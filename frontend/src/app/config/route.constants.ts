@@ -5,7 +5,7 @@ export interface RouteLink {
   
   export const RouterConfig = {
     HOME: {path: '', link: '/'},
-    LOGIN: {path: 'login', link: '/login', title: 'Login Page'},
+    AUTH: {path: 'auth', link: '/auth', title: 'Auth Page'},
     CUSTOMER: {path: 'customer', link: '/customer', title: 'Customer Page'},
     ROOM: {path: 'room', link: '/room', title: 'Room Page'},
     BOOKING: {path: 'booking', link: '/booking', title: 'Booking Page'},

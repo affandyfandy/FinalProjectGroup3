@@ -4,8 +4,19 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        lexend: ['Lexend', 'sans-serif'],
+      },
+      colors: {
+        primary: {
+          DEFAULT: '#172E54',
+        }
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 }
 
