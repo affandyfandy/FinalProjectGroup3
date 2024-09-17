@@ -37,7 +37,6 @@ export class RegisterComponent {
     } else {
       this.registerForm.markAllAsTouched();
     }
-    console.log(this.registerForm.get('password')?.value);
   }
 
   get f() {

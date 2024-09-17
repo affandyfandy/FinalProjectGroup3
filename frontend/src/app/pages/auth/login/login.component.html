@@ -3,7 +3,11 @@
       <img src="/assets/images/login.png" alt="Login" class="w-full h-screen object-cover">
   </div>
 
-  <div *ngIf="!isForgotPassword" class="w-full lg:w-1/3 p-8 lg:p-16 flex flex-col justify-center">
+  <div *ngIf="!isForgotPassword" class="w-full lg:w-1/3 p-8 lg:px-16 flex flex-col justify-center">
+      <div class="mb-8 flex items-center">
+        <ng-icon name="heroChevronLeft"></ng-icon>
+        <a href="/" class="cursor-pointer">Back</a>
+      </div>
       <div class="mb-8 text-center">
           <img src="/assets/images/logo.png" alt="Logo">
       </div>
@@ -27,13 +31,14 @@
               </label>
               <p (click)="toggleForgotPassword()" class="cursor-pointer text-primary hover:underline">Forgot Password?</p>
           </div>
-          <div class="mb-6">
+          <div>
             <button class="w-full bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
               Login
             </button>
           </div>
       </form>
-      <p class="text-gray-500">
+      <span class="text-red-500 text-sm mt-3 hidden">Incorrect email or password</span>
+      <p class="text-gray-500 mt-3">
           Don’t have an account? <a href="/auth/register" class="text-blue-600 hover:underline">Register Here</a>
       </p>
   </div>

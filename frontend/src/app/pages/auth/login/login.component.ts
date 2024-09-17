@@ -8,7 +8,7 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
   standalone: true,
   imports: [
     CommonModule,
-    NgIconComponent
+    NgIconComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
