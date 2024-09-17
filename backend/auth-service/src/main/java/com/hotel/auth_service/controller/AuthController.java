@@ -44,13 +44,9 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        AuthUser userDetails = (AuthUser) authentication.getPrincipal();
-
         log.info("Token request for user: {}", authentication.getAuthorities());
         String token = authService.generateToken(authentication);
-
         AuthDto.Response response = new AuthDto.Response("User logged in successfully", token);
-
         return ResponseEntity.ok(response);
     }
 }

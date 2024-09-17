@@ -55,16 +55,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/error/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setContentType("application/json");
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");
-                        })
-                )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
-                .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
@@ -75,11 +66,6 @@ public class SecurityConfig {
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
     }
 
     @Bean
