@@ -10,9 +10,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.hotel.room_service.data.model.Room;
-import com.hotel.room_service.data.model.Status;
-import com.hotel.room_service.data.repository.RoomRepository;
+import com.hotel.room_service.entity.Room;
+import com.hotel.room_service.entity.Status;
+import com.hotel.room_service.repository.RoomRepository;
+
 
 @Service
 public class RoomServiceImpl implements RoomService {

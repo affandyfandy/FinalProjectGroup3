@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hotel.room_service.data.model.Room;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
+import com.hotel.room_service.entity.Room;
 import com.hotel.room_service.service.RoomService;
 
 @RestController

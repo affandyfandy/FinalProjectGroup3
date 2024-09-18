@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.hotel.room_service.data.model.Room;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
+import com.hotel.room_service.entity.Room;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {

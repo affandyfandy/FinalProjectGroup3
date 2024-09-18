@@ -1,11 +1,12 @@
-package com.hotel.room_service.data.repository;
-
-import java.util.UUID;
+package com.hotel.room_service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.hotel.room_service.data.model.Room;
+import com.hotel.room_service.entity.Room;
+
+import java.util.UUID;
+
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID>{

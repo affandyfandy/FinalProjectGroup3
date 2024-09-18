@@ -23,4 +23,5 @@ public class ReadRoomDto {
     private UUID hotelId;
     private String photo;
     private String facility;
+    private String token;
 }

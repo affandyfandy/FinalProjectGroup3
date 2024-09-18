@@ -1,4 +1,6 @@
-package com.hotel.room_service.data.model;
+package com.hotel.room_service.entity;
+
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -2,7 +2,82 @@
 
 The Hotel Reservation Management System is a comprehensive system to process end-to-end hotel booking orders for customers and provides insightful information for the hotel management.
 
-## List of Endpoint
+## Project Structure
+
+```
+│
+├── backend/
+│   ├── auth-service/
+│       ├── src/main/java/com/hotel/auth_service/
+│           ├── controller/
+│           ├── data/
+│               ├── repository/
+│               └── model/
+│           ├── service/
+│           └── dto/
+│   ├── discovery
+│   ├── gateaway
+│   ├── hotel-service
+│   ├── reservation-service
+│   └── room-service
+│
+├── frontend/
+│   ├── src/
+│       ├── app/
+│           ├── config/
+│               ├── app.constants.ts
+│               └── route.constants.ts
+│           ├── main/
+│               ├── components/
+│                   ├── footer/
+│                   ├── header/
+│                   └── main/
+│               └── guard/
+│           ├── models/
+│           ├── pages/
+│               ├── auth/
+│                   ├── login/
+│                   └── register/
+│                   └── auth.routes.ts
+│               ├── dashboard/
+│               ├── hotel/
+│                   ├── hotel-list/
+│                   └── hotel-form/
+│                   └── hotel.routes.ts
+│               ├── hotel/
+│                   ├── hotel-list/
+│                   └── hotel-form/
+│                   └── hotel.routes.ts
+│               ├── room/
+│                   ├── room-list/
+│                   └── room-form/
+│                   └── room.routes.ts
+│               ├── reservation/
+│                   ├── reservation-list/
+│                   └── reservation-form/
+│                   └── reservation.routes.ts
+│               ├── payment/
+│                   ├── invoice-details/
+│                   └── payment-form/
+│                   └── payment.routes.ts
+│               ├── rating/
+│                   ├── rating-details/
+│                   └── rating-form/
+│                   └── rating.routes.ts
+│               └── user/
+│                   ├── user-list/
+│                   └── user-form/
+│                   └── user.routes.ts
+│           ├── services/
+│       ├── assets/
+│       └── styles/
+│           └── _variable.scss
+│
+│
+└── README.md
+```
+
+## List of Endpoints
 
 ### Hotel
 | Method | Endpoint                        | Description                              |

@@ -1,7 +1,9 @@
 package com.hotel.room_service.service;
 
-import com.hotel.room_service.data.model.Room;
 import org.springframework.data.domain.Page;
+
+import com.hotel.room_service.entity.Room;
+
 import java.util.Optional;
 import java.util.UUID;
 
