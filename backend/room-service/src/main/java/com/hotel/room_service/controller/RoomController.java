@@ -1,8 +1,11 @@
 package com.hotel.room_service.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,8 @@ import com.hotel.room_service.service.RoomService;
 @RequestMapping("/api/v1/room")
 public class RoomController {
 
+    private static final Logger log = LoggerFactory.getLogger(RoomController.class);
+
     public RoomService roomService;
     public RoomMapper roomMapper;
 
@@ -39,7 +44,6 @@ public class RoomController {
         Room room = roomService.findById(id).get() != null ? roomService.findById(id).get() : null;
         ReadRoomDto roomDto = roomMapper.toDto(room);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
-        
     }   
 
     @PostMapping
@@ -49,21 +53,11 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }
 
-    @GetMapping
-    public ResponseEntity<?> findAllRooms(
-        @RequestParam(defaultValue = "0", required = false) int pageNo,
-        @RequestParam(defaultValue = "10", required = false) int pageSize) 
-    {
-        Page<Room> listRoom = roomService.findAll(pageNo, pageSize);
-        List<ReadRoomDto> listRoomDto = roomMapper.toListDto(listRoom.getContent());
-        Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
-    }
-
     @PutMapping("/{id}/activate")
     public ResponseEntity<?> activateRoomStatus(@PathVariable UUID id){
         Room updateRoom = roomService.updateStatus(id, "active");
         ReadRoomDto updateRoomDto = roomMapper.toDto(updateRoom);
+        log.info("Room is ACTIVE");
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateRoomDto);
     }
 
@@ -71,6 +65,38 @@ public class RoomController {
     public ResponseEntity<?> deactivateRoomStatus(@PathVariable UUID id){
         Room updateRoom = roomService.updateStatus(id, "inactive");
         ReadRoomDto updateRoomDto = roomMapper.toDto(updateRoom);
+        log.info("Room is INACTIVE");
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateRoomDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findAllSorted(
+        @RequestParam(defaultValue = "0", required = false) int pageNo,
+        @RequestParam(defaultValue = "10", required = false) int pageSize,
+        @RequestParam(defaultValue = "roomType", required = false) String sortBy,
+        @RequestParam(defaultValue = "asc", required = false) String sortOrder)
+    {
+        Page<Room> listRoom = roomService.findAllSorted(pageNo, pageSize, sortBy, sortOrder);
+        List<ReadRoomDto> listRoomDto = roomMapper.toListDto(listRoom.getContent());
+        Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> filterRooms(
+        @RequestParam(defaultValue = "0", required = false) int pageNo,
+        @RequestParam(defaultValue = "10", required = false) int pageSize,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String facility,
+        @RequestParam(required = false) Integer capacity,
+        @RequestParam(required = false) String roomType,
+        @RequestParam(required = false) BigDecimal lowerLimitPrice,
+        @RequestParam(required = false) BigDecimal upperLimitPrice
+        )
+    {
+        Page<Room> listRoom = roomService.search(pageNo, pageSize, status, facility, roomType, capacity, lowerLimitPrice, upperLimitPrice);
+        List<ReadRoomDto> listRoomDto = roomMapper.toListDto(listRoom.getContent());
+        Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
     }
 }
