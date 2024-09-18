@@ -31,17 +31,16 @@ public class AuthServiceImpl implements AuthService {
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
 
-        String scope = authentication.getAuthorities()
-                .stream()
+        String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(","));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(10, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("scope", scope)
+                .claim("role", role)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

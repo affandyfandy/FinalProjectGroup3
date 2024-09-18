@@ -12,7 +12,11 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -32,6 +36,14 @@ public class SecurityConfig {
                         .pathMatchers("/api/v1/auth/**").permitAll()
                         .anyExchange().authenticated()
                 )
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration corsConfig = new CorsConfiguration();
+                    corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                    corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(Arrays.asList("*"));
+                    corsConfig.setAllowCredentials(true);
+                    return corsConfig;
+                }))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtSpec -> jwtSpec.jwtDecoder(jwtDecoder()))
                         .authenticationEntryPoint((exchange, ex) -> {
