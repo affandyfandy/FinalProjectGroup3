@@ -9,10 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -62,4 +65,20 @@ public class SecurityConfig {
     public ReactiveJwtDecoder jwtDecoder() {
         return NimbusReactiveJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
     }
+
+    @Bean
+    public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
+        ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
+
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            String role = jwt.getClaimAsString("role");
+            if (role != null) {
+                return Flux.just(new SimpleGrantedAuthority(role));
+            }
+            return Flux.empty();
+        });
+
+        return converter;
+    }
+
 }

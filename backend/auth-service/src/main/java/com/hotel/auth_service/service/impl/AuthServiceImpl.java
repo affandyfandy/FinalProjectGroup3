@@ -1,7 +1,9 @@
 package com.hotel.auth_service.service.impl;
 
+import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.repository.UserRepository;
 import com.hotel.auth_service.service.AuthService;
+import com.hotel.auth_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,12 +21,12 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
     private final JwtEncoder jwtEncoder;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public AuthServiceImpl(JwtEncoder jwtEncoder, UserRepository userRepository) {
+    public AuthServiceImpl(JwtEncoder jwtEncoder, UserService userService) {
         this.jwtEncoder = jwtEncoder;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -44,5 +46,15 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    @Override
+    public UserDto registerUser(UserDto userDto) {
+        return userService.createUser(userDto);
+    }
+
+    @Override
+    public void forgotPassword(String email, String newPassword) {
+        userService.changeUserPassword(email, newPassword);
     }
 }

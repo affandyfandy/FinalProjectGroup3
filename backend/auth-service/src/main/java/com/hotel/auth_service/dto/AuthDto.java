@@ -6,4 +6,7 @@ public class AuthDto {
 
     public record Response(String message, String token) {
     }
+
+    public record RegisterRequest(UserDto userDto) {
+    }
 }
