@@ -40,7 +40,6 @@ public class RoomControllerTest {
         room.setId(UUID.randomUUID());
         room.setCapacity(5);
         room.setFacility("View");
-        // room.setPrice(10000.0);
         room.setRoomNumber("AD990");
         room.setRoomType(RoomType.SINGLE);
     }
