@@ -1,0 +1,199 @@
+2024-09-19 21:46:11 - Starting GatewayApplication using Java 17.0.12 with PID 4375 (/Users/fahiraadindiah/Documents/Work/FinalProjectGroup3/backend/gateway/target/classes started by fahiraadindiah in /Users/fahiraadindiah/Documents/Work/FinalProjectGroup3)
+2024-09-19 21:46:11 - No active profile set, falling back to 1 default profile: "default"
+2024-09-19 21:46:11 - BeanFactory id=b0fb9e66-bf23-3059-bb01-d946a2741f12
+2024-09-19 21:46:11 - Routes supplied from Gateway Properties: [RouteDefinition{id='auth-service', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/api/v1/auth/**, _genkey_1=/api/v1/users/**}}], filters=[], uri=http://localhost:8081, order=0, metadata={}}, RouteDefinition{id='room-service', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/api/v1/room/**}}], filters=[], uri=http://localhost:8083, order=0, metadata={}}]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [After]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Before]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Between]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Cookie]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Header]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Host]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Method]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Path]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Query]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [ReadBody]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [RemoteAddr]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [Weight]
+2024-09-19 21:46:11 - Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2024-09-19 21:46:11 - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-09-19 21:46:11 - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 @ExceptionHandler
+2024-09-19 21:46:11 - enableLoggingRequestDetails='false': form data and headers will be masked to prevent unsafe logging of potentially sensitive data
+2024-09-19 21:46:11 - Unable to start LiveReload server
+2024-09-19 21:46:11 - Netty started on port 8080 (http)
+2024-09-19 21:46:11 - RouteDefinition auth-service applying {_genkey_0=/api/v1/auth/**, _genkey_1=/api/v1/users/**} to Path
+2024-09-19 21:46:11 - RouteDefinition matched: auth-service
+2024-09-19 21:46:11 - RouteDefinition room-service applying {_genkey_0=/api/v1/room/**} to Path
+2024-09-19 21:46:11 - RouteDefinition matched: room-service
+2024-09-19 21:46:11 - Started GatewayApplication in 0.385 seconds (process running for 5589.411)
+2024-09-19 21:46:11 - Condition evaluation unchanged
+2024-09-19 21:46:14 - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-09-19 21:46:14 - Starting GatewayApplication using Java 17.0.12 with PID 4375 (/Users/fahiraadindiah/Documents/Work/FinalProjectGroup3/backend/gateway/target/classes started by fahiraadindiah in /Users/fahiraadindiah/Documents/Work/FinalProjectGroup3)
+2024-09-19 21:46:14 - No active profile set, falling back to 1 default profile: "default"
+2024-09-19 21:46:14 - BeanFactory id=b0fb9e66-bf23-3059-bb01-d946a2741f12
+2024-09-19 21:46:14 - Routes supplied from Gateway Properties: [RouteDefinition{id='auth-service', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/api/v1/auth/**, _genkey_1=/api/v1/users/**}}], filters=[], uri=http://localhost:8081, order=0, metadata={}}, RouteDefinition{id='room-service', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/api/v1/room/**}}], filters=[], uri=http://localhost:8083, order=0, metadata={}}]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [After]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Before]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Between]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Cookie]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Header]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Host]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Method]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Path]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Query]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [ReadBody]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [RemoteAddr]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [Weight]
+2024-09-19 21:46:14 - Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2024-09-19 21:46:14 - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-09-19 21:46:14 - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 @ExceptionHandler
+2024-09-19 21:46:14 - enableLoggingRequestDetails='false': form data and headers will be masked to prevent unsafe logging of potentially sensitive data
+2024-09-19 21:46:14 - Unable to start LiveReload server
+2024-09-19 21:46:14 - Netty started on port 8080 (http)
+2024-09-19 21:46:14 - RouteDefinition auth-service applying {_genkey_0=/api/v1/auth/**, _genkey_1=/api/v1/users/**} to Path
+2024-09-19 21:46:14 - RouteDefinition matched: auth-service
+2024-09-19 21:46:14 - RouteDefinition room-service applying {_genkey_0=/api/v1/room/**} to Path
+2024-09-19 21:46:14 - RouteDefinition matched: room-service
+2024-09-19 21:46:14 - Started GatewayApplication in 0.426 seconds (process running for 5592.282)
+2024-09-19 21:46:14 - Condition evaluation unchanged
+2024-09-19 21:48:42 - HV000001: Hibernate Validator 8.0.1.Final
+2024-09-19 21:48:42 - Starting GatewayApplication using Java 17.0.12 with PID 10095 (/Users/fahiraadindiah/Documents/Work/FinalProjectGroup3/backend/gateway/target/classes started by fahiraadindiah in /Users/fahiraadindiah/Documents/Work/FinalProjectGroup3)
+2024-09-19 21:48:42 - No active profile set, falling back to 1 default profile: "default"
+2024-09-19 21:48:42 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-09-19 21:48:42 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-09-19 21:48:44 - BeanFactory id=b0fb9e66-bf23-3059-bb01-d946a2741f12
+2024-09-19 21:48:45 - Routes supplied from Gateway Properties: [RouteDefinition{id='auth-service', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/api/v1/auth/**, _genkey_1=/api/v1/users/**}}], filters=[], uri=http://localhost:8081, order=0, metadata={}}, RouteDefinition{id='room-service', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/api/v1/room/**}}], filters=[], uri=http://localhost:8083, order=0, metadata={}}]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [After]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Before]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Between]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Cookie]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Header]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Host]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Method]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Path]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Query]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [ReadBody]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [RemoteAddr]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [Weight]
+2024-09-19 21:48:45 - Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2024-09-19 21:48:45 - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-09-19 21:48:45 - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 @ExceptionHandler
+2024-09-19 21:48:45 - enableLoggingRequestDetails='false': form data and headers will be masked to prevent unsafe logging of potentially sensitive data
+2024-09-19 21:48:46 - Unable to start LiveReload server
+2024-09-19 21:48:46 - Netty started on port 8080 (http)
+2024-09-19 21:48:46 - RouteDefinition auth-service applying {_genkey_0=/api/v1/auth/**, _genkey_1=/api/v1/users/**} to Path
+2024-09-19 21:48:46 - RouteDefinition matched: auth-service
+2024-09-19 21:48:46 - RouteDefinition room-service applying {_genkey_0=/api/v1/room/**} to Path
+2024-09-19 21:48:46 - RouteDefinition matched: room-service
+2024-09-19 21:48:46 - Started GatewayApplication in 4.484 seconds (process running for 5.029)
+2024-09-19 21:54:36 - [90dca5c6-1] HTTP OPTIONS "/api/v1/room?pageNo=0&pageSize=10"
+2024-09-19 21:54:36 - [2ad78e3f-2] HTTP OPTIONS "/api/v1/users/admin@example.com"
+2024-09-19 21:54:36 - [2ad78e3f-2] Completed 200 OK
+2024-09-19 21:54:36 - [90dca5c6-1] Completed 200 OK
+2024-09-19 21:54:36 - [2ad78e3f-3] HTTP GET "/api/v1/room?pageNo=0&pageSize=10"
+2024-09-19 21:54:36 - [90dca5c6-4] HTTP GET "/api/v1/users/admin@example.com"
+2024-09-19 21:54:36 - Created new WebSession.
+2024-09-19 21:54:36 - Created new WebSession.
+2024-09-19 21:54:36 - Route matched: room-service
+2024-09-19 21:54:36 - Route matched: auth-service
+2024-09-19 21:54:36 - Mapping [Exchange: GET http://localhost:8080/api/v1/users/admin@example.com] to Route{id='auth-service', uri=http://localhost:8081, order=0, predicate=Paths: [/api/v1/auth/**, /api/v1/users/**], match trailing slash: true, gatewayFilters=[], metadata={}}
+2024-09-19 21:54:36 - Mapping [Exchange: GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10] to Route{id='room-service', uri=http://localhost:8083, order=0, predicate=Paths: [/api/v1/room/**], match trailing slash: true, gatewayFilters=[], metadata={}}
+2024-09-19 21:54:36 - [90dca5c6-4] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@335119d3
+2024-09-19 21:54:36 - [2ad78e3f-3] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@335119d3
+2024-09-19 21:54:36 - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@608a46e1}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@14b42d9f}, order = -2147482648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@7abd7179}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@1f21d531}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6d185131}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration$NoLoadBalancerClientFilter@2107837}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@2d2e357a}, order = 2147483646], [GatewayFilterAdapter{delegate=com.hotel.gateway.filter.LoggingGlobalFilter@40f9bcd5}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@1e6fb249}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@e865b21}, order = 2147483647]]
+2024-09-19 21:54:36 - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@608a46e1}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@14b42d9f}, order = -2147482648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@7abd7179}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@1f21d531}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6d185131}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration$NoLoadBalancerClientFilter@2107837}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@2d2e357a}, order = 2147483646], [GatewayFilterAdapter{delegate=com.hotel.gateway.filter.LoggingGlobalFilter@40f9bcd5}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@1e6fb249}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@e865b21}, order = 2147483647]]
+2024-09-19 21:54:36 - Request: GET http://localhost:8080/api/v1/users/admin@example.com from IP: /[0:0:0:0:0:0:0:1]:52701
+2024-09-19 21:54:36 - Request: GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10 from IP: /[0:0:0:0:0:0:0:1]:52700
+2024-09-19 21:54:37 - [15145ad5-1, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Handler is being applied: {uri=http://localhost:8081/api/v1/users/admin@example.com, method=GET}
+2024-09-19 21:54:37 - [2ad78e3f-3] Using @ExceptionHandler com.hotel.gateway.exception.GlobalExceptionHandler#handleGeneralException(Exception)
+2024-09-19 21:54:37 - [2ad78e3f-3] Using 'application/json' given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/x-ndjson, text/event-stream]
+2024-09-19 21:54:37 - [2ad78e3f-3] 0..1 [java.util.Map<java.lang.String, java.lang.String>]
+2024-09-19 21:54:37 - [15145ad5-1, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Received response (auto-read:false) : RESPONSE(decodeResult: success, version: HTTP/1.1)
+HTTP/1.1 200 
+Content-Disposition: <filtered>
+X-Content-Type-Options: <filtered>
+X-XSS-Protection: <filtered>
+Cache-Control: <filtered>
+Pragma: <filtered>
+Expires: <filtered>
+X-Frame-Options: <filtered>
+Content-Type: <filtered>
+Transfer-Encoding: <filtered>
+Date: <filtered>
+2024-09-19 21:54:37 - Response: 200 OK for GET http://localhost:8080/api/v1/users/admin@example.com
+2024-09-19 21:54:37 - [2ad78e3f-3] Encoding [{error=Internal Server Error, message=Connection refused: localhost/127.0.0.1:8083}]
+2024-09-19 21:54:37 - [15145ad5-1, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Received last HTTP packet
+2024-09-19 21:54:37 - [90dca5c6-4] Completed 200 OK
+2024-09-19 21:54:37 - [2ad78e3f-3] Completed 500 INTERNAL_SERVER_ERROR
+2024-09-19 21:54:39 - [2ad78e3f-5] HTTP GET "/api/v1/users/admin@example.com"
+2024-09-19 21:54:39 - Created new WebSession.
+2024-09-19 21:54:39 - Route matched: auth-service
+2024-09-19 21:54:39 - Mapping [Exchange: GET http://localhost:8080/api/v1/users/admin@example.com] to Route{id='auth-service', uri=http://localhost:8081, order=0, predicate=Paths: [/api/v1/auth/**, /api/v1/users/**], match trailing slash: true, gatewayFilters=[], metadata={}}
+2024-09-19 21:54:39 - [2ad78e3f-5] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@335119d3
+2024-09-19 21:54:39 - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@608a46e1}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@14b42d9f}, order = -2147482648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@7abd7179}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@1f21d531}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6d185131}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration$NoLoadBalancerClientFilter@2107837}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@2d2e357a}, order = 2147483646], [GatewayFilterAdapter{delegate=com.hotel.gateway.filter.LoggingGlobalFilter@40f9bcd5}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@1e6fb249}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@e865b21}, order = 2147483647]]
+2024-09-19 21:54:39 - Request: GET http://localhost:8080/api/v1/users/admin@example.com from IP: /[0:0:0:0:0:0:0:1]:52700
+2024-09-19 21:54:39 - [15145ad5-2, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Handler is being applied: {uri=http://localhost:8081/api/v1/users/admin@example.com, method=GET}
+2024-09-19 21:54:39 - [90dca5c6-6] HTTP GET "/api/v1/room?pageNo=0&pageSize=10"
+2024-09-19 21:54:39 - Created new WebSession.
+2024-09-19 21:54:39 - Route matched: room-service
+2024-09-19 21:54:39 - Mapping [Exchange: GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10] to Route{id='room-service', uri=http://localhost:8083, order=0, predicate=Paths: [/api/v1/room/**], match trailing slash: true, gatewayFilters=[], metadata={}}
+2024-09-19 21:54:39 - [90dca5c6-6] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@335119d3
+2024-09-19 21:54:39 - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@608a46e1}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@14b42d9f}, order = -2147482648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@7abd7179}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@1f21d531}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6d185131}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration$NoLoadBalancerClientFilter@2107837}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@2d2e357a}, order = 2147483646], [GatewayFilterAdapter{delegate=com.hotel.gateway.filter.LoggingGlobalFilter@40f9bcd5}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@1e6fb249}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@e865b21}, order = 2147483647]]
+2024-09-19 21:54:39 - Request: GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10 from IP: /[0:0:0:0:0:0:0:1]:52701
+2024-09-19 21:54:39 - [90dca5c6-6] Using @ExceptionHandler com.hotel.gateway.exception.GlobalExceptionHandler#handleGeneralException(Exception)
+2024-09-19 21:54:39 - [90dca5c6-6] Using 'application/json' given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/x-ndjson, text/event-stream]
+2024-09-19 21:54:39 - [90dca5c6-6] 0..1 [java.util.Map<java.lang.String, java.lang.String>]
+2024-09-19 21:54:39 - [90dca5c6-6] Encoding [{error=Internal Server Error, message=Connection refused: localhost/127.0.0.1:8083}]
+2024-09-19 21:54:39 - [15145ad5-2, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Received response (auto-read:false) : RESPONSE(decodeResult: success, version: HTTP/1.1)
+HTTP/1.1 200 
+Content-Disposition: <filtered>
+X-Content-Type-Options: <filtered>
+X-XSS-Protection: <filtered>
+Cache-Control: <filtered>
+Pragma: <filtered>
+Expires: <filtered>
+X-Frame-Options: <filtered>
+Content-Type: <filtered>
+Transfer-Encoding: <filtered>
+Date: <filtered>
+2024-09-19 21:54:39 - Response: 200 OK for GET http://localhost:8080/api/v1/users/admin@example.com
+2024-09-19 21:54:39 - [15145ad5-2, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Received last HTTP packet
+2024-09-19 21:54:39 - [2ad78e3f-5] Completed 200 OK
+2024-09-19 21:54:39 - [90dca5c6-6] Completed 500 INTERNAL_SERVER_ERROR
+2024-09-19 21:54:39 - [90dca5c6-7] HTTP GET "/api/v1/users/admin@example.com"
+2024-09-19 21:54:39 - Created new WebSession.
+2024-09-19 21:54:39 - Route matched: auth-service
+2024-09-19 21:54:39 - Mapping [Exchange: GET http://localhost:8080/api/v1/users/admin@example.com] to Route{id='auth-service', uri=http://localhost:8081, order=0, predicate=Paths: [/api/v1/auth/**, /api/v1/users/**], match trailing slash: true, gatewayFilters=[], metadata={}}
+2024-09-19 21:54:39 - [90dca5c6-7] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@335119d3
+2024-09-19 21:54:39 - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@608a46e1}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@14b42d9f}, order = -2147482648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@7abd7179}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@1f21d531}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6d185131}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration$NoLoadBalancerClientFilter@2107837}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@2d2e357a}, order = 2147483646], [GatewayFilterAdapter{delegate=com.hotel.gateway.filter.LoggingGlobalFilter@40f9bcd5}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@1e6fb249}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@e865b21}, order = 2147483647]]
+2024-09-19 21:54:39 - Request: GET http://localhost:8080/api/v1/users/admin@example.com from IP: /[0:0:0:0:0:0:0:1]:52701
+2024-09-19 21:54:39 - [15145ad5-3, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Handler is being applied: {uri=http://localhost:8081/api/v1/users/admin@example.com, method=GET}
+2024-09-19 21:54:39 - [2ad78e3f-8] HTTP GET "/api/v1/room?pageNo=0&pageSize=10"
+2024-09-19 21:54:39 - Created new WebSession.
+2024-09-19 21:54:39 - Route matched: room-service
+2024-09-19 21:54:39 - Mapping [Exchange: GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10] to Route{id='room-service', uri=http://localhost:8083, order=0, predicate=Paths: [/api/v1/room/**], match trailing slash: true, gatewayFilters=[], metadata={}}
+2024-09-19 21:54:39 - [2ad78e3f-8] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@335119d3
+2024-09-19 21:54:39 - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@608a46e1}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@14b42d9f}, order = -2147482648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@7abd7179}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@1f21d531}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6d185131}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.config.GatewayNoLoadBalancerClientAutoConfiguration$NoLoadBalancerClientFilter@2107837}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@2d2e357a}, order = 2147483646], [GatewayFilterAdapter{delegate=com.hotel.gateway.filter.LoggingGlobalFilter@40f9bcd5}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@1e6fb249}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@e865b21}, order = 2147483647]]
+2024-09-19 21:54:39 - Request: GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10 from IP: /[0:0:0:0:0:0:0:1]:52700
+2024-09-19 21:54:39 - [2ad78e3f-8] Using @ExceptionHandler com.hotel.gateway.exception.GlobalExceptionHandler#handleGeneralException(Exception)
+2024-09-19 21:54:39 - [15145ad5-3, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Received response (auto-read:false) : RESPONSE(decodeResult: success, version: HTTP/1.1)
+HTTP/1.1 200 
+Content-Disposition: <filtered>
+X-Content-Type-Options: <filtered>
+X-XSS-Protection: <filtered>
+Cache-Control: <filtered>
+Pragma: <filtered>
+Expires: <filtered>
+X-Frame-Options: <filtered>
+Content-Type: <filtered>
+Transfer-Encoding: <filtered>
+Date: <filtered>
+2024-09-19 21:54:39 - [2ad78e3f-8] Using 'application/json' given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/x-ndjson, text/event-stream]
+2024-09-19 21:54:39 - [2ad78e3f-8] 0..1 [java.util.Map<java.lang.String, java.lang.String>]
+2024-09-19 21:54:39 - Response: 200 OK for GET http://localhost:8080/api/v1/users/admin@example.com
+2024-09-19 21:54:39 - [2ad78e3f-8] Encoding [{error=Internal Server Error, message=Connection refused: localhost/127.0.0.1:8083}]
+2024-09-19 21:54:39 - [15145ad5-3, L:/127.0.0.1:52703 - R:localhost/127.0.0.1:8081] Received last HTTP packet
+2024-09-19 21:54:39 - [90dca5c6-7] Completed 200 OK
+2024-09-19 21:54:39 - [2ad78e3f-8] Completed 500 INTERNAL_SERVER_ERROR

@@ -138,4 +138,12 @@ public class RoomServiceImpl implements RoomService {
         // If no filters match, return all rooms
         return roomRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<Room> findAllActiveSorted(int pageNo, int pageSize, String sortBy, String sortOrder) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction,sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        return roomRepository.findAllActiveRooms(pageable);
+    }
 }

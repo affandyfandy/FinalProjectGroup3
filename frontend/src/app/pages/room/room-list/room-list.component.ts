@@ -5,7 +5,8 @@ import { RoomFormComponent } from '../room-form/room-form.component';
 import { Room, RoomResponse } from '../../../model/room.model';
 import { RoomService } from '../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroEllipsisVertical } from '@ng-icons/heroicons/outline';
+import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/outline';
+import { heroAdjustmentsHorizontalSolid, heroStarSolid } from '@ng-icons/heroicons/solid';
 import { AuthService } from '../../../services/auth/auth.service';
 
 
@@ -20,7 +21,7 @@ import { AuthService } from '../../../services/auth/auth.service';
   ],
   templateUrl: './room-list.component.html',
   providers: [
-    provideIcons({ heroEllipsisVertical})
+    provideIcons({ heroEllipsisVertical, heroUser, heroStarSolid, heroAdjustmentsHorizontalSolid})
   ]
 })
 export class RoomListComponent implements OnInit{
@@ -45,27 +46,43 @@ export class RoomListComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    this.loadRooms(this.currentPage);
     this.isAdmin = this.authService.isAdmin();
+    this.loadRooms(this.currentPage);
   }
 
   loadRooms(currentPage: number) {
-    this.roomService.getAllRooms(currentPage-1, this.pageSize).subscribe({
-      next: (response: RoomResponse) => {
-        console.log("Full response:", response);
-        this.rooms = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
-        this.currentPage = currentPage;
-        // this.isLoading = false;
-      },
-      error: (err) => {
-        this.error = 'Nothing to see..';
-        console.error(err);
-        // this.isLoading = false;
-        // this.toastService.showToast('Failed to load products', 'error');
-      }
-    });
+    if (this.isAdmin){
+      this.roomService.getAllRooms(currentPage-1, this.pageSize).subscribe({
+        next: (response: RoomResponse) => {
+          console.log("Full response:", response);
+          this.rooms = response.content;
+          this.totalElements = response.totalElements;
+          this.totalPages = response.totalPages;
+          this.currentPage = currentPage;
+        },
+        error: (err) => {
+          this.error = 'Nothing to see..';
+          console.error(err);
+          // this.toastService.showToast('Failed to load products', 'error');
+        }
+      });
+    }
+    else{
+      this.roomService.getAllActiveRooms(currentPage-1, this.pageSize).subscribe({
+        next: (response: RoomResponse) => {
+          console.log("Full response:", response);
+          this.rooms = response.content;
+          this.totalElements = response.totalElements;
+          this.totalPages = response.totalPages;
+          this.currentPage = currentPage;
+        },
+        error: (err) => {
+          this.error = 'Nothing to see..';
+          console.error(err);
+          // this.toastService.showToast('Failed to load products', 'error');
+        }
+      });
+    }
   }
 
   changePage(page: number): void {

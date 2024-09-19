@@ -16,5 +16,6 @@ public interface RoomService {
     Page<Room> search(int pageNo, int pageSize, String status, String facility, String roomType, Integer capacity,
                 BigDecimal lowerLimit, BigDecimal upperLimit);
     Room findById(UUID id);
+    Page<Room> findAllActiveSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
     Room updateStatus(UUID id, String status);
 }

@@ -23,6 +23,16 @@ export class RoomService {
         return this.http.get<RoomResponse>(this.baseUrl, { params });
     }
 
+    getAllActiveRooms(
+        pageNo: number,
+        pageSize: number,
+    ): Observable<RoomResponse> {
+        const params = new HttpParams()
+        .set('pageNo', pageNo.toString())
+        .set('pageSize', pageSize.toString());
+        return this.http.get<RoomResponse>(`${this.baseUrl}/active`, { params });
+    }
+
     getRoomById(id: string): Observable<any> {
         return this.http.get<Room>(`${this.baseUrl}/${id}`);
     }

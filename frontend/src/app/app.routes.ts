@@ -15,5 +15,11 @@ export const routes: Routes = [
         loadChildren: () =>
             import('./pages/room/room.routes')
                 .then(m => m.RoomRoutes)
+    },
+    {
+        path: RouterConfig.USER.path,
+        loadChildren: () =>
+            import('./pages/user/user.routes')
+                .then(m => m.UserRoutes)
     }
 ];

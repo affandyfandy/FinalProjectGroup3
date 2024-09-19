@@ -1,5 +1,6 @@
 package com.hotel.auth_service.entity;
 
+import com.hotel.auth_service.audit.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends Auditable<String> {
     @Id
     @Column(unique = true)
     @Email(message = "Email should be valid")
@@ -43,25 +44,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private LocalDateTime createdTime;
-
-    private LocalDateTime updatedTime;
-
-    private String createdBy;
-
-    private String updatedBy;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdTime = LocalDateTime.now();
-        this.updatedTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedTime = LocalDateTime.now();
-    }
-
     @Override
     public String toString() {
         return "user{" +
@@ -74,10 +56,6 @@ public class User {
                 ", photo='" + photo + '\'' +
                 ", address='" + address + '\'' +
                 ", status=" + status +
-                ", createdTime=" + createdTime +
-                ", updatedTime=" + updatedTime +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
                 '}';
     }
 }

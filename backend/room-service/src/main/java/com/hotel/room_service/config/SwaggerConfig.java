@@ -1,5 +1,4 @@
 package com.hotel.room_service.config;
-package com.hotel.auth_service.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -23,7 +22,7 @@ public class SwaggerConfig {
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Hotel - Auth Service API Documentation").version("v1"))
+                .info(new Info().title("Hotel - Room Service API Documentation").version("v1"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(
                         new Components()

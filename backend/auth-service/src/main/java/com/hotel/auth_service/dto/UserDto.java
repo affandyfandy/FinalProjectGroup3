@@ -19,4 +19,8 @@ public class UserDto {
     private String photo;
     private String address;
     private String status;
+    private String createdBy;
+    private String lastModifiedBy;
+    private LocalDate createdDate;
+    private LocalDate lastModifiedDate;
 }

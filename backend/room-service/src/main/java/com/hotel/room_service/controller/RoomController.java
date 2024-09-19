@@ -82,6 +82,19 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<?> findAllActiveRooms(
+        @RequestParam(defaultValue = "0", required = false) int pageNo,
+        @RequestParam(defaultValue = "10", required = false) int pageSize,
+        @RequestParam(defaultValue = "price", required = false) String sortBy,
+        @RequestParam(defaultValue = "asc", required = false) String sortOrder)
+    {
+        Page<Room> listRoom = roomService.findAllActiveSorted(pageNo, pageSize, sortBy, sortOrder);
+        List<ReadRoomDto> listRoomDto = roomMapper.toListDto(listRoom.getContent());
+        Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<?> filterRooms(
         @RequestParam(defaultValue = "0", required = false) int pageNo,
