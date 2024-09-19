@@ -1,13 +1,13 @@
 export interface Room {
     id: string
     roomType: string
+    roomNumber: string
     capacity: number
     status: string
     price: number
     hotelId: string
     photo: string
     facility: string
-    token: string
 }
 
 export interface RoomResponse{

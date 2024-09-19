@@ -1,6 +1,7 @@
 package com.hotel.auth_service.controller;
 
 import com.hotel.auth_service.dto.AuthDto;
+import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.entity.AuthUser;
 import com.hotel.auth_service.service.impl.AuthServiceImpl;
 import org.slf4j.Logger;
@@ -12,10 +13,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -47,6 +48,30 @@ public class AuthController {
         log.info("Token request for user: {}", authentication.getAuthorities());
         String token = authService.generateToken(authentication);
         AuthDto.Response response = new AuthDto.Response("User logged in successfully", token);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserDto userDto) {
+        log.info("User registered successfully: {}", userDto);
+        UserDto registeredUser = authService.registerUser(userDto);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                registeredUser.getEmail(),
+                registeredUser.getPassword()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("Token request for registered user: {}", authentication.getAuthorities());
+        String token = authService.generateToken(authentication);
+        AuthDto.Response response = new AuthDto.Response("User logged in successfully", token);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/forgot-password")
+    public ResponseEntity<?> forgotPassword(@PathVariable("id") String id, @RequestBody String password) {
+        authService.forgotPassword(id, password);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Password changed successfully");
         return ResponseEntity.ok(response);
     }
 }

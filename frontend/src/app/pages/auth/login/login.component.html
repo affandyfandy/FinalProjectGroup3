@@ -26,7 +26,7 @@
           </div>
           <div class="flex items-center justify-between mb-6">
               <label class="flex items-center">
-                  <input type="checkbox" class="form-checkbox h-4 w-4 rounded-md text-primary cursor-pointer">
+                  <input type="checkbox" [(ngModel)]="remember" name="remember" class="form-checkbox h-4 w-4 rounded-md text-primary cursor-pointer">
                   <span class="ml-2">Remember me</span>
               </label>
               <p (click)="toggleForgotPassword()" class="cursor-pointer text-primary hover:underline">Forgot Password?</p>
@@ -52,18 +52,32 @@
       <h2 class="text-3xl font-bold text-primary">Forgot Password</h2>
       <p class="text-gray-500">Enter your registered email address and new password</p>
     </div>
-    <form action="">
+    <form [formGroup]="forgotForm" (ngSubmit)="onForgotPassword()">
       <div class="mb-4">
           <label class="block text-gray-700" for="email">Email Address</label>
-          <input type="email" id="email" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Email Address">
+          <input type="email" id="email" formControlName="email_forgot" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Email Address">
+          <div *ngIf="f['email_forgot'].touched && f['email_forgot'].invalid" class="text-red-500 text-sm">
+            <span *ngIf="f['email_forgot'].errors?.['required']">Email should not be blank</span>
+            <span *ngIf="f['email_forgot'].errors?.['email']">Email should be valid</span>
+          </div>
       </div>
       <div class="mb-4">
           <label class="block text-gray-700" for="password">New Password</label>
-          <input type="password" id="password" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="New Password">
+          <input type="password" id="password" formControlName="password_forgot" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="New Password">
+          <div *ngIf="f['password_forgot'].touched && f['password_forgot'].invalid" class="text-red-500 text-sm">
+            <span *ngIf="f['password_forgot'].errors?.['required']">Password should not be blank</span>
+            <span *ngIf="f['password_forgot'].errors?.['minlength']">Password should have at least 8 characters</span>
+          </div>
       </div>
       <div class="mb-8">
         <label class="block text-gray-700" for="password">Confirm New Password</label>
-        <input type="password" id="confirm-password" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Confirm New Password">
+        <input type="password" id="password_confirmation_forgot" formControlName="password_confirmation_forgot" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Confirm New Password">
+        <div *ngIf="f['password_confirmation_forgot'].touched && f['password_confirmation_forgot'].invalid" class="text-red-500 text-sm">
+          <span *ngIf="f['password_confirmation_forgot'].errors?.['required']">Please confirm your password</span>
+        </div>
+        <div *ngIf="forgotForm.errors?.['passwordMismatch'] && (f['password_confirmation_forgot'].touched || f['password_forgot'].touched)" class="text-red-500 text-sm">
+          <span>Passwords do not match</span>
+        </div>
       </div>
       <div class="mb-6">
         <button class="w-full bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">

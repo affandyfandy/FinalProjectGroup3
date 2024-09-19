@@ -1,1 +1,58 @@
-<p>room-list works!</p>
+<div *ngIf="isAdmin" class="container mx-auto px-4 py-8">
+    <div class="mb-5">
+        <h1 class="text-2xl font-bold text-primary mb-2">Manage Room</h1>
+        <p class="text-sm text-gray-600">Manage your hotel rooms</p>
+    </div>
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <!-- Use *ngFor for dynamic table headers -->
+            <th *ngFor="let header of ['No', 'Room Number', 'Room Type', 'Price', 'Last Updated', 'Updated By', 'Status', '']" 
+                class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
+              {{ header }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <!-- Use *ngFor to iterate over rooms data -->
+          <tr *ngFor="let room of rooms; let i = index" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ room.roomNumber }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.roomType }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ 2024 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ 2020 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                <div class="flex items-center">
+                    <!-- Checkbox to represent the Switch -->
+                    <input type="checkbox" [checked]="room.status === 'ACTIVE'" (change)="toggleItemStatus(room)" />
+                    
+                    <!-- Conditional styling based on room status -->
+                    <span 
+                      class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-green-100 text-green-800': room.status === 'ACTIVE',
+                        'bg-red-100 text-red-800': room.status !== 'ACTIVE'
+                      }">
+                      {{ room.status }}
+                    </span>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button (click)="toggleOptions($event, room)" class="text-gray-400 hover:text-gray-500">
+                  <ng-icon name="heroEllipsisVertical" class="h-5 w-5"></ng-icon>
+                </button>
+                <div *ngIf="selectedRoom === room && showOptions" class="absolute bg-white border border-gray-300 shadow-lg rounded-lg mt-2">
+                  <ul class="list-none p-2 m-0">
+                    <li (click)="editRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
+                    <li (click)="viewRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">View</li>
+                  </ul>
+                </div>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+  
