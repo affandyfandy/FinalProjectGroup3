@@ -54,6 +54,8 @@ export class AuthService {
         if (response && response.token) {
           this.storeTokenInCookie(response.token);
           this.router.navigate(['/']);
+
+          window.location.reload();
         }
       }
     );
