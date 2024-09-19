@@ -50,7 +50,7 @@ export class RegisterComponent {
         phone: this.registerForm.value.phone,
         address: this.registerForm.value.address,
         dateOfBirth: this.registerForm.value.dateOfBirth,
-        photo: 'https://ui-avatars.com/api/?name=' + this.registerForm.value.fullName
+        photo: 'https://ui-avatars.com/api/?name=' + this.registerForm.value.fullName,
       };
       this.authService.register(newUser);
     } else {

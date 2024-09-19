@@ -11,11 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,12 +58,17 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody UserDto userDto) {
         log.info("User registered successfully: {}", userDto);
         UserDto registeredUser = authService.registerUser(userDto);
+
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(registeredUser.getRole()));
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 registeredUser.getEmail(),
-                registeredUser.getPassword()
+                registeredUser.getPassword(),
+                authorities  // Set the authorities (roles) here
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         log.info("Token request for registered user: {}", authentication.getAuthorities());
         String token = authService.generateToken(authentication);
         AuthDto.Response response = new AuthDto.Response("User logged in successfully", token);
