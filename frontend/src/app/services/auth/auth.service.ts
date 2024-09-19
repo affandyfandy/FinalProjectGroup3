@@ -20,8 +20,7 @@ export class AuthService {
   constructor(
     private http: HttpClient, 
     private router: Router, 
-    private cookieService: CookieService, 
-    private userService: UserService
+    private cookieService: CookieService
   ) { }
 
   login(username: string, password: string, remember: boolean): Observable<any> {

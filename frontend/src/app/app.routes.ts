@@ -9,5 +9,11 @@ export const routes: Routes = [
         loadChildren: () =>
             import('./pages/auth/auth.routes')
                 .then(m => m.AuthRoutes)
+    },
+    {
+        path: RouterConfig.USER.path,
+        loadChildren: () =>
+            import('./pages/user/user.routes')
+                .then(m => m.UserRoutes)
     }
 ];
