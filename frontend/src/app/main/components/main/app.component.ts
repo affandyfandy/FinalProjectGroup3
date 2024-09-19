@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     initFlowbite();
   }
 
-  isLoginPage(): boolean {
-    return this.router.url === '/auth/login';
+  isAuthPage(): boolean {
+    return this.router.url.includes('auth');
   }
 }

@@ -26,11 +26,16 @@ import { User } from '../../../model/user.model';
 export class HeaderComponent implements OnInit {
   email: string = '';
   fullName: string = '';
+  photo: string = 'https://ui-avatars.com/api/?name=User';
   
   constructor(private authService: AuthService, private router: Router, private userService: UserService) {  }
 
   isLoggedIn() {
     return this.authService.checkCredentials();
+  }
+
+  isAdmin() {
+    return this.authService.isAdmin();
   }
 
   ngOnInit() {
@@ -39,6 +44,9 @@ export class HeaderComponent implements OnInit {
       this.userService.getUserById(userPayload[1].value).subscribe((user: User) => {
         this.email = user.email;
         this.fullName = user.fullName;
+        if (user.photo) {
+          this.photo = user.photo;
+        }
       });
     }
 
