@@ -41,7 +41,7 @@ public class RoomController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getRoomDetails(@PathVariable UUID id){
-        Room room = roomService.findById(id).get() != null ? roomService.findById(id).get() : null;
+        Room room = roomService.findById(id) != null ? roomService.findById(id).get() : null;
         ReadRoomDto roomDto = roomMapper.toDto(room);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }   
