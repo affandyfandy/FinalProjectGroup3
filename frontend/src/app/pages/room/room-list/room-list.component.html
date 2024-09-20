@@ -5,7 +5,8 @@
       <p class="text-sm text-gray-600">Manage your hotel's room</p>
     </div>
     <div class="flex space-x-2">
-      <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+      <button (click)="createRoom()" 
+        class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
         Add New Room
       </button>
       <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
@@ -34,9 +35,9 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ room.roomNumber }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.roomType }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ 2024 }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ 2020 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price | currency:'IDR':'symbol':'1.0-0' }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">2024-09-20</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">admin</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                 <div class="flex items-center">
                     <!-- Checkbox to represent the Switch -->
@@ -95,7 +96,7 @@
           <div class="flex flex-col justify-start space-y-1">
             <h3 class="text-lg font-semibold">{{ room.roomType }} ROOM</h3>
             <p class="text-sm text-gray-600 flex items-center">
-              <ng-icon name="heroUser" class="h-5 w-5"></ng-icon>
+              <ng-icon name="heroUserSolid" class="h-5 w-5"></ng-icon>
               {{ room.capacity }} Guests
             </p>
           </div>

@@ -16,11 +16,12 @@ import lombok.Setter;
 @Setter
 public class ReadRoomDto {
     private UUID id;
+    private String roomNumber;
     private String roomType;
     private Integer capacity;
     private String status;
     private BigDecimal price;
-    private UUID hotelId;
+    // private UUID hotelId;
     private String photo;
     private String facility;
     private String token;

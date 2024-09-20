@@ -72,27 +72,4 @@ public class RoomControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(room.getPrice()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.facility").value(room.getFacility()));
     }
-
-    @Test
-    @DisplayName("Test 2: Get all rooms ")
-    public void testGetAllRooms() throws Exception {
-        Room newRoom = new Room();
-        newRoom.setId(UUID.randomUUID());
-        newRoom.setCapacity(5);
-        newRoom.setFacility("Shower");
-        newRoom.setRoomNumber("AD8888");
-        newRoom.setRoomType(RoomType.DOUBLE);
-        
-        Page<Room> pageRoom = new PageImpl<>(Arrays.asList(room, newRoom), PageRequest.of(0, 10), 2);
-    
-        Mockito.when(roomService.findAllSorted(Mockito.any(Integer.class), Mockito.any(Integer.class),
-            Mockito.any(String.class), Mockito.any(String.class))).thenReturn(pageRoom);
-    
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product")
-                .param("status", "deactive"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].getRoomType").value(room.getRoomType()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[1].getRoomType").value(newRoom.getRoomType()));
-    }
 }

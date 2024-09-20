@@ -6,8 +6,9 @@ import { Room, RoomResponse } from '../../../model/room.model';
 import { RoomService } from '../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/outline';
-import { heroAdjustmentsHorizontalSolid, heroStarSolid } from '@ng-icons/heroicons/solid';
+import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
 import { AuthService } from '../../../services/auth/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { AuthService } from '../../../services/auth/auth.service';
   ],
   templateUrl: './room-list.component.html',
   providers: [
-    provideIcons({ heroEllipsisVertical, heroUser, heroStarSolid, heroAdjustmentsHorizontalSolid})
+    provideIcons({ heroEllipsisVertical, heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid})
   ]
 })
 export class RoomListComponent implements OnInit{
@@ -42,7 +43,8 @@ export class RoomListComponent implements OnInit{
 
   constructor(
     private roomService: RoomService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -123,6 +125,10 @@ export class RoomListComponent implements OnInit{
     event.stopPropagation(); // Prevent event from propagating to parent elements
     this.selectedRoom = this.selectedRoom === room ? null : room;
     this.showOptions = this.selectedRoom === room ? !this.showOptions : true;
+  }
+
+  createRoom() {
+    this.router.navigate(['/rooms/create']);
   }
 
   editRoom(room: any) {
