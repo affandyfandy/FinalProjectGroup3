@@ -51,8 +51,8 @@ public class Room {
     @Column
     private BigDecimal price;
 
-    @Column
-    private UUID hotelId;
+    // @Column
+    // private UUID hotelId;
 
     @Column
     private String photo;

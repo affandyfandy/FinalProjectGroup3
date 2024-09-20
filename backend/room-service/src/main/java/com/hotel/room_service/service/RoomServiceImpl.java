@@ -146,4 +146,19 @@ public class RoomServiceImpl implements RoomService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         return roomRepository.findAllActiveRooms(pageable);
     }
+
+    @Override
+    public Room updateRoom(UUID id, Room room){
+        Room findRoom = findById(id);
+        if (findRoom != null){
+            findRoom.setCapacity(room.getCapacity());
+            findRoom.setFacility(room.getFacility());
+            findRoom.setPrice(room.getPrice());
+            findRoom.setRoomNumber(room.getRoomNumber());
+            findRoom.setRoomType(room.getRoomType());
+            findRoom.setPhoto(room.getPhoto());
+            roomRepository.save(findRoom);
+        }
+        return findRoom;
+    }
 }

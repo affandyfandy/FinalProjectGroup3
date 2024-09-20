@@ -8,6 +8,10 @@ export interface Room {
     hotelId: string
     photo: string
     facility: string
+    createdBy?: string
+    createdDate?: string
+    lastModifiedBy?: string
+    lastModifiedDate?: string
 }
 
 export interface RoomResponse{
@@ -37,4 +41,15 @@ export interface RoomResponse{
     unpaged: boolean;
   };
   empty: boolean;
+}
+
+export enum RoomType {
+  SINGLE = 'SINGLE',
+  DOUBLE = 'DOUBLE',
+  SUITE = 'SUITE'
+}
+
+export enum Status {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
 }

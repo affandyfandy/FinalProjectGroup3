@@ -112,4 +112,12 @@ public class RoomController {
         Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
     }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> editRoomDetails(@RequestBody CreateRoomDto dto, @PathVariable("id") UUID id){
+        Room updateRoom = roomService.updateRoom(id, roomMapper.toEntity(dto));
+        ReadRoomDto readRoomDto = roomMapper.toDto(updateRoom);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(readRoomDto);
+    }
+
 }
