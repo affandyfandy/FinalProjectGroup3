@@ -15,5 +15,9 @@ export const routes: Routes = [
         loadChildren: () =>
             import('./pages/user/user.routes')
                 .then(m => m.UserRoutes)
+    },
+    {
+        path: RouterConfig.PROFILE.path,
+        loadComponent: () => import('./pages/user/profile/profile.component').then(m => m.ProfileComponent)
     }
 ];
