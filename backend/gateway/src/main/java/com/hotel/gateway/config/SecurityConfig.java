@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -37,6 +38,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/api/v1/auth/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
+                        .pathMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .anyExchange().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(request -> {

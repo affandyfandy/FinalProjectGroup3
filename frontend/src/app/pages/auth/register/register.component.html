@@ -47,7 +47,7 @@
         <input type="text" id="phone" formControlName="phone" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Phone Number">
         <div *ngIf="f['phone'].touched && f['phone'].invalid" class="text-red-500 text-sm">
           <span *ngIf="f['phone'].errors?.['required']">Phone number should not be blank</span>
-          <span *ngIf="f['phone'].errors?.['pattern']">Phone number should be valid</span>
+          <span *ngIf="f['phone'].errors?.['pattern']">Phone number should be valid Indonesian format (+62)</span>
         </div>
       </div>
       <div class="mb-4">

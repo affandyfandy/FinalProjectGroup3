@@ -1,12 +1,13 @@
 package com.hotel.auth_service.service.impl;
 
+import com.hotel.auth_service.dto.RequestNewPasswordDto;
 import com.hotel.auth_service.dto.UserDto;
-import com.hotel.auth_service.repository.UserRepository;
 import com.hotel.auth_service.service.AuthService;
 import com.hotel.auth_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,11 +23,13 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtEncoder jwtEncoder;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthServiceImpl(JwtEncoder jwtEncoder, UserService userService) {
+    public AuthServiceImpl(JwtEncoder jwtEncoder, UserService userService, PasswordEncoder passwordEncoder) {
         this.jwtEncoder = jwtEncoder;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -54,7 +57,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void forgotPassword(String email, String newPassword) {
-        userService.changeUserPassword(email, newPassword);
+    public UserDto forgotPassword(RequestNewPasswordDto requestNewPasswordDto) {
+        Optional<UserDto> user = userService.changeUserPassword(requestNewPasswordDto.getEmail(), requestNewPasswordDto.getNewPassword());
+
+        return user.orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }

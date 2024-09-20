@@ -1,9 +1,9 @@
 package com.hotel.auth_service.controller;
 
 import com.hotel.auth_service.dto.AuthDto;
+import com.hotel.auth_service.dto.RequestNewPasswordDto;
 import com.hotel.auth_service.dto.UserDto;
-import com.hotel.auth_service.entity.AuthUser;
-import com.hotel.auth_service.service.impl.AuthServiceImpl;
+import com.hotel.auth_service.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +28,12 @@ public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-    private final AuthServiceImpl authService;
+    private final AuthService authService;
 
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(AuthServiceImpl authService, AuthenticationManager authenticationManager) {
+    public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
         this.authService = authService;
         this.authenticationManager = authenticationManager;
     }
@@ -75,9 +75,9 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}/forgot-password")
-    public ResponseEntity<?> forgotPassword(@PathVariable("id") String id, @RequestBody String password) {
-        authService.forgotPassword(id, password);
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> resetPassword(@RequestBody RequestNewPasswordDto requestNewPasswordDto) {
+        UserDto user = authService.forgotPassword(requestNewPasswordDto);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Password changed successfully");
         return ResponseEntity.ok(response);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -39,6 +39,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadUserData();
+  }
+
+  loadUserData() {
     if (this.isLoggedIn()) {
       let userPayload = this.authService.getUserInformation();
       this.userService.getUserById(userPayload[1].value).subscribe((user: User) => {
