@@ -7,7 +7,6 @@ import com.hotel.auth_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -23,13 +22,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtEncoder jwtEncoder;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthServiceImpl(JwtEncoder jwtEncoder, UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(JwtEncoder jwtEncoder, UserService userService) {
         this.jwtEncoder = jwtEncoder;
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

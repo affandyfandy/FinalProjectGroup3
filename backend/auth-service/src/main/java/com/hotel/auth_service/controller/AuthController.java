@@ -77,7 +77,7 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> resetPassword(@RequestBody RequestNewPasswordDto requestNewPasswordDto) {
-        UserDto user = authService.forgotPassword(requestNewPasswordDto);
+        authService.forgotPassword(requestNewPasswordDto);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Password changed successfully");
         return ResponseEntity.ok(response);
