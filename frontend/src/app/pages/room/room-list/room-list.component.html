@@ -1,0 +1,110 @@
+<div *ngIf="isAdmin" class="container mx-auto px-4 py-8">
+  <div class="mb-5 flex justify-between items-end">
+    <div>
+      <h1 class="text-2xl font-bold text-primary mb-2">Manage Room</h1>
+      <p class="text-sm text-gray-600">Manage your hotel's room</p>
+    </div>
+    <div class="flex space-x-2">
+      <button (click)="createRoom()" 
+        class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        Add New Room
+      </button>
+      <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        Export Data
+      </button>
+      <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        <span class="sr-only">Toggle Filters</span>
+          <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
+      </button>
+    </div>
+  </div>
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <!-- Use *ngFor for dynamic table headers -->
+            <th *ngFor="let header of ['No', 'Room Number', 'Room Type', 'Price', 'Last Modified Date', 'Last Modified By', 'Status', '']" 
+                class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
+              {{ header }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <!-- Use *ngFor to iterate over rooms data -->
+          <tr *ngFor="let room of rooms; let i = index" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ room.roomNumber }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.roomType }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price | currency:'IDR':'symbol':'1.0-0' }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">2024-09-20</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">admin</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                <div class="flex items-center">
+                    <!-- Checkbox to represent the Switch -->
+                    <input type="checkbox" [checked]="room.status === 'ACTIVE'" (change)="toggleItemStatus(room)" />
+                    
+                    <!-- Conditional styling based on room status -->
+                    <span 
+                      class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-green-100 text-green-800': room.status === 'ACTIVE',
+                        'bg-red-100 text-red-800': room.status !== 'ACTIVE'
+                      }">
+                      {{ room.status }}
+                    </span>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button (click)="toggleOptions($event, room)" class="text-gray-400 hover:text-gray-500">
+                  <ng-icon name="heroEllipsisVertical" class="h-5 w-5"></ng-icon>
+                </button>
+                <div *ngIf="selectedRoom === room && showOptions" class="absolute bg-white border border-gray-300 shadow-lg rounded-lg mt-2">
+                  <ul class="list-none p-2 m-0">
+                    <li (click)="editRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
+                    <li (click)="viewRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Detail</li>
+                  </ul>
+                </div>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div><div *ngIf="!isAdmin" class="container mx-auto px-4 py-8">
+  <div class="mb-5">
+    <h1 class="text-2xl font-bold text-primary mb-2">Explore Our Rooms</h1>
+    <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let room of rooms" class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="relative">
+        <div class="bg-gray-200 h-48 w-full"></div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-medium text-gray-600">{{ room.price | currency:'IDR':'symbol':'1.0-0' }}</span>
+          <div class="flex items-center">
+            <!-- Star Rating -->
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let index = index">
+              <ng-icon name="heroStarSolid" class="h-5 w-5 text-yellow-500"></ng-icon>
+            </ng-container>
+          </div>
+        </div>
+        
+        <!-- Room Type and Capacity with Choose Button -->
+        <div class="flex items-start justify-between">
+          <div class="flex flex-col justify-start space-y-1">
+            <h3 class="text-lg font-semibold">{{ room.roomType }} ROOM</h3>
+            <p class="text-sm text-gray-600 flex items-center">
+              <ng-icon name="heroUserSolid" class="h-5 w-5"></ng-icon>
+              {{ room.capacity }} Guests
+            </p>
+          </div>
+          <button class="bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+            Book
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

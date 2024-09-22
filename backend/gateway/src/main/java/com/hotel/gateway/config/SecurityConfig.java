@@ -37,10 +37,12 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/v1/auth/**").permitAll()
+                        .pathMatchers("/api/v1/auth/**").permitAll(
                         .pathMatchers(HttpMethod.GET, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .pathMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .pathMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .pathMatchers("/api/v1/room/**").permitAll()
+                        // .pathMatchers("/api/v1/room/edit/**").hasAuthority()
                         .anyExchange().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(request -> {
