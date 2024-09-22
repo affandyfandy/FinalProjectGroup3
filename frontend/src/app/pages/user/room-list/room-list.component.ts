@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RoomFormComponent } from '../../admin/room-form/room-form.component';
-import { Room, RoomResponse } from '../../../../model/room.model';
-import { RoomService } from '../../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/outline';
 import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
-import { AuthService } from '../../../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { RoomFormComponent } from '../room-form/room-form.component';
+import { Room, RoomResponse } from '../../../model/room.model';
+import { RoomService } from '../../../services/room.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 
 @Component({
