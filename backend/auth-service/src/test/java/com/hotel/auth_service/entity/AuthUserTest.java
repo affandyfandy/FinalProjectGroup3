@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AuthUserTest {
+class AuthUserTest {
     private User mockUser;
     private AuthUser authUser;
 
