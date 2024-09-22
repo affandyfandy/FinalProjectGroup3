@@ -46,7 +46,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }   
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createNewRoom(@RequestBody CreateRoomDto newRoom){
         Room room = roomMapper.toEntity(newRoom);
         ReadRoomDto roomDto = roomMapper.toDto(roomService.create(room));

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RoomFormComponent } from '../room-form/room-form.component';
-import { Room, RoomResponse } from '../../../model/room.model';
-import { RoomService } from '../../../services/room.service';
+import { RoomFormComponent } from '../../admin/room-form/room-form.component';
+import { Room, RoomResponse } from '../../../../model/room.model';
+import { RoomService } from '../../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/outline';
 import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
-import { AuthService } from '../../../services/auth/auth.service';
+import { AuthService } from '../../../../services/auth/auth.service';
 import { Router } from '@angular/router';
 
 
@@ -53,38 +53,20 @@ export class RoomListComponent implements OnInit{
   }
 
   loadRooms(currentPage: number) {
-    if (this.isAdmin){
-      this.roomService.getAllRooms(currentPage-1, this.pageSize).subscribe({
-        next: (response: RoomResponse) => {
-          console.log("Full response:", response);
-          this.rooms = response.content;
-          this.totalElements = response.totalElements;
-          this.totalPages = response.totalPages;
-          this.currentPage = currentPage;
-        },
-        error: (err) => {
-          this.error = 'Nothing to see..';
-          console.error(err);
-          // this.toastService.showToast('Failed to load products', 'error');
-        }
-      });
-    }
-    else{
-      this.roomService.getAllActiveRooms(currentPage-1, this.pageSize).subscribe({
-        next: (response: RoomResponse) => {
-          console.log("Full response:", response);
-          this.rooms = response.content;
-          this.totalElements = response.totalElements;
-          this.totalPages = response.totalPages;
-          this.currentPage = currentPage;
-        },
-        error: (err) => {
-          this.error = 'Nothing to see..';
-          console.error(err);
-          // this.toastService.showToast('Failed to load products', 'error');
-        }
-      });
-    }
+    this.roomService.getAllActiveRooms(currentPage-1, this.pageSize).subscribe({
+      next: (response: RoomResponse) => {
+        console.log("Full response:", response);
+        this.rooms = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.currentPage = currentPage;
+      },
+      error: (err) => {
+        this.error = 'Nothing to see..';
+        console.error(err);
+        // this.toastService.showToast('Failed to load products', 'error');
+      }
+    });
   }
 
   changePage(page: number): void {
