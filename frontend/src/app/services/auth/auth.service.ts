@@ -60,11 +60,11 @@ export class AuthService {
     );
   }
 
-  forgotPassword(email: string, password: string): Observable<any> {
+  forgotPassword(email: string, newPassword: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const body = { password };
+    const body = { email, newPassword };
 
-    return this.http.put(`${this.authApiUrl}/${email}/forgot-password`, body, { headers }).pipe(
+    return this.http.post(`${this.authApiUrl}/forgot-password`, body, { headers }).pipe(
       tap(() => {
         window.location.reload();
       })

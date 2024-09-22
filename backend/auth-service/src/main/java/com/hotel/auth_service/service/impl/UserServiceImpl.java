@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {
             User user = userMapper.toUserEntity(userDto);
+            user.setEmail(existingUser.get().getEmail());
             user = userRepository.save(user);
             return Optional.of(userMapper.toUserDto(user));
         } else {

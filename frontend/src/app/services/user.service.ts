@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppConstants } from '../config/app.constants';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { User } from '../model/user.model';
 import { Page } from '../model/page.model';
 import { AuthService } from './auth/auth.service';
@@ -62,5 +62,14 @@ export class UserService {
       'Logged-User': this.authService.getUserInformation()[1].value
     });
     return this.htpp.delete<User>(`${this.authApiUrl}/${id}`, { headers });
+  }
+
+  getLoggedUser(): Observable<User | null> {
+    if (this.authService.checkCredentials()) {
+      let userPayload = this.authService.getUserInformation();
+      return this.getUserById(userPayload[1].value);
+    }
+
+    return of(null);
   }
 }

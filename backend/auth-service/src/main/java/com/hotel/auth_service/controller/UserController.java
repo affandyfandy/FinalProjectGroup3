@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserDto>> getAllUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                     @RequestParam(value = "size", defaultValue = "10") int size) {
+                                                        @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserDto> userDtos = userService.getAllUsers(pageable);
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
