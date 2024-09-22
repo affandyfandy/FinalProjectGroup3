@@ -68,4 +68,61 @@ export class RoomListComponent {
       }
     });
   }
+
+  toggleItemStatus(room: Room): void {
+    if (room.status === 'ACTIVE') {
+      this.roomService.deactivateRoom(room.id).subscribe(
+        (updatedRoom: Room) => {
+          console.log('Room deactivated successfully:', updatedRoom);
+          room.status === 'INACTIVE';
+          // this.toastService.showToast('Product deactivated successfully!', 'success');
+        },
+        (error: any) => {
+          console.error('Error deactivating room:', error);
+          // this.toastService.showToast('Error deactivating product.', 'error');
+        }
+      );
+    } else {
+      this.roomService.activateRoom(room.id).subscribe(
+        (updatedRoom: Room) => {
+          console.log('Product activated successfully:', updatedRoom);
+          room.status === 'ACTIVE';
+          // this.toastService.showToast('Product activated successfully!', 'success');
+        },
+        (error: any) => {
+          console.error('Error activating product:', error);
+          // this.toastService.showToast('Error deactivating product.', 'error');
+        }
+      );
+    }
+  }
+
+
+  toggleOptions(event: Event, room: any) {
+    event.stopPropagation(); // Prevent event from propagating to parent elements
+    this.selectedRoom = this.selectedRoom === room ? null : room;
+    this.showOptions = this.selectedRoom === room ? !this.showOptions : true;
+  }
+
+  createRoom() {
+    this.router.navigate(['/rooms/create']);
+  }
+
+  editRoom(room: any) {
+    // Implement the edit functionality
+    console.log('Edit room', room);
+    this.showOptions = false; // Hide options after selection
+  }
+
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.loadRooms(this.currentPage);
+    // this.toastService.showToast('Changed page', 'success');
+  }
+
+  viewRoom(room: any) {
+    // Implement the view functionality
+    console.log('View room', room);
+    this.showOptions = false; // Hide options after selection
+  }
 }
