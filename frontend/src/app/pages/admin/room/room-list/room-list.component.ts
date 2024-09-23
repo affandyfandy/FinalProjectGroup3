@@ -25,7 +25,6 @@ import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@n
   ]
 })
 export class RoomListComponent {
-
   rooms: Room[] = [];
   totalElements: number = 0;
   totalPages: number = 0;
@@ -39,7 +38,7 @@ export class RoomListComponent {
   selectedRoom: Room | null = null;
   showOptions: boolean = false;
   isModalVisible: boolean = false;
-  action: string = 'add';
+  // action: 'detail' | 'add' | 'edit' = 'add';
 
   constructor(
     private roomService: RoomService,
@@ -49,7 +48,7 @@ export class RoomListComponent {
 
   ngOnInit(): void {
     // this.isAdmin = this.authService.isAdmin();
-    // this.loadRooms(this.currentPage);
+    this.loadRooms(this.currentPage);
   }
 
   loadRooms(currentPage: number) {
@@ -74,7 +73,7 @@ export class RoomListComponent {
       this.roomService.deactivateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
           console.log('Room deactivated successfully:', updatedRoom);
-          room.status === 'INACTIVE';
+          room.status = 'INACTIVE';
           // this.toastService.showToast('Product deactivated successfully!', 'success');
         },
         (error: any) => {
@@ -86,7 +85,7 @@ export class RoomListComponent {
       this.roomService.activateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
           console.log('Product activated successfully:', updatedRoom);
-          room.status === 'ACTIVE';
+          room.status = 'ACTIVE';
           // this.toastService.showToast('Product activated successfully!', 'success');
         },
         (error: any) => {
@@ -104,25 +103,25 @@ export class RoomListComponent {
     this.showOptions = this.selectedRoom === room ? !this.showOptions : true;
   }
 
-  createRoom() {
-    this.router.navigate(['/rooms/create']);
-  }
-
-  editRoom(room: any) {
-    // Implement the edit functionality
-    console.log('Edit room', room);
-    this.showOptions = false; // Hide options after selection
-  }
-
   changePage(page: number): void {
     this.currentPage = page;
     this.loadRooms(this.currentPage);
     // this.toastService.showToast('Changed page', 'success');
   }
+  
+  createRoom() {
+    this.router.navigate(['/admin/rooms/create']);
+  }
 
-  viewRoom(room: any) {
-    // Implement the view functionality
+  editRoom(room: Room) {
+    console.log('Edit room', room);
+    this.selectedRoom = room;
+    this.router.navigate(['/admin/rooms', this.selectedRoom.id, 'edit']);
+  }
+
+  viewRoom(room: Room) {
     console.log('View room', room);
-    this.showOptions = false; // Hide options after selection
+    this.selectedRoom = room;
+    this.router.navigate(['/admin/rooms', this.selectedRoom?.id, 'view']);
   }
 }

@@ -10,7 +10,11 @@ export const RoomRoutes: Routes = [
         loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
     },
     {
-        path: 'edit/:id',
+        path: ':id/edit',
+        loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
+    },
+    {
+        path: ':id/view',
         loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
     }
 ];

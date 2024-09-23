@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Room, RoomType, Status } from '../../../../model/room.model';
+import { Facility, Room, RoomType, Status } from '../../../../model/room.model';
 import { RoomService } from '../../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-room-form',
@@ -12,11 +13,12 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgIconComponent
+    NgIconComponent,
+    RouterModule
   ],
   templateUrl: './room-form.component.html',
   providers: [
-    provideIcons({ heroChevronLeft})
+    provideIcons({ heroChevronLeft })
   ]
 })
 export class RoomFormComponent implements OnInit {
@@ -25,11 +27,17 @@ export class RoomFormComponent implements OnInit {
   @Output() save = new EventEmitter<Room>();
   @Output() cancel = new EventEmitter<void>();
 
+  roomId?: string | null = null;
   roomTypes = Object.values(RoomType); 
   selectedRoomType: RoomType = RoomType.SINGLE; 
-  
   roomStatus = Object.values(Status); 
   selectedRoomStatus: Status = Status.ACTIVE; 
+  roomFacility = Object.values(Facility);
+
+  selectedFacilities: { [key: string]: boolean } = this.roomFacility.reduce((acc, facility) => {
+    acc[facility] = false;
+    return acc;
+  }, {} as { [key: string]: boolean });
 
   roomForm: FormGroup;
   isVisible = true;
@@ -39,50 +47,119 @@ export class RoomFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private roomService: RoomService) {
+    private roomService: RoomService,
+    private route: ActivatedRoute,
+    private router: Router) {
     this.roomForm = this.fb.group({
-      roomType: ['', Validators.required],
-      roomNumber: ['', [Validators.required, Validators.min(0)]],
-      capacity: ['', [Validators.required, Validators.min(0)]],
-      status: ['', [Validators.required, Validators.min(0)]],
-      price: ['', [Validators.required, Validators.min(0)]],
-      photo: ['', [Validators.required, Validators.min(0)]],
-      facility: ['', [Validators.required, Validators.min(0)]]
+      roomType: [''],
+      roomNumber: [''],
+      capacity: [''],
+      status: [''],
+      price: [''],
+      photo: [''],
+      facility: [[]]
     });
   }
   
   ngOnInit(): void {
-    if (this.room) {
-      this.roomForm.patchValue({
-        roomType: this.room.roomType,
-        roomNumber: this.room.roomNumber,
-        capacity: this.room.capacity,
-        status: this.room.status,
-        price: this.room.price,
-        photo: this.room.photo,
-        facility: this.room.facility
+    console.log(this.route.snapshot.url);
+    const currentRoute = this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path;
+    console.log(currentRoute);
+    this.action = currentRoute === 'edit' ? 'Edit Room' : (currentRoute === 'create' ? 'Add New Room' : 'Room Details');
+    this.roomId = this.route.snapshot.paramMap.get('id');
+    this.loadRoom();
+  }
+
+  loadRoom(): void {
+    if (this.roomId) {
+      this.roomService.getRoomById(this.roomId).subscribe({
+        next: (room: Room) => {
+          this.room = room;
+          this.roomForm.patchValue({
+            roomType: this.room.roomType,
+            roomNumber: this.room.roomNumber,
+            capacity: this.room.capacity,
+            status: this.room.status,
+            price: this.room.price,
+            photo: this.room.photo,
+          });
+          this.updateSelectedFacilities();
+        },
+        error: (err) => {
+          console.error('Error fetching room:', err);
+        }
+      });
+    }
+  }
+
+  updateSelectedFacilities(): void {
+    if (this.room?.facility) {
+      this.roomFacility.forEach((facility) => {
+        this.selectedFacilities[facility] = this.room?.facility.includes(facility) || false;
+      });
+    } else {
+      // Ensure all facilities are set to false if room is null or undefined
+      this.roomFacility.forEach((facility) => {
+        this.selectedFacilities[facility] = false;
       });
     }
   }
 
   onSubmit(): void {
     if (this.roomForm.valid) {
-      const roomData = this.roomForm.value;
-      if (this.room) {
-        roomData.id = this.room.id;
-      }
+      const roomData = {
+        ...this.roomForm.value,
+        facility: this.getSelectedFacilities()
+      };
 
-      this.save.emit(roomData);
-      this.onClose();
+      console.log(roomData);
+      if (this.action === 'Edit Room' && this.roomId) {
+        this.roomService.editRoomData(this.roomId, roomData).subscribe({
+          next: (updatedRoom) => {
+            console.log('Room updated successfully:', updatedRoom);
+            this.save.emit(updatedRoom);
+          },
+          error: (err) => {
+            console.error('Error updating room:', err);
+          }
+        });
+      } else if (this.action === 'Add New Room') {
+        this.roomService.createRoom(roomData).subscribe({
+          next: (createdRoom) => {
+            console.log('Room created successfully:', createdRoom);
+            this.save.emit(createdRoom);
+          },
+          error: (err) => {
+            console.error('Error creating room:', err);
+          }
+        });
+      }
     }
   }
 
+  getSelectedFacilities(): string[] {
+    return Object.keys(this.selectedFacilities).filter((key) => this.selectedFacilities[key]);
+  }
+
   onClose(): void {
-    this.isVisible = false;
+    this.router.navigate(['/admin/rooms']);
     this.cancel.emit();
   }
 
-  onRoomTypeChange(type: RoomType) {
-    this.selectedRoomType = type;
+  onFacilityChange(facility: Facility, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const checked = input.checked;
+    const facilities = this.roomForm.get('facility')?.value as Facility[];
+    console.log(facilities);
+  
+    if (checked) {
+      this.roomForm.patchValue({
+        facility: [...facilities, facility]
+      });
+    } else {
+      this.roomForm.patchValue({
+        facility: facilities.filter(f => f !== facility)
+      });
+    }
   }
 }

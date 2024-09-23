@@ -80,7 +80,7 @@ export class RoomListComponent implements OnInit{
   }
 
   bookRoom(id: string) {
-    this.router.navigate(['/book', id]);
+    this.router.navigate(['/reservation', id]);
   }
 
 }

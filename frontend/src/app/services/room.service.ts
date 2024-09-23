@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { AppConstants } from "../config/app.constants";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Room, RoomResponse } from "../model/room.model";
+import { AuthService } from "./auth/auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class RoomService {
 
     private baseUrl = `${AppConstants.BASE_API_V1_URL}/room`;
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private authService: AuthService){}
 
     getAllRooms(
         pageNo: number,
@@ -38,12 +39,31 @@ export class RoomService {
     }
 
     activateRoom(id: string): Observable<Room> {
-        return this.http.post<Room>(`${this.baseUrl}/${id}/activate`, {});
+        const headers = new HttpHeaders({
+            'Logged-User': this.authService.getUserInformation()[1].value
+        });
+        return this.http.put<Room>(`${this.baseUrl}/${id}/activate`, {});
     }
 
     deactivateRoom(id: string): Observable<Room> {
-        return this.http.post<Room>(`${this.baseUrl}/${id}/deactivate`, {});
+        const headers = new HttpHeaders({
+            'Logged-User': this.authService.getUserInformation()[1].value
+        });
+        return this.http.put<Room>(`${this.baseUrl}/${id}/deactivate`, {});
     }
 
-    // when create new room, the updatedby will be assigned
+    editRoomData(id: string, roomData: Room): Observable<Room>{
+        const headers = new HttpHeaders({
+            'Logged-User': this.authService.getUserInformation()[1].value
+        });
+        return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData);
+    }
+
+    createRoom(roomData: Room): Observable<Room>{
+        const headers = new HttpHeaders({
+            'Logged-User': this.authService.getUserInformation()[1].value
+        });
+        return this.http.post<Room>(`${this.baseUrl}/create`, roomData);
+    }
+    
 }
