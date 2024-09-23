@@ -1,15 +1,14 @@
 export interface RouteLink {
-    path: string;
-    link: string;
-  }
-  
-  export const RouterConfig = {
-    HOME: {path: '', link: '/'},
-    AUTH: {path: 'auth', link: '/auth', title: 'Auth Page'},
-    PROFILE: {path: 'profile', link: '/profile', title: 'Profile Page'},
-    USER: {path: 'users', link: '/user', title: 'User Page'},
-    CUSTOMER: {path: 'customers', link: '/customer', title: 'Customer Page'},
-    ROOM: {path: 'rooms', link: '/room', title: 'Room Page'},
-    BOOKING: {path: 'bookings', link: '/booking', title: 'Booking Page'},
-    NOT_FOUND: {path: '**', link: null, title: 'Page Not Found'}
-  };
+  path: string;
+  link: string;
+}
+
+export const RouterConfig = {
+  CUSTOMER: { path: '', link: '/', title: 'Customer Page' },
+  AUTH: { path: 'auth', link: '/auth', title: 'Auth Page' },
+  ADMIN: { path: 'admin', link: '/admin', title: 'Admin Page' },
+  ROOM: { path: 'rooms', link: '/rooms', title: 'Room Page' },
+  USER: { path: 'users', link: '/users', title: 'User Page' },
+  UNAUTHORIZED: { path: 'unauthorized', link: '/unauthorized', title: 'Unauthorized Page' },
+  NOT_FOUND: { path: '**', link: null, title: 'Page Not Found' }
+};

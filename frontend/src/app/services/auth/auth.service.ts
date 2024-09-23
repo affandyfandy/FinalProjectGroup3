@@ -53,8 +53,6 @@ export class AuthService {
         if (response && response.token) {
           this.storeTokenInCookie(response.token);
           this.router.navigate(['/']);
-
-          window.location.reload();
         }
       }
     );
@@ -99,7 +97,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.cookieService.delete(this.tokenName);
+    this.cookieService.delete(this.tokenName, '/');
     sessionStorage.removeItem(this.tokenName);
     this.router.navigate(['/']);
   }

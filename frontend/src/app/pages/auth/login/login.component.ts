@@ -52,8 +52,12 @@ export class LoginComponent {
     console.log('Logging in with email', this.email);
     this.authSubscription = this.authService.login(this.email, this.password, this.remember).subscribe(
       (success) => {
-        console.log('Logged in successfully', success);
-        this.router.navigate(['/']);
+        if (this.authService.isAdmin()){
+          this.router.navigate(['/admin'])
+        }
+        else {
+          this.router.navigate(['/']);
+        }
       },
       (error) => {
         console.error('Error logging in', error);

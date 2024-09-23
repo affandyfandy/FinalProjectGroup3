@@ -18,7 +18,6 @@ import { User } from '../../../model/user.model';
     CommonModule
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
   providers: [
     provideIcons({ heroChevronDown})
   ]
@@ -32,10 +31,12 @@ export class HeaderComponent implements OnInit {
 
   isLoggedIn() {
     return this.authService.checkCredentials();
+    // return true;
   }
 
   isAdmin() {
     return this.authService.isAdmin();
+    // return true;
   }
 
   ngOnInit() {
@@ -58,7 +59,9 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
+    console.log('logout');
     this.authService.logout();
+    console.log('isLoggedIn', this.isLoggedIn());
   }
 
 }
