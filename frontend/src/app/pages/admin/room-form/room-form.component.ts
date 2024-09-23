@@ -22,7 +22,6 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   ]
 })
 export class RoomFormComponent implements OnInit {
-  
   @Input() room: Room | null = null;
   @Input() action?: string;
   @Output() save = new EventEmitter<Room>();
@@ -57,7 +56,7 @@ export class RoomFormComponent implements OnInit {
   
   ngOnInit(): void {
     console.log(this.route.snapshot.url);
-    const currentRoute = this.route.snapshot.url[1]?.path;
+    const currentRoute = this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path;
     this.action = currentRoute === 'edit' ? 'edit' : (currentRoute === 'create' ? 'add' : 'detail');
     this.roomId = this.route.snapshot.paramMap.get('id');
     this.loadRoom();
@@ -87,15 +86,30 @@ export class RoomFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.roomForm.valid) {
-      const roomData = this.roomForm.value;
-      if (this.room) {
-        roomData.id = this.room.id;
+        const roomData = this.roomForm.value;
+        console.log(roomData);
+        
+        if (this.action === 'edit') { 
+          if (this.roomId) {
+              this.roomService.editRoomData(this.roomId, roomData).subscribe({
+                  next: (updatedRoom) => {
+                      console.log('Room updated successfully:', updatedRoom);
+                      this.save.emit(updatedRoom); 
+                  },
+                  error: (err) => {
+                      console.error('Error updating room:', err);
+                  }
+              });
+          } else {
+              console.error('Room ID is not available for editing.');
+          }
+      } else {
+          this.save.emit(roomData);
       }
 
-      this.save.emit(roomData);
       this.onClose();
     }
-  }
+}
 
   onClose(): void {
     this.isVisible = false;

@@ -45,5 +45,8 @@ export class RoomService {
         return this.http.put<Room>(`${this.baseUrl}/${id}/deactivate`, {});
     }
 
-    // when create new room, the updatedby will be assigned
+    editRoomData(id: string, roomData: Room): Observable<Room>{
+        return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData);
+    }
+    
 }

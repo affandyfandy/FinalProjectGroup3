@@ -117,7 +117,7 @@ export class RoomListComponent {
   editRoom(room: Room) {
     console.log('Edit room', room);
     this.selectedRoom = room;
-    this.router.navigate(['/admin/rooms/edit', this.selectedRoom.id]);
+    this.router.navigate(['/admin/rooms', this.selectedRoom.id, 'edit']);
   }
 
   viewRoom(room: Room) {

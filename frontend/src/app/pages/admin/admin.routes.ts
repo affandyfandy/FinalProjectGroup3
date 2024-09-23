@@ -7,7 +7,7 @@ import { UserListComponent } from './user-list/user-list.component';
 export const AdminRoutes: Routes = [
   { path: 'rooms', component: RoomListComponent },
   { path: 'rooms/create', component: RoomFormComponent },
-  { path: 'rooms/edit/:id', component: RoomFormComponent },
+  { path: 'rooms/:id/edit', component: RoomFormComponent },
   { path: 'rooms/:id', component: RoomFormComponent },
   { path: 'users', component: UserListComponent },
   { path: '', component: DashboardComponent} 
