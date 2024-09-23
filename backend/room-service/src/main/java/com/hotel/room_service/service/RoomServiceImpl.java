@@ -54,6 +54,7 @@ public class RoomServiceImpl implements RoomService {
             else if (status.equals("inactive")){
                 findRoom.setStatus(Status.INACTIVE);
             }
+            roomRepository.save(findRoom);
         }
         return findRoom;
     }

@@ -5,6 +5,7 @@ import { Room, RoomType, Status } from '../../../model/room.model';
 import { RoomService } from '../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-room-form',
@@ -12,22 +13,24 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgIconComponent
+    NgIconComponent,
+    RouterModule
   ],
   templateUrl: './room-form.component.html',
   providers: [
-    provideIcons({ heroChevronLeft})
+    provideIcons({ heroChevronLeft })
   ]
 })
 export class RoomFormComponent implements OnInit {
+  
   @Input() room: Room | null = null;
   @Input() action?: string;
   @Output() save = new EventEmitter<Room>();
   @Output() cancel = new EventEmitter<void>();
 
+  roomId?: string | null = null;
   roomTypes = Object.values(RoomType); 
   selectedRoomType: RoomType = RoomType.SINGLE; 
-  
   roomStatus = Object.values(Status); 
   selectedRoomStatus: Status = Status.ACTIVE; 
 
@@ -39,7 +42,8 @@ export class RoomFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private roomService: RoomService) {
+    private roomService: RoomService,
+    private route: ActivatedRoute) {
     this.roomForm = this.fb.group({
       roomType: ['', Validators.required],
       roomNumber: ['', [Validators.required, Validators.min(0)]],
@@ -52,15 +56,31 @@ export class RoomFormComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    if (this.room) {
-      this.roomForm.patchValue({
-        roomType: this.room.roomType,
-        roomNumber: this.room.roomNumber,
-        capacity: this.room.capacity,
-        status: this.room.status,
-        price: this.room.price,
-        photo: this.room.photo,
-        facility: this.room.facility
+    console.log(this.route.snapshot.url);
+    const currentRoute = this.route.snapshot.url[1]?.path;
+    this.action = currentRoute === 'edit' ? 'edit' : (currentRoute === 'create' ? 'add' : 'detail');
+    this.roomId = this.route.snapshot.paramMap.get('id');
+    this.loadRoom();
+  }
+
+  loadRoom(): void {
+    if (this.roomId) {
+      this.roomService.getRoomById(this.roomId).subscribe({
+        next: (room: Room) => {
+          this.room = room;
+          this.roomForm.patchValue({
+            roomType: this.room.roomType,
+            roomNumber: this.room.roomNumber,
+            capacity: this.room.capacity,
+            status: this.room.status,
+            price: this.room.price,
+            photo: this.room.photo,
+            facility: this.room.facility
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching room:', err);
+        }
       });
     }
   }

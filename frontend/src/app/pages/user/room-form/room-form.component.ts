@@ -21,69 +21,33 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
   ]
 })
 export class RoomFormComponent implements OnInit {
-  @Input() room: Room | null = null;
-  @Input() action?: string;
-  @Output() save = new EventEmitter<Room>();
-  @Output() cancel = new EventEmitter<void>();
-
-  roomTypes = Object.values(RoomType); 
-  selectedRoomType: RoomType = RoomType.SINGLE; 
-  
-  roomStatus = Object.values(Status); 
-  selectedRoomStatus: Status = Status.ACTIVE; 
-
-  roomForm: FormGroup;
-  isVisible = true;
-  showFileUpload = false;
-  selectedFile: File | null = null;
-  message: string | null = null;
+  room: Room | null = null;
+  roomTypes: RoomType = RoomType.DOUBLE;
+  roomStatus: Status = Status.ACTIVE;
+  roomId: string | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private roomService: RoomService) {
-    this.roomForm = this.fb.group({
-      roomType: ['', Validators.required],
-      roomNumber: ['', [Validators.required, Validators.min(0)]],
-      capacity: ['', [Validators.required, Validators.min(0)]],
-      status: ['', [Validators.required, Validators.min(0)]],
-      price: ['', [Validators.required, Validators.min(0)]],
-      photo: ['', [Validators.required, Validators.min(0)]],
-      facility: ['', [Validators.required, Validators.min(0)]]
-    });
-  }
-  
+    private roomService: RoomService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
   ngOnInit(): void {
-    if (this.room) {
-      this.roomForm.patchValue({
-        roomType: this.room.roomType,
-        roomNumber: this.room.roomNumber,
-        capacity: this.room.capacity,
-        status: this.room.status,
-        price: this.room.price,
-        photo: this.room.photo,
-        facility: this.room.facility
+    this.roomId = this.route.snapshot.paramMap.get('id');
+    if (this.roomId) {
+      this.roomService.getRoomById(this.roomId).subscribe((room: Room) => {
+        this.room = room;
       });
     }
   }
 
-  onSubmit(): void {
-    if (this.roomForm.valid) {
-      const roomData = this.roomForm.value;
-      if (this.room) {
-        roomData.id = this.room.id;
-      }
+  goBack(): void {
+    this.router.navigate(['/rooms']);
+  }
 
-      this.save.emit(roomData);
-      this.onClose();
+  bookRoom() {
+    if (this.roomId) {
+        this.router.navigate(['/reservation', this.roomId]);
     }
-  }
-
-  onClose(): void {
-    this.isVisible = false;
-    this.cancel.emit();
-  }
-
-  onRoomTypeChange(type: RoomType) {
-    this.selectedRoomType = type;
   }
 }

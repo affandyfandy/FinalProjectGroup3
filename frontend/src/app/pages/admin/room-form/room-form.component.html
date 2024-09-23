@@ -3,8 +3,10 @@
         <ng-icon name="heroChevronLeft"></ng-icon>
         <a href="/admin/rooms" class="cursor-pointer">Back</a>
     </div>
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Add New Room</h1>
-    <form class="space-y-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">
+      {{ room ? (action === 'edit' ? 'Edit Room' : (action === 'add' ? 'Add New Room' : 'Room Detail')) : 'Room Detail' }}
+    </h1>
+    <form class="space-y-6" [formGroup]="roomForm" (ngSubmit)="onSubmit()">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-4">
           <div class="bg-gray-100 p-4 rounded-lg">
@@ -44,30 +46,40 @@
         <div class="space-y-4">
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Room Number</label>
-            <input type="text" id="roomNumber" name="roomNumber" placeholder="Enter room number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            <input formControlName="roomNumber" type="text" id="roomNumber" name="roomNumber" placeholder="Enter room number" [readonly]="action === 'detail' ? true : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
           </div>
           <div>
             <label for="room-type" class="block text-sm font-medium text-gray-700">Room Type</label>
-            <select id="room-type" name="room-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                <option *ngFor="let type of roomTypes" [ngValue]="type">
-                    {{ type }}
-                </option>
+            <select
+              id="room-type"
+              name="room-type"
+              [disabled]="action === 'detail'"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              <option *ngFor="let type of roomTypes" [ngValue]="type">
+                {{ type }}
+              </option>
             </select>
           </div>
           <div>
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-            <input type="text" id="price" name="price" placeholder="Enter price per night" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            <input formControlName="price" type="text" id="price" name="price" placeholder="Enter price per night" [readonly]="action === 'detail' ? true : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
           </div>
           <div>
             <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
-            <input type="text" id="capacity" name="capacity" placeholder="Enter room capacity" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            <input formControlName="capacity" type="text" id="capacity" name="capacity" placeholder="Enter room capacity" [readonly]="action === 'detail' ? true : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
           </div>
           <div>
-            <label for="status" class="block text-sm font-medium text-gray-700">Room Type</label>
-            <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                <option *ngFor="let status of roomStatus" [ngValue]="status">
-                    {{ status }}
-                </option>
+            <label for="room-status" class="block text-sm font-medium text-gray-700">Status</label>
+            <select
+              id="room-status"
+              name="room-status"
+              [disabled]="action === 'detail'"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              <option *ngFor="let status of roomStatus" [ngValue]="status">
+                {{ status }}
+              </option>
             </select>
           </div>
         </div>
