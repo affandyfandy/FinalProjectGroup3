@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../../model/user.model';
-import { UserService } from '../../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { User } from '../../../../model/user.model';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-profile',

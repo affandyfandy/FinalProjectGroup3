@@ -1,9 +1,9 @@
 <div class="min-h-screen flex flex-col relative">
   <app-header class="fixed top-0 left-0 right-0" *ngIf="!isAuthPage()"></app-header>
 
-  <div class="flex-grow pt-[55px]">
+  <div class="flex-grow" [ngClass]="{'pt-[55px]': !isAuthPage()}">
     <router-outlet></router-outlet>
   </div>
 
-  <app-footer></app-footer>
+  <app-footer *ngIf="!isAuthPage()"></app-footer>
 </div>

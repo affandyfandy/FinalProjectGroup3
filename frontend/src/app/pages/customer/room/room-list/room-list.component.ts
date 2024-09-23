@@ -6,9 +6,9 @@ import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/ou
 import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
 import { Router } from '@angular/router';
 import { RoomFormComponent } from '../room-form/room-form.component';
-import { Room, RoomResponse } from '../../../model/room.model';
-import { RoomService } from '../../../services/room.service';
-import { AuthService } from '../../../services/auth/auth.service';
+import { Room, RoomResponse } from '../../../../model/room.model';
+import { RoomService } from '../../../../services/room.service';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 
 @Component({

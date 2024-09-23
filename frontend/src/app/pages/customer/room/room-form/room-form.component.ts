@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Room, RoomType, Status } from '../../../model/room.model';
+import { Room, RoomType, Status } from '../../../../model/room.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoomService } from '../../../services/room.service';
+import { RoomService } from '../../../../services/room.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';

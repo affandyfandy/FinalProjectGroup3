@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { UserService } from '../../../services/user.service';
-import { User } from '../../../model/user.model';
 import { Router } from '@angular/router';
+import { UserService } from '../../../../services/user.service';
+import { User } from '../../../../model/user.model';
 
 @Component({
   selector: 'app-user-form',

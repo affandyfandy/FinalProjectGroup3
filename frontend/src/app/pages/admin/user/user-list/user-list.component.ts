@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEllipsisVertical } from '@ng-icons/heroicons/outline';
-import { UserService } from '../../../services/user.service';
-import { User } from '../../../model/user.model';
+import { User } from '../../../../model/user.model';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-user-list',

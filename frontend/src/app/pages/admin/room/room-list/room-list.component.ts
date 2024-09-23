@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Room, RoomResponse } from '../../../model/room.model';
+import { Room, RoomResponse } from '../../../../model/room.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { AuthService } from '../../../services/auth/auth.service';
-import { RoomService } from '../../../services/room.service';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { RoomService } from '../../../../services/room.service';
 import { RoomFormComponent } from '../room-form/room-form.component';
 import { heroEllipsisVertical } from '@ng-icons/heroicons/outline';
 import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@ng-icons/heroicons/solid';
@@ -48,8 +48,8 @@ export class RoomListComponent {
   ){}
 
   ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
-    this.loadRooms(this.currentPage);
+    // this.isAdmin = this.authService.isAdmin();
+    // this.loadRooms(this.currentPage);
   }
 
   loadRooms(currentPage: number) {
