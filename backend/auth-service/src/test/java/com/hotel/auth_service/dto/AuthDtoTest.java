@@ -4,8 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("sonar")
-public class AuthDtoTest {
+class AuthDtoTest {
+
+    @Test
+    void testAuthDtoCreation() {
+        AuthDto authDto = new AuthDto();
+        assertNotNull(authDto);
+    }
+
     @Test
     void testLoginRequestCreation() {
         String username = "alif@example.com";

@@ -6,9 +6,10 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserTest {
+class UserTest {
+
     @Test
-    public void testToString() {
+    void testToString() {
         // Arrange
         String email = "alif@example.com";
         String password = "12345678";

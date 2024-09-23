@@ -7,12 +7,43 @@ export const AuthGuard: CanActivateFn = (route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    if (authService.checkCredentials()) {
-        router.navigate(['/']);
-        return false;
+    const isLoggedIn = authService.checkCredentials();
+    const isAdmin = authService.isAdmin();
+    const url = state.url;
+
+    if (!isLoggedIn) {
+        if (url === '/'  || url === '/rooms') {
+            return true;
+        } else {
+            router.navigate(['/auth/login']);
+            return false;
+        }
     }
-    else {
-        router.navigate(['/unauthorized']);
-        return false;
+
+    if (isLoggedIn) {
+        if (url.includes(RouterConfig.AUTH.path)) {
+            router.navigate([RouterConfig.CUSTOMER.path]);
+            return false;
+        }
+        if (isAdmin) {
+            if (url == '/') {
+                router.navigate([RouterConfig.ADMIN.path]);
+                return false;
+            }
+            if (!url.includes(RouterConfig.ADMIN.path)) {
+                router.navigate([RouterConfig.UNAUTHORIZED.path]);
+                return false;
+            }
+        }
+        if (!isAdmin) {
+            if (url.includes(RouterConfig.ADMIN.path)) {
+                router.navigate([RouterConfig.UNAUTHORIZED.path]);
+                return false;
+            }
+        }
+
+        return true;
     }
+    
+    return true;
 }

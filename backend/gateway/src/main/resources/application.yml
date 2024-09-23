@@ -29,7 +29,7 @@ logging:
     reactor.netty.http.client: DEBUG
 
   file:
-    name: backend/gateway/gateway.log
+    name: gateway.log
     
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

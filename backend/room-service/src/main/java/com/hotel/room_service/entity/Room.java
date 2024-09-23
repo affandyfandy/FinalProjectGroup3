@@ -1,20 +1,22 @@
 package com.hotel.room_service.entity;
 
-
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.hotel.room_service.audit.Auditable;
+
+import java.util.List;
+
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PostUpdate;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Room {
+public class Room extends Auditable<String>{
 
     @Id
     @Column
@@ -51,12 +53,12 @@ public class Room {
     @Column
     private BigDecimal price;
 
-    // @Column
-    // private UUID hotelId;
-
     @Column
     private String photo;
 
-    @Column
-    private String facility;
+    @ElementCollection(targetClass = Facility.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "room_facilities", joinColumns = @JoinColumn(name = "room_id"))
+    @Column(name = "facility", nullable = false)
+    private List<Facility> facility;
 }

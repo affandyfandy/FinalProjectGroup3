@@ -53,3 +53,12 @@ export enum Status {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE'
 }
+
+export enum Facility {
+  TELEVISION = 'Television',
+  REFRIGERATOR = 'Refrigerator',
+  MINIBAR = 'Minibar',
+  WIFI = 'Wi-Fi',
+  COFFEE_MAKER = 'Coffee Maker',
+  HAIR_DRYER = 'Hair Dryer'
+}

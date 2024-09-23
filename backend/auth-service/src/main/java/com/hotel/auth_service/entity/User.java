@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -31,7 +30,7 @@ public class User extends Auditable<String> {
     @NotBlank(message = "Full name should not be blank")
     private String fullName;
 
-    @Pattern(regexp = "^\\+62[0-9]{9,14}$", message = "Phone should be valid")
+    @Pattern(regexp = "^\\+62\\d{9,14}$", message = "Phone should be valid")
     private String phone;
 
     @Past(message = "Date of birth should be in the past")

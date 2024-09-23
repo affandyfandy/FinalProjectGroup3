@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
+    private static final String USER_NOT_FOUND = "User not found";
+
     private final UserService userService;
 
     @Autowired
@@ -31,7 +33,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") String id) {
         UserDto userDto = userService.getUserByEmail(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
@@ -44,21 +46,21 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") String id, @RequestBody UserDto userDto) {
         UserDto updatedUser = userService.updateUser(id, userDto)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/password")
     public ResponseEntity<UserDto> changeUserPassword(@PathVariable("id") String id, @RequestBody String password) {
         UserDto updatedUser = userService.changeUserPassword(id, password)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<UserDto> toggleUserStatus(@PathVariable("id") String id) {
         UserDto updatedUser = userService.toggleUserStatus(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 

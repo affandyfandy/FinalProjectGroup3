@@ -52,16 +52,12 @@ export class LoginComponent {
     console.log('Logging in with email', this.email);
     this.authSubscription = this.authService.login(this.email, this.password, this.remember).subscribe(
       (success) => {
-        console.log('Logged in successfully', success);
         if (this.authService.isAdmin()){
-          console.log("masuk ke sini");
           this.router.navigate(['/admin'])
-          console.log("masuk ke sini2");
         }
         else {
           this.router.navigate(['/']);
         }
-        // this.router.navigate(['/']);
       },
       (error) => {
         console.error('Error logging in', error);
