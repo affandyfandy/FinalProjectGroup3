@@ -11,6 +11,10 @@ export const routes: Routes = [
                 .then(m => m.AuthRoutes)
     },
     {
+        path: RouterConfig.HOME.path,
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+    },
+    {
         path: RouterConfig.ROOM.path,
         loadChildren: () =>
             import('./pages/room/room.routes')
