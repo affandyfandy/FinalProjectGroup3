@@ -17,10 +17,14 @@ export class RoomService {
     getAllRooms(
         pageNo: number,
         pageSize: number, 
+        sortBy: string,
+        sortOrder: string
     ): Observable<RoomResponse> {
         const params = new HttpParams()
         .set('pageNo', pageNo.toString())
-        .set('pageSize', pageSize.toString());
+        .set('pageSize', pageSize.toString())
+        .set('sortBy', sortBy.toString())
+        .set('sortOrder', sortOrder.toString());
         return this.http.get<RoomResponse>(this.baseUrl, { params });
     }
 

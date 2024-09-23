@@ -2,6 +2,7 @@ package com.hotel.room_service.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,6 @@ import java.util.UUID;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
-
     @Query(nativeQuery = true, value = "SELECT * FROM rooms WHERE status LIKE 'ACTIVE'")
     Page<Room> findAllActiveRooms(Pageable pageable);
 

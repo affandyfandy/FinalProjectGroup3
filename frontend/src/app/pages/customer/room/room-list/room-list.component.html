@@ -11,7 +11,7 @@
       </div>
       <div class="p-4">
         <div class="flex justify-between items-center mb-2">
-          <span class="text-sm font-medium text-gray-600">{{ room.price | currency:'IDR':'symbol':'1.0-0' }}</span>
+          <span class="text-sm font-medium text-gray-600">{{ room.price | currency:'Rp':'symbol':'1.0-0' }}</span>
           <div class="flex items-center">
             <!-- Star Rating -->
             <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let index = index">
@@ -35,5 +35,14 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="flex items-center justify-center mt-5">
+    <button
+    *ngFor="let page of totalPages"
+    (click)="onPageChange(page)"
+    class="px-3 py-1 m-1 text-sm font-medium bg-primary text-white rounded-lg border border-transparent rounded hover:bg-white hover:border-primary hover:text-primary"
+    [ngClass]="{'bg-primary text-white': currentPage === page, 'bg-gray-300': currentPage !== page}">
+    {{ page }}
+    </button>
   </div>
 </div>

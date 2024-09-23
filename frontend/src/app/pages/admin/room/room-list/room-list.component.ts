@@ -7,7 +7,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { RoomService } from '../../../../services/room.service';
 import { RoomFormComponent } from '../room-form/room-form.component';
-import { heroEllipsisVertical } from '@ng-icons/heroicons/outline';
+import { heroChevronDown, heroChevronUp, heroChevronUpDown, heroEllipsisVertical } from '@ng-icons/heroicons/outline';
 import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
@@ -21,24 +21,28 @@ import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@n
   ],
   templateUrl: './room-list.component.html',
   providers: [
-    provideIcons({ heroEllipsisVertical, heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid})
+    provideIcons({
+      heroEllipsisVertical,
+      heroUserSolid,
+      heroStarSolid,
+      heroAdjustmentsHorizontalSolid,
+      heroChevronUpDown})
   ]
 })
 export class RoomListComponent {
   rooms: Room[] = [];
   totalElements: number = 0;
-  totalPages: number = 0;
+  totalPages: number[] = [];
   currentPage: number = 1;
   pageSize: number = 10;
-  sortColumn: string = 'name';
-  sortDirection: string = 'asc';
+  sortBy: string = 'roomType';
+  sortOrder: string = 'asc';
   error: string = '';
   isAdmin: boolean = false;
 
   selectedRoom: Room | null = null;
   showOptions: boolean = false;
   isModalVisible: boolean = false;
-  // action: 'detail' | 'add' | 'edit' = 'add';
 
   constructor(
     private roomService: RoomService,
@@ -52,12 +56,12 @@ export class RoomListComponent {
   }
 
   loadRooms(currentPage: number) {
-    this.roomService.getAllRooms(currentPage-1, this.pageSize).subscribe({
+    this.roomService.getAllRooms(currentPage-1, this.pageSize, this.sortBy, this.sortOrder).subscribe({
       next: (response: RoomResponse) => {
         console.log("Full response:", response);
         this.rooms = response.content;
         this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
+        this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
         this.currentPage = currentPage;
       },
       error: (err) => {
@@ -103,11 +107,11 @@ export class RoomListComponent {
     this.showOptions = this.selectedRoom === room ? !this.showOptions : true;
   }
 
-  changePage(page: number): void {
-    this.currentPage = page;
-    this.loadRooms(this.currentPage);
-    // this.toastService.showToast('Changed page', 'success');
-  }
+  // changePage(page: number): void {
+  //   this.currentPage = page;
+  //   this.loadRooms(this.currentPage);
+  //   // this.toastService.showToast('Changed page', 'success');
+  // }
   
   createRoom() {
     this.router.navigate(['/admin/rooms/create']);
@@ -123,5 +127,35 @@ export class RoomListComponent {
     console.log('View room', room);
     this.selectedRoom = room;
     this.router.navigate(['/admin/rooms', this.selectedRoom?.id, 'view']);
+  }
+
+  sortData(header: string) {
+    console.log(header);
+    var columnName = '';
+    if (header === 'roomnumber'){
+      columnName = 'roomNumber';
+    }
+    else if (header === 'roomtype'){
+      columnName = 'roomType'
+    }
+    if (this.sortBy === columnName){
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = columnName;
+      this.sortOrder = 'asc';
+    }
+    this.loadRooms(this.currentPage);
+  }
+
+  // Handle changes in page size
+  onPageSizeChange(event: Event): void {
+    this.pageSize = +(event.target as HTMLSelectElement).value;
+    this.currentPage = 1; // Reset to the first page
+    this.loadRooms(this.currentPage);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadRooms(this.currentPage);
   }
 }
