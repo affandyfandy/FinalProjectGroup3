@@ -59,27 +59,4 @@ public class Room {
 
     @Column
     private String facility;
-
-    @Column
-    private LocalDateTime createdTime;
-
-    @Column
-    private LocalDateTime updatedTime;
-
-    @Column 
-    private String createdBy;
-
-    @Column
-    private String updatedBy;
-
-    @PrePersist
-    protected void onCreate() {
-        createdTime = LocalDateTime.now();
-        updatedTime = LocalDateTime.now();
-    }
-
-    @PostUpdate
-    protected void onUpdate() {
-        updatedTime = LocalDateTime.now();
-    }
 }

@@ -18,7 +18,6 @@ import { User } from '../../../model/user.model';
     CommonModule
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
   providers: [
     provideIcons({ heroChevronDown})
   ]

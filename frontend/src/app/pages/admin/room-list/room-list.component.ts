@@ -1,15 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RoomFormComponent } from '../room-form/room-form.component';
+import { Component } from '@angular/core';
 import { Room, RoomResponse } from '../../../model/room.model';
-import { RoomService } from '../../../services/room.service';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/outline';
-import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
-import { AuthService } from '../../../services/auth/auth.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { AuthService } from '../../../services/auth/auth.service';
+import { RoomService } from '../../../services/room.service';
+import { RoomFormComponent } from '../room-form/room-form.component';
+import { heroEllipsisVertical } from '@ng-icons/heroicons/outline';
+import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-room-list',
@@ -25,7 +24,8 @@ import { Router } from '@angular/router';
     provideIcons({ heroEllipsisVertical, heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid})
   ]
 })
-export class RoomListComponent implements OnInit{
+export class RoomListComponent {
+
   rooms: Room[] = [];
   totalElements: number = 0;
   totalPages: number = 0;
@@ -53,44 +53,20 @@ export class RoomListComponent implements OnInit{
   }
 
   loadRooms(currentPage: number) {
-    if (this.isAdmin){
-      this.roomService.getAllRooms(currentPage-1, this.pageSize).subscribe({
-        next: (response: RoomResponse) => {
-          console.log("Full response:", response);
-          this.rooms = response.content;
-          this.totalElements = response.totalElements;
-          this.totalPages = response.totalPages;
-          this.currentPage = currentPage;
-        },
-        error: (err) => {
-          this.error = 'Nothing to see..';
-          console.error(err);
-          // this.toastService.showToast('Failed to load products', 'error');
-        }
-      });
-    }
-    else{
-      this.roomService.getAllActiveRooms(currentPage-1, this.pageSize).subscribe({
-        next: (response: RoomResponse) => {
-          console.log("Full response:", response);
-          this.rooms = response.content;
-          this.totalElements = response.totalElements;
-          this.totalPages = response.totalPages;
-          this.currentPage = currentPage;
-        },
-        error: (err) => {
-          this.error = 'Nothing to see..';
-          console.error(err);
-          // this.toastService.showToast('Failed to load products', 'error');
-        }
-      });
-    }
-  }
-
-  changePage(page: number): void {
-    this.currentPage = page;
-    this.loadRooms(this.currentPage);
-    // this.toastService.showToast('Changed page', 'success');
+    this.roomService.getAllRooms(currentPage-1, this.pageSize).subscribe({
+      next: (response: RoomResponse) => {
+        console.log("Full response:", response);
+        this.rooms = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.currentPage = currentPage;
+      },
+      error: (err) => {
+        this.error = 'Nothing to see..';
+        console.error(err);
+        // this.toastService.showToast('Failed to load products', 'error');
+      }
+    });
   }
 
   toggleItemStatus(room: Room): void {
@@ -121,6 +97,7 @@ export class RoomListComponent implements OnInit{
     }
   }
 
+
   toggleOptions(event: Event, room: any) {
     event.stopPropagation(); // Prevent event from propagating to parent elements
     this.selectedRoom = this.selectedRoom === room ? null : room;
@@ -137,10 +114,15 @@ export class RoomListComponent implements OnInit{
     this.showOptions = false; // Hide options after selection
   }
 
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.loadRooms(this.currentPage);
+    // this.toastService.showToast('Changed page', 'success');
+  }
+
   viewRoom(room: any) {
     // Implement the view functionality
     console.log('View room', room);
     this.showOptions = false; // Hide options after selection
   }
-
 }

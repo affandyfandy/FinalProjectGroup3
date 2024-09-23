@@ -3,6 +3,7 @@ package com.hotel.gateway.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,8 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .pathMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/**").permitAll()
-                        // .pathMatchers("/api/v1/room/edit/**").hasAuthority()
+                        .pathMatchers("/api/v1/room/edit/**").hasAuthority("ADMIN")
+                        .pathMatchers("/api/v1/room/create/**").hasAuthority("ADMIN")
                         .anyExchange().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(request -> {
