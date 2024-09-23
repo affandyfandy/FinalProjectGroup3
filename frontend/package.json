@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@ng-icons/bootstrap-icons": "^29.5.0",
     "@ng-icons/core": "^29.5.0",
     "@ng-icons/heroicons": "^29.5.0",
     "flowbite": "^2.5.1",
