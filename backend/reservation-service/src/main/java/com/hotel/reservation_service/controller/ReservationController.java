@@ -1,5 +1,6 @@
 package com.hotel.reservation_service.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hotel.reservation_service.entity.Reservation;
+import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.service.ReservationService;
 
 @RestController
-@RequestMapping("/reservations")
+@RequestMapping("api/v1/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -64,5 +66,16 @@ public class ReservationController {
     public ResponseEntity<Void> deleteReservation(@PathVariable UUID id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public Page<Reservation> searchReservations(
+        @RequestParam(required = false) ReservationStatus status,
+        @RequestParam(required = false) String userId,
+        @RequestParam(required = false) LocalDateTime checkInDate,
+        @RequestParam(required = false) LocalDateTime checkOutDate,
+        Pageable pageable
+    ) {
+        return reservationService.searchReservations(status, userId, checkInDate, checkOutDate, pageable);
     }
 }

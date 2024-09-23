@@ -17,13 +17,13 @@ public abstract class AuditEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdTime;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = true, updatable = false)
     private String createdBy;
 
     @Column(nullable = false)
     private LocalDateTime updatedTime;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String updatedBy;
 
     @PrePersist

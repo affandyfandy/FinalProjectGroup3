@@ -7,11 +7,14 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.hotel.reservation_service.entity.Reservation;
+import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.repository.ReservationRepository;
 import com.hotel.reservation_service.service.ReservationService;
+import com.hotel.reservation_service.specification.ReservationSpecification;
 
 import jakarta.transaction.Transactional;
 
@@ -35,6 +38,17 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findAll(sort); 
     }
 
+     @Override
+    public Page<Reservation> searchReservations(ReservationStatus status, String userId, LocalDateTime checkInDate, LocalDateTime checkOutDate, Pageable pageable) {
+        Specification<Reservation> specification = Specification
+            .where(ReservationSpecification.hasStatus(status))
+            .and(ReservationSpecification.hasUserId(userId))
+            .and(ReservationSpecification.hasCheckInDateAfter(checkInDate))
+            .and(ReservationSpecification.hasCheckOutDateBefore(checkOutDate));
+
+        return reservationRepository.findAll(specification, pageable);
+    }
+
     @Override
     public Reservation getReservationById(UUID id) {
         return reservationRepository.findById(id)
@@ -43,8 +57,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation createReservation(Reservation reservation) {
-        reservation.setCreatedTime(LocalDateTime.now());
-        reservation.setUpdatedTime(LocalDateTime.now());
+        reservation.setCreatedBy(null); 
+        reservation.setUpdatedBy(null); 
         return reservationRepository.save(reservation);
     }
 
