@@ -4,14 +4,12 @@ export interface RouteLink {
   }
   
   export const RouterConfig = {
-    HOME: { path: '', link: '/', title: 'Home' },
+    CUSTOMER: { path: '', link: '/', title: 'Home' },
     AUTH: { path: 'auth', link: '/auth', title: 'Auth Page' },
-    PROFILE: { path: 'profile', link: '/profile', title: 'Profile Page' },
-    USER: { path: 'users', link: '/user', title: 'User Page' },
-    CUSTOMER: { path: 'customers', link: '/customer', title: 'Customer Page' },
-    ROOM: { path: 'rooms', link: '/room', title: 'Room Page' },
-    CREATE_ROOM: { path: 'rooms/create', link: '/rooms/create', title: 'Create Room' },
-    EDIT_ROOM: { path: 'rooms/edit/:id', link: '/rooms/edit/:id', title: 'Edit Room' },
+    ADMIN: { path: 'admin', link: '/customer', title: 'Admin Page' },
+    // ROOM: { path: 'rooms', link: '/room', title: 'Room Page' },
+    // CREATE_ROOM: { path: 'rooms/create', link: '/rooms/create', title: 'Create Room' },
+    // EDIT_ROOM: { path: 'rooms/edit/:id', link: '/rooms/edit/:id', title: 'Edit Room' },
     BOOKING: { path: 'bookings', link: '/booking', title: 'Booking Page' },
     NOT_FOUND: { path: '**', link: null, title: 'Page Not Found' }
   };

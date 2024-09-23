@@ -39,7 +39,7 @@ export class RoomListComponent implements OnInit{
   selectedRoom: Room | null = null;
   showOptions: boolean = false;
   isModalVisible: boolean = false;
-  action: string = 'add';
+  action: string = 'detail';
 
   constructor(
     private roomService: RoomService,
@@ -75,10 +75,12 @@ export class RoomListComponent implements OnInit{
     // this.toastService.showToast('Changed page', 'success');
   }
 
-  viewRoom(room: any) {
-    // Implement the view functionality
-    console.log('View room', room);
-    this.showOptions = false; // Hide options after selection
+  viewRoom(id: string) {
+    this.router.navigate(['/rooms', id]);
+  }
+
+  bookRoom(id: string) {
+    this.router.navigate(['/book', id]);
   }
 
 }
