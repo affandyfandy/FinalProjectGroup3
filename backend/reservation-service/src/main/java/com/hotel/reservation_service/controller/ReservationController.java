@@ -1,9 +1,11 @@
 package com.hotel.reservation_service.controller;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.service.ReservationService;
+import com.hotel.reservation_service.util.PDFGenerator;
 
 @RestController
 @RequestMapping("api/v1/reservations")
@@ -77,5 +80,37 @@ public class ReservationController {
         Pageable pageable
     ) {
         return reservationService.searchReservations(status, userId, checkInDate, checkOutDate, pageable);
+    }
+
+    @GetMapping("/export/user/{userId}")
+    public ResponseEntity<InputStreamResource> exportUserReservationsToPDF(@PathVariable String userId) {
+        List<Reservation> reservations = reservationService.getReservationsByUserId(userId);
+
+        ByteArrayInputStream bis = PDFGenerator.generateUserReservationPDF(reservations);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=user_reservations.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
+    @GetMapping("/export/admin")
+    public ResponseEntity<InputStreamResource> exportAllReservationsToPDF() {
+        List<Reservation> reservations = reservationService.getAllReservations(Sort.by(Sort.Direction.DESC, "reservationDate"));
+
+        ByteArrayInputStream bis = PDFGenerator.generateAdminReservationReportPDF(reservations);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=admin_reservation_report.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }
