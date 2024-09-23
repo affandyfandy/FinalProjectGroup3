@@ -44,13 +44,13 @@ export class RoomFormComponent implements OnInit {
     private roomService: RoomService,
     private route: ActivatedRoute) {
     this.roomForm = this.fb.group({
-      roomType: ['', Validators.required],
-      roomNumber: ['', [Validators.required, Validators.min(0)]],
-      capacity: ['', [Validators.required, Validators.min(0)]],
-      status: ['', [Validators.required, Validators.min(0)]],
-      price: ['', [Validators.required, Validators.min(0)]],
-      photo: ['', [Validators.required, Validators.min(0)]],
-      facility: ['', [Validators.required, Validators.min(0)]]
+      roomType: [''],
+      roomNumber: [''],
+      capacity: [''],
+      status: [''],
+      price: [''],
+      photo: [''],
+      facility: ['']
     });
   }
   
@@ -85,10 +85,12 @@ export class RoomFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("mantap");
     if (this.roomForm.valid) {
         const roomData = this.roomForm.value;
         console.log(roomData);
         
+        console.log(this.action);
         if (this.action === 'edit') { 
           if (this.roomId) {
               this.roomService.editRoomData(this.roomId, roomData).subscribe({
@@ -103,9 +105,21 @@ export class RoomFormComponent implements OnInit {
           } else {
               console.error('Room ID is not available for editing.');
           }
-      } else {
+        }
+        else if (this.action === 'add') {
+          this.roomService.createRoom(roomData).subscribe({
+            next: (createdRoom) => {
+                console.log('Room created successfully:', createdRoom);
+                this.save.emit(createdRoom); 
+            },
+            error: (err) => {
+                console.error('Error creating room:', err);
+            }
+          });
+        }
+        else{
           this.save.emit(roomData);
-      }
+        }
 
       this.onClose();
     }

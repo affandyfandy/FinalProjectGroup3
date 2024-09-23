@@ -48,5 +48,9 @@ export class RoomService {
     editRoomData(id: string, roomData: Room): Observable<Room>{
         return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData);
     }
+
+    createRoom(roomData: Room): Observable<Room>{
+        return this.http.post<Room>(`${this.baseUrl}`, roomData);
+    }
     
 }
