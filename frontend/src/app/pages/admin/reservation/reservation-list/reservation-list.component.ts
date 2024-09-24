@@ -29,29 +29,17 @@ export class ReservationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReservations(this.currentPage);
-    this.reservationService.getAllReservationsWithRooms().subscribe(reservations => {
-      console.log(reservations);
-    });
-    console.log(this.reservations[0].room);
-    
-    this.reservations.forEach(reservation => {
-      if (reservation && reservation.room && reservation.room.roomNumber) {
-        console.log(reservation.room.roomNumber);
-      } else {
-        console.log('Room information is missing for this reservation.');
-      }
-    });
-    
-    
-  }
-  
+  }  
 
   loadReservations(page: number): void {
     this.reservationService.getAllReservationsWithRooms(page - 1, this.pageSize).subscribe({
       next: (response: any) => {
-        this.reservations = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
+        this.reservations = response;
+        // this.reservations = response.content;
+        // this.totalElements = response.totalElements;
+        // this.totalPages = response.totalPages;
+
+        console.log(response);
       },
       error: (err) => {
         this.error = 'Failed to load reservations';

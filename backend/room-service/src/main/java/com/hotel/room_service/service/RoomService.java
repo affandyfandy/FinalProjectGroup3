@@ -1,11 +1,13 @@
 package com.hotel.room_service.service;
 
+import com.hotel.room_service.dto.response.ReadRoomDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.hotel.room_service.entity.Room;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,4 +25,5 @@ public interface RoomService {
     void deleteRoom(UUID id);
     void saveAll(List<Room> listRoom);
 
+    Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable);
 }
