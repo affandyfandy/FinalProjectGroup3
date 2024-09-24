@@ -11,14 +11,11 @@ spring:
           uri: http://localhost:8081
           predicates:
                 - Path=/api/v1/auth/**,/api/v1/users/**
-        - id: room-service
-<<<<<<< HEAD
-=======
+        - id: reservation-service
           uri: http://localhost:8082
           predicates:
                 - Path=/api/v1/payments/**,/api/v1/reservations/**
         - id: room-service
->>>>>>> 62f325808f0c97b8073ef7174c0e413b0576a06d
           uri: http://localhost:8083
           predicates:
                 - Path=/api/v1/room/**

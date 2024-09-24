@@ -2,7 +2,6 @@ package com.hotel.reservation_service.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.hotel.reservation_service.entity.ReservationStatus;
 

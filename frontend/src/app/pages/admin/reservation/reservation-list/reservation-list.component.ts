@@ -7,6 +7,7 @@ import { Reservation } from '../../../../model/reservation.model';
 
 import { NgIf, NgFor, CurrencyPipe, DatePipe } from '@angular/common';
 import { RoomService } from '../../../../services/room.service';
+import { Room } from '../../../../model/room.model';
 
 @Component({
   selector: 'app-reservation-list',
@@ -16,6 +17,7 @@ import { RoomService } from '../../../../services/room.service';
 })
 export class ReservationListComponent implements OnInit {
   reservations: Reservation[] = [];
+  roomMap: Map<string, string> = new Map();
   totalElements: number = 0;
   totalPages: number = 0;
   currentPage: number = 1;
@@ -27,7 +29,11 @@ export class ReservationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReservations(this.currentPage);
+    this.reservationService.getAllReservationsWithRooms().subscribe(reservations => {
+      console.log(reservations);
+    });
   }
+  
 
   loadReservations(page: number): void {
     this.reservationService.getAllReservations(page - 1, this.pageSize).subscribe({

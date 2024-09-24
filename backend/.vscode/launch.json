@@ -8,7 +8,8 @@
             "mainClass": "com.hotel.gateway.GatewayApplication",
             "projectName": "gateway",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57312 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=gateway"
         },
         {
             "type": "java",
@@ -18,7 +19,8 @@
             "mainClass": "com.hotel.auth_service.AuthServiceApplication",
             "projectName": "auth-service",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57320 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=auth-service"
         },
         {
             "type": "java",
@@ -27,6 +29,27 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.hotel.room_service.RoomServiceApplication",
             "projectName": "room-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60472 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=room-service"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-HotelServiceApplication<hotel-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.hotel.hotel_service.HotelServiceApplication",
+            "projectName": "hotel-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ReservationServiceApplication<reservation-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.hotel.reservation_service.ReservationServiceApplication",
+            "projectName": "reservation-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

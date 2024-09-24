@@ -2,10 +2,6 @@ package com.hotel.room_service.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-<<<<<<< HEAD
-import org.springframework.data.domain.Sort;
-=======
->>>>>>> 62f325808f0c97b8073ef7174c0e413b0576a06d
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

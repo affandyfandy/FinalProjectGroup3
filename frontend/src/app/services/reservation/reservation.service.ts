@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { AppConstants } from "../../config/app.constants";
 import { Reservation } from '../../model/reservation.model';
 import { RoomService } from '../room.service';
+import { forkJoin, map, switchMap } from 'rxjs';
+import { Room } from '../../model/room.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +14,24 @@ export class ReservationService {
   private apiUrl = `${AppConstants.BASE_API_V1_URL}/reservations`;
 
   constructor(private http: HttpClient, private roomService : RoomService) {}
+
+  getAllReservationsWithRooms(page: number = 0, size: number = 10): Observable<unknown> {
+      return this.getAllReservations(page, size).pipe(
+          switchMap((reservationsResponse: any) => {
+              const reservations = reservationsResponse.content;
+              const roomObservables = reservations.map((reservation: Reservation) => 
+                  this.roomService.getRoomById(reservation.roomId).pipe(
+                      map((room: Room) => ({
+                          ...reservation,
+                          room: room 
+                      }))
+                  )
+              );
+
+              return forkJoin(roomObservables);
+          })
+      );
+  }
 
   getAllReservations(page: number = 0, size: number = 10): Observable<any> {
     const params = new HttpParams().set('page', page).set('size', size);
