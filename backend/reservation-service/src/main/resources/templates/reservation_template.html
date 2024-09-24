@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservation Details</title>
+</head>
+<body>
+    <h1>Reservation List for Customer</h1>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Room ID</th>
+                <th>Reservation Date</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reservation : ${reservations}">
+                <td th:text="${reservation.id}"></td>
+                <td th:text="${reservation.roomId}"></td>
+                <td th:text="${reservation.reservationDate}"></td>
+                <td th:text="${reservation.checkInDate}"></td>
+                <td th:text="${reservation.checkOutDate}"></td>
+                <td th:text="${reservation.status}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

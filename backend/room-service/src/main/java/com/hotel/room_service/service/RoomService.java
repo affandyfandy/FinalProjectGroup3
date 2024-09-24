@@ -22,4 +22,5 @@ public interface RoomService {
     Room updateRoom(UUID id, Room room);
     void deleteRoom(UUID id);
     void saveAll(List<Room> listRoom);
+
 }

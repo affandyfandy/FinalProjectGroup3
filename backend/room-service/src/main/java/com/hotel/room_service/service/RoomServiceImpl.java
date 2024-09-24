@@ -163,7 +163,6 @@ public class RoomServiceImpl implements RoomService {
         }
         return findRoom;
     }
-
     @Override
     public void deleteRoom(UUID id) {
         Room findRoom = findById(id);
@@ -174,4 +173,5 @@ public class RoomServiceImpl implements RoomService {
     public void saveAll(List<Room> listRoom) {
         roomRepository.saveAll(listRoom);
     }
+
 }

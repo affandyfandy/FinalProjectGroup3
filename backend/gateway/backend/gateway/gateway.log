@@ -11148,6 +11148,7 @@ Date: <filtered>
 2024-09-23 21:49:02 - Response: 202 ACCEPTED for GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10
 2024-09-23 21:49:02 - [90f80ddc-9, L:/127.0.0.1:52522 - R:localhost/127.0.0.1:8083] Received last HTTP packet
 2024-09-23 21:49:02 - [40edc17b-630] Completed 202 ACCEPTED
+<<<<<<< HEAD
 2024-09-23 21:51:40 - [40edc17b-631] HTTP OPTIONS "/api/v1/users/admin@example.com"
 2024-09-23 21:51:40 - [40edc17b-631] Completed 200 OK
 2024-09-23 21:51:40 - [40edc17b-632] HTTP GET "/api/v1/users/admin@example.com"
@@ -17569,3 +17570,5 @@ Date: <filtered>
 2024-09-23 22:57:52 - Response: 202 ACCEPTED for GET http://localhost:8080/api/v1/room?pageNo=0&pageSize=10&sortBy=roomType&sortOrder=asc
 2024-09-23 22:57:52 - [224c39a0-19, L:/127.0.0.1:61722 - R:localhost/127.0.0.1:8083] Received last HTTP packet
 2024-09-23 22:57:52 - [bcf9937c-1175] Completed 202 ACCEPTED
+=======
+>>>>>>> 62f325808f0c97b8073ef7174c0e413b0576a06d

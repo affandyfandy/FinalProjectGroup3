@@ -20,5 +20,11 @@ export const AdminRoutes: Routes = [
     loadChildren: () =>
       import('./user/user.routes')
         .then(m => m.UserRoutes)
+  },
+  {
+    path: RouterConfig.RESERVATION.path,
+    loadChildren: () =>
+      import('./reservation/reservation.routes')
+        .then(m => m.ReservationRoutes)
   }
 ];

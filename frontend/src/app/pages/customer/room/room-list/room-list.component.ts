@@ -58,7 +58,11 @@ export class RoomListComponent implements OnInit{
         console.log("Full response:", response);
         this.rooms = response.content;
         this.totalElements = response.totalElements;
+<<<<<<< HEAD
         this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
+=======
+        this.totalPages = response.totalPages;
+>>>>>>> 62f325808f0c97b8073ef7174c0e413b0576a06d
         this.currentPage = currentPage;
       },
       error: (err) => {
@@ -69,6 +73,15 @@ export class RoomListComponent implements OnInit{
     });
   }
 
+<<<<<<< HEAD
+=======
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.loadRooms(this.currentPage);
+    // this.toastService.showToast('Changed page', 'success');
+  }
+
+>>>>>>> 62f325808f0c97b8073ef7174c0e413b0576a06d
   viewRoom(id: string) {
     this.router.navigate(['/rooms', id]);
   }
@@ -77,6 +90,7 @@ export class RoomListComponent implements OnInit{
     this.router.navigate(['/reservation', id]);
   }
 
+<<<<<<< HEAD
   // Handle changes in page size
   onPageSizeChange(event: Event): void {
     this.pageSize = +(event.target as HTMLSelectElement).value;
@@ -89,4 +103,6 @@ export class RoomListComponent implements OnInit{
     this.loadRooms(this.currentPage);
   }
 
+=======
+>>>>>>> 62f325808f0c97b8073ef7174c0e413b0576a06d
 }
