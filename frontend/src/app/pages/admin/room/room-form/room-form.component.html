@@ -21,7 +21,7 @@
                   type="checkbox" 
                   class="form-checkbox"
                   [disabled]="action === 'Room Details'" 
-                  [checked]="action === 'Room Details' ? facilityList.includes(facility) : roomForm.value.facility.includes(facility)"
+                  [checked]="action === 'Room Details' || action === 'Edit Room' ? facilityList.includes(facility) : roomForm.value.facility.includes(facility)"
                   (change)="onFacilityChange(facility, $event)"
                 />
                 <span>{{ facility }}</span>
