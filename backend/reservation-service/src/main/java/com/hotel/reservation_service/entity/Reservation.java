@@ -10,6 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,5 +52,12 @@ public class Reservation extends AuditEntity {
 
     @Column(nullable = true)
     private BigDecimal amount;
+
+    @PrePersist
+    @Override
+    public void prePersist() {
+        super.prePersist();
+        this.reservationDate = LocalDateTime.now();
+    }
 
 }
