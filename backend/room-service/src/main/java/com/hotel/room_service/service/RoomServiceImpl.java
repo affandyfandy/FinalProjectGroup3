@@ -177,9 +177,14 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public String byteToString(MultipartFile file) throws IOException {
-        byte[] imageBytes = file.getBytes();
-        return Base64.getEncoder().encodeToString(imageBytes);
+    public byte[] encoded(MultipartFile file) throws IOException {
+        return file.getBytes();
+        // return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+    @Override
+    public String byteToString(byte[] file) {
+        return Base64.getEncoder().encodeToString(file);
     }
 
 }

@@ -24,6 +24,7 @@ public interface RoomService {
     Room updateRoom(UUID id, Room room);
     void deleteRoom(UUID id);
     void saveAll(List<Room> listRoom);
-    String byteToString(MultipartFile file) throws IOException;
+    byte[] encoded(MultipartFile file) throws IOException;
+    String byteToString(byte[] file);
 
 }

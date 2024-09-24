@@ -51,6 +51,7 @@ public class RoomController {
     public ResponseEntity<?> getRoomDetails(@PathVariable UUID id){
         Room room = roomService.findById(id) != null ? roomService.findById(id) : null;
         ReadRoomDto roomDto = roomMapper.toDto(room);
+        roomDto.setPhotoUrl(roomService.byteToString(room.getPhoto()));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }   
 
@@ -62,9 +63,9 @@ public class RoomController {
         ObjectMapper objectMapper = new ObjectMapper();
         CreateRoomDto newRoom = objectMapper.readValue(roomDataJson, CreateRoomDto.class);
 
-        String photo = null;
+        byte[] photo = null;
         if (multipartFile != null && !multipartFile.isEmpty()) {
-            photo = roomService.byteToString(multipartFile);
+            photo = roomService.encoded(multipartFile);
         }
         Room room = roomMapper.toEntity(newRoom);
         if (photo != null) {

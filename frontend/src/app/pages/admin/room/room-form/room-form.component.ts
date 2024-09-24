@@ -43,6 +43,7 @@ export class RoomFormComponent implements OnInit {
   isVisible = true;
   showFileUpload = false;
   message: string | null = null;
+  photoUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -81,10 +82,11 @@ export class RoomFormComponent implements OnInit {
             capacity: this.room.capacity,
             status: this.room.status,
             price: this.room.price,
-            photo: this.room.photo,
+            // photo: this.room.photo,
             facility: this.room.facility,
           });
           this.updateSelectedFacilities();
+          this.photoUrl = this.room.photo;
         },
         error: (err) => {
           console.error('Error fetching room:', err);
@@ -171,14 +173,22 @@ export class RoomFormComponent implements OnInit {
     }
   }
 
-  onFileSelect(event: any): void {
-    const file = event.target.files[0];
-    console.log(file);
-    if (file) {
-      this.selectedFile = file;
-      this.roomForm.patchValue({
-        multipartFile: file
-      });
+  // onFileSelect(event: any): void {
+  //   const file = event.target.files[0];
+  //   console.log(file);
+  //   if (file) {
+  //     this.selectedFile = file;
+  //     this.roomForm.patchValue({
+  //       multipartFile: file
+  //     });
+  //   }
+  // }
+
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      console.log('Selected file:', this.selectedFile);
     }
   }
 
