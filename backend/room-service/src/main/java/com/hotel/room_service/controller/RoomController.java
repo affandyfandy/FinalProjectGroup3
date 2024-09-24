@@ -1,6 +1,9 @@
 package com.hotel.room_service.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
 import com.hotel.room_service.entity.Room;
+import com.hotel.room_service.exception.InvalidInputException;
 import com.hotel.room_service.service.RoomService;
 
 @RestController
@@ -118,6 +124,24 @@ public class RoomController {
         Room updateRoom = roomService.updateRoom(id, roomMapper.toEntity(dto));
         ReadRoomDto readRoomDto = roomMapper.toDto(updateRoom);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(readRoomDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRoom(@PathVariable("id") UUID id){
+        roomService.deleteRoom(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Collections.singletonMap("status", "success"));
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<String> importProduct(@RequestParam("file") MultipartFile file){
+        try {
+            // List<Room> listProduct = FileUtils.readProductFromExcel(file);
+            List<Room> listProduct = new ArrayList<>();
+            roomService.saveAll(listProduct);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Room imported successfully");
+        } catch (InvalidInputException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid file content: " + e.getMessage());
+        }
     }
 
 }

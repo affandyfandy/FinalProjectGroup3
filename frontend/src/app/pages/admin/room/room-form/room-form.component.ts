@@ -6,6 +6,8 @@ import { RoomService } from '../../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ToastService } from '../../../../services/toast.service';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-room-form',
@@ -34,10 +36,8 @@ export class RoomFormComponent implements OnInit {
   selectedRoomStatus: Status = Status.ACTIVE; 
   roomFacility = Object.values(Facility);
 
-  selectedFacilities: { [key: string]: boolean } = this.roomFacility.reduce((acc, facility) => {
-    acc[facility] = false;
-    return acc;
-  }, {} as { [key: string]: boolean });
+  selectedFacility: Facility[] = [];
+  facilityList: string[] = [];
 
   roomForm: FormGroup;
   isVisible = true;
@@ -49,13 +49,14 @@ export class RoomFormComponent implements OnInit {
     private fb: FormBuilder,
     private roomService: RoomService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private toastService: ToastService) {
     this.roomForm = this.fb.group({
-      roomType: [''],
-      roomNumber: [''],
-      capacity: [''],
-      status: [''],
-      price: [''],
+      roomType: ['',[Validators.required]],
+      roomNumber: ['',[Validators.required]],
+      capacity: ['',[Validators.required, Validators.pattern('^[0-9]+$')]],
+      status: ['',[Validators.required]],
+      price: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       photo: [''],
       facility: [[]]
     });
@@ -82,11 +83,13 @@ export class RoomFormComponent implements OnInit {
             status: this.room.status,
             price: this.room.price,
             photo: this.room.photo,
+            facility: this.room.facility,
           });
           this.updateSelectedFacilities();
         },
         error: (err) => {
           console.error('Error fetching room:', err);
+          this.message = err;
         }
       });
     }
@@ -94,22 +97,41 @@ export class RoomFormComponent implements OnInit {
 
   updateSelectedFacilities(): void {
     if (this.room?.facility) {
-      this.roomFacility.forEach((facility) => {
-        this.selectedFacilities[facility] = this.room?.facility.includes(facility) || false;
-      });
+      this.selectedFacility = this.room.facility.map((facility: Facility) => facility);
     } else {
-      // Ensure all facilities are set to false if room is null or undefined
-      this.roomFacility.forEach((facility) => {
-        this.selectedFacilities[facility] = false;
-      });
+      this.selectedFacility = [];
     }
+    // console.log(this.selectedFacility);
+
+    this.selectedFacility.forEach((facility) => {
+      if (facility.toString() === 'TELEVISION'){
+        this.facilityList.push('Television');
+      }
+      else if (facility.toString() === 'REFRIGERATOR'){
+        this.facilityList.push('Refrigerator');
+      }
+      else if (facility.toString() === 'MINIBAR'){
+        this.facilityList.push('Minibar');
+      }
+      else if (facility.toString() === 'WIFI'){
+        this.facilityList.push('Wi-Fi');
+      }
+      else if (facility.toString() === 'COFFEE_MAKER'){
+        this.facilityList.push('Coffee Maker');
+      }
+      else if (facility.toString() === 'HAIR_DRYER'){
+        this.facilityList.push('Hair Dryer');
+      }
+    })
+    console.log(this.facilityList);
+    console.log("kesini dulu");
+    console.log(this.roomFacility);
   }
 
   onSubmit(): void {
     if (this.roomForm.valid) {
       const roomData = {
-        ...this.roomForm.value,
-        facility: this.getSelectedFacilities()
+        ...this.roomForm.value
       };
 
       console.log(roomData);
@@ -118,9 +140,11 @@ export class RoomFormComponent implements OnInit {
           next: (updatedRoom) => {
             console.log('Room updated successfully:', updatedRoom);
             this.save.emit(updatedRoom);
+            this.toastService.showToast('Room updated successfully!', 'success');
           },
           error: (err) => {
             console.error('Error updating room:', err);
+            this.toastService.showToast('Error updating room: ' + err, 'error');
           }
         });
       } else if (this.action === 'Add New Room') {
@@ -128,17 +152,17 @@ export class RoomFormComponent implements OnInit {
           next: (createdRoom) => {
             console.log('Room created successfully:', createdRoom);
             this.save.emit(createdRoom);
+            this.toastService.showToast('Room created successfully!', 'success');
           },
           error: (err) => {
             console.error('Error creating room:', err);
+            this.message = err;
+            this.toastService.showToast('Error creating room: ' + err, 'error');
           }
         });
       }
     }
-  }
-
-  getSelectedFacilities(): string[] {
-    return Object.keys(this.selectedFacilities).filter((key) => this.selectedFacilities[key]);
+    this.router.navigate(['/admin/rooms']);
   }
 
   onClose(): void {
@@ -146,20 +170,59 @@ export class RoomFormComponent implements OnInit {
     this.cancel.emit();
   }
 
-  onFacilityChange(facility: Facility, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const checked = input.checked;
-    const facilities = this.roomForm.get('facility')?.value as Facility[];
-    console.log(facilities);
+  onFacilityChange(facility: string, event: Event) {
+    const facilities = this.roomForm.get('facility')?.value || [];
+    const isChecked = (event.target as HTMLInputElement).checked;
   
-    if (checked) {
-      this.roomForm.patchValue({
-        facility: [...facilities, facility]
-      });
+    if (isChecked) {
+      var upperCaseFacility = facility.toUpperCase();
+      upperCaseFacility = upperCaseFacility.replace(' ', '_');
+      facilities.push(upperCaseFacility);
     } else {
-      this.roomForm.patchValue({
-        facility: facilities.filter(f => f !== facility)
-      });
+      const index = facilities.indexOf(facility);
+      if (index > -1) {
+        facilities.splice(index, 1);
+      }
+    }
+    console.log(facilities);
+    this.roomForm.get('facility')?.setValue(facilities);
+  }
+
+  onFileChange(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.roomService.importRoom(this.selectedFile).subscribe(
+        (event: HttpEvent<any>) => {
+          switch (event.type) {
+            case HttpEventType.UploadProgress:
+              if (event.total) {
+                const percent = Math.round((100 * event.loaded) / event.total);
+                this.message = `Progress: ${percent}%`;
+              }
+              break;
+            case HttpEventType.Response:
+              this.message = `Success: ${event.body}`;
+              this.showFileUpload = false;
+              this.toastService.showToast('Room data imported successfully!', 'success');
+              break;
+          }
+        },
+        error => {
+          if (error.status === 400) {
+            this.message = `Error: Invalid file content - ${error.error}`;
+          } else if (error.status === 500) {
+            this.message = `Error: ${error.error}`;
+          } else {
+            this.message = `Error: ${error.message}`;
+          }
+          this.toastService.showToast('Error import room data: '+error.message, 'error');
+        }
+      );
+    } else {
+      this.message = 'Please select a file first';
     }
   }
 }

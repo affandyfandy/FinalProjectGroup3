@@ -7,7 +7,7 @@ export interface Room {
     price: number
     hotelId: string
     photo: string
-    facility: string
+    facility: Facility[]; 
     createdBy?: string
     createdDate?: string
     lastModifiedBy?: string
