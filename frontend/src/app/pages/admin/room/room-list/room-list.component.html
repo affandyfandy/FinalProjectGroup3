@@ -37,8 +37,8 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ room.roomNumber }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.roomType }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price | currency:'Rp':'symbol':'1.0-0' }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">2024-09-20</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">admin</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.lastModifiedDate }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.lastModifiedBy}}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                   <div class="flex items-center">
                       <!-- Checkbox to represent the Switch -->

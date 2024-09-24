@@ -50,28 +50,28 @@ export class RoomService {
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.put<Room>(`${this.baseUrl}/${id}/activate`, {});
+        return this.http.put<Room>(`${this.baseUrl}/${id}/activate`, { headers });
     }
 
     deactivateRoom(id: string): Observable<Room> {
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.put<Room>(`${this.baseUrl}/${id}/deactivate`, {});
+        return this.http.put<Room>(`${this.baseUrl}/${id}/deactivate`, { headers });
     }
 
     editRoomData(id: string, roomData: Room): Observable<Room>{
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData);
+        return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData, { headers });
     }
 
     createRoom(roomData: Room): Observable<Room>{
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.post<Room>(`${this.baseUrl}/create`, roomData);
+        return this.http.post<Room>(`${this.baseUrl}/create`, roomData, { headers });
     }
     
 }

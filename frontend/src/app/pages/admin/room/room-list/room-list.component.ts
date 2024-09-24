@@ -9,6 +9,7 @@ import { RoomService } from '../../../../services/room.service';
 import { RoomFormComponent } from '../room-form/room-form.component';
 import { heroChevronDown, heroChevronUp, heroChevronUpDown, heroEllipsisVertical } from '@ng-icons/heroicons/outline';
 import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@ng-icons/heroicons/solid';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-room-list',
@@ -50,7 +51,8 @@ export class RoomListComponent {
   constructor(
     private roomService: RoomService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ){}
 
   ngOnInit(): void {
@@ -70,7 +72,6 @@ export class RoomListComponent {
       error: (err) => {
         this.error = 'Nothing to see..';
         console.error(err);
-        // this.toastService.showToast('Failed to load products', 'error');
       }
     });
   }
@@ -81,23 +82,23 @@ export class RoomListComponent {
         (updatedRoom: Room) => {
           console.log('Room deactivated successfully:', updatedRoom);
           room.status = 'INACTIVE';
-          // this.toastService.showToast('Product deactivated successfully!', 'success');
+          this.toastService.showToast('Room deactivated successfully!', 'success');
         },
         (error: any) => {
           console.error('Error deactivating room:', error);
-          // this.toastService.showToast('Error deactivating product.', 'error');
+          this.toastService.showToast('Error deactivating room: ' + error, 'error');
         }
       );
     } else {
       this.roomService.activateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
-          console.log('Product activated successfully:', updatedRoom);
+          console.log('Room activated successfully:', updatedRoom);
           room.status = 'ACTIVE';
-          // this.toastService.showToast('Product activated successfully!', 'success');
+          this.toastService.showToast('Room activated successfully!', 'success');
         },
         (error: any) => {
-          console.error('Error activating product:', error);
-          // this.toastService.showToast('Error deactivating product.', 'error');
+          console.error('Error activating room:', error);
+          this.toastService.showToast('Error deactivating room: ' + error, 'error');
         }
       );
     }
@@ -134,9 +135,11 @@ export class RoomListComponent {
       next: () => {
         console.log('Room deleted successfully');
         this.loadRooms(this.currentPage);
+        this.toastService.showToast('Room deleted successfully!', 'success');
       },
       error: (err) => {
         console.error('Error deleting room:', err);
+        this.toastService.showToast('Error deleting room: ' + err, 'error');
       }
     });
   }

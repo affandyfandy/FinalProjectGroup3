@@ -6,6 +6,7 @@ import { RoomService } from '../../../../services/room.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-room-form',
@@ -47,7 +48,8 @@ export class RoomFormComponent implements OnInit {
     private fb: FormBuilder,
     private roomService: RoomService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private toastService: ToastService) {
     this.roomForm = this.fb.group({
       roomType: ['',[Validators.required]],
       roomNumber: ['',[Validators.required]],
@@ -137,9 +139,11 @@ export class RoomFormComponent implements OnInit {
           next: (updatedRoom) => {
             console.log('Room updated successfully:', updatedRoom);
             this.save.emit(updatedRoom);
+            this.toastService.showToast('Room updated successfully!', 'success');
           },
           error: (err) => {
             console.error('Error updating room:', err);
+            this.toastService.showToast('Error updating room: ' + err, 'error');
           }
         });
       } else if (this.action === 'Add New Room') {
@@ -147,14 +151,17 @@ export class RoomFormComponent implements OnInit {
           next: (createdRoom) => {
             console.log('Room created successfully:', createdRoom);
             this.save.emit(createdRoom);
+            this.toastService.showToast('Room created successfully!', 'success');
           },
           error: (err) => {
             console.error('Error creating room:', err);
             this.message = err;
+            this.toastService.showToast('Error creating room: ' + err, 'error');
           }
         });
       }
     }
+    this.router.navigate(['/admin/rooms']);
   }
 
   onClose(): void {
