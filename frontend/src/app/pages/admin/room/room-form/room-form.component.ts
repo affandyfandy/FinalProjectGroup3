@@ -7,6 +7,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../../../services/toast.service';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-room-form',
@@ -185,5 +186,43 @@ export class RoomFormComponent implements OnInit {
     }
     console.log(facilities);
     this.roomForm.get('facility')?.setValue(facilities);
+  }
+
+  onFileChange(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.roomService.importRoom(this.selectedFile).subscribe(
+        (event: HttpEvent<any>) => {
+          switch (event.type) {
+            case HttpEventType.UploadProgress:
+              if (event.total) {
+                const percent = Math.round((100 * event.loaded) / event.total);
+                this.message = `Progress: ${percent}%`;
+              }
+              break;
+            case HttpEventType.Response:
+              this.message = `Success: ${event.body}`;
+              this.showFileUpload = false;
+              this.toastService.showToast('Room data imported successfully!', 'success');
+              break;
+          }
+        },
+        error => {
+          if (error.status === 400) {
+            this.message = `Error: Invalid file content - ${error.error}`;
+          } else if (error.status === 500) {
+            this.message = `Error: ${error.error}`;
+          } else {
+            this.message = `Error: ${error.message}`;
+          }
+          this.toastService.showToast('Error import room data: '+error.message, 'error');
+        }
+      );
+    } else {
+      this.message = 'Please select a file first';
+    }
   }
 }

@@ -73,5 +73,15 @@ export class RoomService {
         });
         return this.http.post<Room>(`${this.baseUrl}/create`, roomData, { headers });
     }
+
+    importRoom(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.http.post<any>(`${this.baseUrl}/import`, formData, {
+          observe: 'events',
+          reportProgress: true,
+          responseType: 'text' as 'json'
+        });
+    }
     
 }

@@ -115,6 +115,10 @@ export class RoomListComponent {
     this.router.navigate(['/admin/rooms/create']);
   }
 
+  importData() {
+    this.router.navigate(['/admin/rooms/import']);
+  }
+
   editRoom(room: Room) {
     console.log('Edit room', room);
     this.selectedRoom = room;

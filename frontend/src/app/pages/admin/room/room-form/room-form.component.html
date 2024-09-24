@@ -98,4 +98,24 @@
         <button *ngIf="action !== 'Room Details'" type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
       </div>
     </form>
+
+
+    <!-- File Upload Form -->
+    <form *ngIf="action === 'upload'" class="flex flex-col gap-4">
+      <label class="flex flex-col text-gray-700">
+        Select File:
+        <input type="file" (change)="onFileChange($event)" class="mt-2 p-2 border border-gray-300 rounded focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200"/>
+      </label>
+      <div *ngIf="selectedFile" class="mt-2 text-gray-700">
+        Selected file: {{ selectedFile.name }}
+      </div>
+      <div class="flex justify-end gap-4 mt-4">
+        <button type="button" (click)="onClose()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition duration-200">Close</button>
+        <button type="button" (click)="uploadFile()" class="px-4 py-2 bg-[#9E16B6] text-white rounded hover:bg-[#8A0CA1] transition duration-200">Upload</button>
+      </div>
+      <div *ngIf="message" class="alert mt-4">
+        {{ message }}
+      </div>
+    </form>
+    
   </div>
