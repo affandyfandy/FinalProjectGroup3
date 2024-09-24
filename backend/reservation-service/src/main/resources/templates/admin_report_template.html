@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Reservation Report</title>
+</head>
+<body>
+    <h1>All Reservations Report</h1>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Room ID</th>
+                <th>Reservation Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reservation : ${reservations}">
+                <td th:text="${reservation.id}"></td>
+                <td th:text="${reservation.userId}"></td>
+                <td th:text="${reservation.roomId}"></td>
+                <td th:text="${reservation.reservationDate}"></td>
+                <td th:text="${reservation.status}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

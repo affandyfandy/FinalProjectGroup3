@@ -1,0 +1,39 @@
+<div *ngIf="!isAdmin" class="container mx-auto px-4 py-8">
+  <div class="mb-5">
+    <h1 class="text-2xl font-bold text-primary mb-2">Explore Our Rooms</h1>
+    <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let room of rooms" class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="relative">
+        <div class="bg-gray-200 h-48 w-full"></div>
+      </div>
+      <div class="p-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-medium text-gray-600">{{ room.price | currency:'IDR':'symbol':'1.0-0' }}</span>
+          <div class="flex items-center">
+            <!-- Star Rating -->
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let index = index">
+              <ng-icon name="heroStarSolid" class="h-5 w-5 text-yellow-500"></ng-icon>
+            </ng-container>
+          </div>
+        </div>
+        
+        <!-- Room Type and Capacity with Choose Button -->
+        <div class="flex items-start justify-between">
+          <div class="flex flex-col justify-start space-y-1">
+            <a (click)="viewRoom(room.id)" class="text-lg font-semibold cursor-pointer">{{ room.roomType }} ROOM</a>
+            <p class="text-sm text-gray-600 flex items-center">
+              <ng-icon name="heroUserSolid" class="h-5 w-5"></ng-icon>
+              {{ room.capacity }} Guests
+            </p>
+          </div>
+          <button class="bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+            Book
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

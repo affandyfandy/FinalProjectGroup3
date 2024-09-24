@@ -1,15 +1,15 @@
 package com.hotel.reservation_service.controller;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.service.ReservationService;
-import com.hotel.reservation_service.util.PDFGenerator;
 
 @RestController
 @RequestMapping("api/v1/reservations")
@@ -82,35 +81,22 @@ public class ReservationController {
         return reservationService.searchReservations(status, userId, checkInDate, checkOutDate, pageable);
     }
 
-    @GetMapping("/export/user/{userId}")
-    public ResponseEntity<InputStreamResource> exportUserReservationsToPDF(@PathVariable String userId) {
-        List<Reservation> reservations = reservationService.getReservationsByUserId(userId);
-
-        ByteArrayInputStream bis = PDFGenerator.generateUserReservationPDF(reservations);
-
+    @GetMapping("/export/customer/{userId}")
+    public ResponseEntity<byte[]> exportCustomerReservationsToPdf(@PathVariable String userId) {
+        byte[] pdfContent = reservationService.generateCustomerReservationPdf(userId);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=user_reservations.pdf");
-
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=customer_reservations.pdf");
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
     }
 
     @GetMapping("/export/admin")
-    public ResponseEntity<InputStreamResource> exportAllReservationsToPDF() {
-        List<Reservation> reservations = reservationService.getAllReservations(Sort.by(Sort.Direction.DESC, "reservationDate"));
-
-        ByteArrayInputStream bis = PDFGenerator.generateAdminReservationReportPDF(reservations);
-
+    public ResponseEntity<byte[]> exportAdminReportToPdf(@RequestParam(required = false) String filter) {
+        byte[] pdfContent = reservationService.generateAdminReportPdf(filter);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=admin_reservation_report.pdf");
-
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=admin_reservations_report.pdf");
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
     }
+
+
+    
 }

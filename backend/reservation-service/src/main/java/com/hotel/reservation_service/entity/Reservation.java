@@ -1,5 +1,6 @@
 package com.hotel.reservation_service.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -47,5 +48,8 @@ public class Reservation extends AuditEntity {
 
     @Column(nullable = false)
     private UUID roomId;
+
+    @Column(nullable = true)
+    private BigDecimal amount;
 
 }
