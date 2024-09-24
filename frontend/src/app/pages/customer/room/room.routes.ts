@@ -10,7 +10,16 @@ export const RoomRoutes: Routes = [
         loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
     },
     {
-        path: 'edit/:id',
+        path: ':id',
         loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
+    },
+    {
+        path: 'reservation/:id',
+        loadComponent: () => import('./reservation-form/reservation-form.component').then(m => m.ReservationFormComponent)
+    },
+    {
+        path: 'payment/:id',
+        loadComponent: () => import('./payment/payment.component').then(m => m.PaymentFormComponent)
     }
+
 ];

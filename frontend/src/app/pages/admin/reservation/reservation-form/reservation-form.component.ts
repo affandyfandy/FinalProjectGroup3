@@ -90,7 +90,7 @@ export class ReservationFormComponent implements OnInit {
   }
 
   onClose(): void {
-    this.router.navigate(['/admin/reservation']);
+    this.router.navigate(['/admin/reservations']);
     this.cancel.emit();
   }
 }

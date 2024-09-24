@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import com.hotel.room_service.entity.Room;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,4 +20,7 @@ public interface RoomService {
     Page<Room> findAllActiveSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
     Room updateStatus(UUID id, String status);
     Room updateRoom(UUID id, Room room);
+    void deleteRoom(UUID id);
+    void saveAll(List<Room> listRoom);
+
 }

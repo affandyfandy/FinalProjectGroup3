@@ -1,6 +1,7 @@
 package com.hotel.room_service.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -162,4 +163,15 @@ public class RoomServiceImpl implements RoomService {
         }
         return findRoom;
     }
+    @Override
+    public void deleteRoom(UUID id) {
+        Room findRoom = findById(id);
+        roomRepository.delete(findRoom);
+    }
+
+    @Override
+    public void saveAll(List<Room> listRoom) {
+        roomRepository.saveAll(listRoom);
+    }
+
 }

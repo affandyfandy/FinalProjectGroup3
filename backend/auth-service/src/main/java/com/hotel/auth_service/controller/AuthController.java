@@ -1,9 +1,9 @@
 package com.hotel.auth_service.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.hotel.auth_service.dto.AuthDto;
+import com.hotel.auth_service.dto.RequestNewPasswordDto;
+import com.hotel.auth_service.dto.UserDto;
+import com.hotel.auth_service.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.hotel.auth_service.dto.AuthDto;
-import com.hotel.auth_service.dto.RequestNewPasswordDto;
-import com.hotel.auth_service.dto.UserDto;
-import com.hotel.auth_service.service.AuthService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")

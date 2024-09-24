@@ -28,9 +28,9 @@ import { AuthService } from '../../../../services/auth/auth.service';
 export class RoomListComponent implements OnInit{
   rooms: Room[] = [];
   totalElements: number = 0;
-  totalPages: number = 0;
+  totalPages: number[] = [];
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 6;
   sortColumn: string = 'name';
   sortDirection: string = 'asc';
   error: string = '';
@@ -58,7 +58,7 @@ export class RoomListComponent implements OnInit{
         console.log("Full response:", response);
         this.rooms = response.content;
         this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
+        this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
         this.currentPage = currentPage;
       },
       error: (err) => {
@@ -69,18 +69,25 @@ export class RoomListComponent implements OnInit{
     });
   }
 
-  changePage(page: number): void {
-    this.currentPage = page;
-    this.loadRooms(this.currentPage);
-    // this.toastService.showToast('Changed page', 'success');
-  }
-
   viewRoom(id: string) {
     this.router.navigate(['/rooms', id]);
   }
 
-  bookRoom(id: string) {
-    this.router.navigate(['/reservation', id]);
+  bookRoom(roomId: string) {
+    this.router.navigate(['/reservation', roomId]);
+  }
+
+
+  // Handle changes in page size
+  onPageSizeChange(event: Event): void {
+    this.pageSize = +(event.target as HTMLSelectElement).value;
+    this.currentPage = 1;
+    this.loadRooms(this.currentPage);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadRooms(this.currentPage);
   }
 
 }

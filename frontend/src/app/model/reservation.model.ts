@@ -9,6 +9,8 @@ export interface Reservation {
   status: string;
   userId: string;
   roomId: string;
+  room: Room;
+  amount: number;
   createdBy?: string;
   createdTime?: string;
   updatedBy?: string;

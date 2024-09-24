@@ -1,11 +1,9 @@
 package com.hotel.gateway.config;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -19,9 +17,11 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -43,8 +43,6 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .pathMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/**").permitAll()
-                        .pathMatchers("/api/v1/reservations/**").permitAll()
-                        .pathMatchers("/api/v1/payments/**").permitAll()
                         .pathMatchers("/api/v1/room/edit/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/create/**").hasAuthority("ADMIN")
                         .anyExchange().authenticated()

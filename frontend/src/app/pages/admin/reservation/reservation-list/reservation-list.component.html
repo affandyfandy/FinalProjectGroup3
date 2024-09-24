@@ -31,7 +31,7 @@
         <tr *ngFor="let reservation of reservations; let i = index" class="hover:bg-gray-50">
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
           <td (click)="openDetailsModal(reservation)" class="cursor-pointer px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ reservation.id }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.roomId }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.room.roomNumber }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.userId }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.reservationDate | date }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.checkInDate | date }}</td>
