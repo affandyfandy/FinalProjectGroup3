@@ -122,18 +122,25 @@ export class RoomFormComponent implements OnInit {
         this.facilityList.push('Hair Dryer');
       }
     })
-    console.log(this.facilityList);
-    console.log("kesini dulu");
-    console.log(this.roomFacility);
+
   }
 
   onSubmit(): void {
     if (this.roomForm.valid) {
       const roomData = {
-        ...this.roomForm.value
+        ...this.roomForm.value,
+        facility: this.roomForm.value.facility.map((f: string) => Facility[f as keyof typeof Facility])
       };
+      const formData = new FormData();
+      formData.append('roomData', JSON.stringify(this.roomForm.value));
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+      console.log("FormData before sending:");
+      for (let [key, value] of (formData as any).entries()) {
+          console.log(key, value);
+      }
 
-      console.log(roomData);
       if (this.action === 'Edit Room' && this.roomId) {
         this.roomService.editRoomData(this.roomId, roomData).subscribe({
           next: (updatedRoom) => {
@@ -147,7 +154,7 @@ export class RoomFormComponent implements OnInit {
           }
         });
       } else if (this.action === 'Add New Room') {
-        this.roomService.createRoom(roomData).subscribe({
+        this.roomService.createRoom(formData).subscribe({
           next: (createdRoom) => {
             console.log('Room created successfully:', createdRoom);
             this.save.emit(createdRoom);
@@ -183,20 +190,25 @@ export class RoomFormComponent implements OnInit {
   onFacilityChange(facility: string, event: Event) {
     const facilities = this.roomForm.get('facility')?.value || [];
     const isChecked = (event.target as HTMLInputElement).checked;
-  
+
+    let upperCaseFacility = facility.toUpperCase();
+    upperCaseFacility = upperCaseFacility.replace(' ', '_');
+    upperCaseFacility = upperCaseFacility.replace('-', '');
+
     if (isChecked) {
-      var upperCaseFacility = facility.toUpperCase();
-      upperCaseFacility = upperCaseFacility.replace(' ', '_');
-      facilities.push(upperCaseFacility);
+        if (!facilities.includes(upperCaseFacility)) {
+            facilities.push(upperCaseFacility);
+        }
     } else {
-      const index = facilities.indexOf(facility);
-      if (index > -1) {
-        facilities.splice(index, 1);
-      }
+        const index = facilities.indexOf(upperCaseFacility);
+        if (index > -1) {
+            facilities.splice(index, 1);
+        }
     }
+
     console.log(facilities);
     this.roomForm.get('facility')?.setValue(facilities);
-  }
+}
 
   onFileChange(event: any): void {
     this.selectedFile = event.target.files[0];

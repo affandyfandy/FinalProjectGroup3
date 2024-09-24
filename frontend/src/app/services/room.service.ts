@@ -67,15 +67,12 @@ export class RoomService {
         return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData, { headers });
     }
 
-    createRoom(roomData: Room): Observable<Room>{
+    createRoom(roomData: FormData): Observable<Room>{
         console.log("roomData");
         console.log(roomData);
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        // if (multipartFile) {
-        //     roomData.append('multipartFile', multipartFile, multipartFile.name);
-        //   }
         return this.http.post<Room>(`${this.baseUrl}/create`, roomData, { headers });
     }
 

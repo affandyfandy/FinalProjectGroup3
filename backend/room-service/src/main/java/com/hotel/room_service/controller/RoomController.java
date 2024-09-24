@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
@@ -54,11 +55,21 @@ public class RoomController {
     }   
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewRoom(@RequestBody CreateRoomDto newRoom,
-                @RequestParam("image") MultipartFile multipartFile) throws IOException{
-        String photo = roomService.byteToString(newRoom.getMultipartFile());
+    public ResponseEntity<?> createNewRoom(
+        @RequestParam("roomData") String roomDataJson,
+        @RequestParam(value="image", required = false) MultipartFile multipartFile) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        CreateRoomDto newRoom = objectMapper.readValue(roomDataJson, CreateRoomDto.class);
+
+        String photo = null;
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            photo = roomService.byteToString(multipartFile);
+        }
         Room room = roomMapper.toEntity(newRoom);
-        room.setPhoto(photo);
+        if (photo != null) {
+            room.setPhoto(photo);
+        }
         ReadRoomDto roomDto = roomMapper.toDto(roomService.create(room));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }

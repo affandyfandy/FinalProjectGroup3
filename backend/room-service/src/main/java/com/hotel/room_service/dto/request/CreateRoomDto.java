@@ -42,8 +42,9 @@ public class CreateRoomDto {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal price;
 
-    // @NotBlank(message = "Photo URL is required")
-    private MultipartFile multipartFile;
+    private String photo;
+
+    private MultipartFile image;
 
     @NotBlank(message = "Facility description is required")
     @Size(max = 500, message = "Facility description must not exceed 500 characters")
