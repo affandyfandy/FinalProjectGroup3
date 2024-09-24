@@ -32,11 +32,22 @@ export class ReservationListComponent implements OnInit {
     this.reservationService.getAllReservationsWithRooms().subscribe(reservations => {
       console.log(reservations);
     });
+    console.log(this.reservations[0].room);
+    
+    this.reservations.forEach(reservation => {
+      if (reservation && reservation.room && reservation.room.roomNumber) {
+        console.log(reservation.room.roomNumber);
+      } else {
+        console.log('Room information is missing for this reservation.');
+      }
+    });
+    
+    
   }
   
 
   loadReservations(page: number): void {
-    this.reservationService.getAllReservations(page - 1, this.pageSize).subscribe({
+    this.reservationService.getAllReservationsWithRooms(page - 1, this.pageSize).subscribe({
       next: (response: any) => {
         this.reservations = response.content;
         this.totalElements = response.totalElements;
