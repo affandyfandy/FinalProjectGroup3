@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KeyLabel } from '../../../../model/key-label.model';
+import { KeyValue } from '../../../../model/key-value.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filter-modal',
@@ -14,16 +15,50 @@ import { KeyLabel } from '../../../../model/key-label.model';
   styleUrl: './filter-modal.component.scss'
 })
 export class FilterModalComponent {
-  type: string = '';
-  searchText: string = '';
-  status: string = '';
-  fields: KeyLabel[] = [];
+  
+  @Input() type: string = '';
+  @Input() searchText: string = '';
+  @Input() status: string = '';
+  @Input() role: string = '';
 
-  @Output() filter = new EventEmitter<{ searchText: string, status: string }>();
+  queryParams: any = {};
+
+  @Input() fields: KeyValue[] = [];
+
+  @Output() filter = new EventEmitter<any>();
   @Output() close = new EventEmitter<void>();
 
+  constructor(private router: Router) { }
+
   applyFilter() {
-    this.filter.emit({ searchText: this.searchText, status: this.status });
+    if (this.type && this.searchText) {
+      this.queryParams[this.type] = this.searchText;
+    }
+    if (this.role) {
+      this.queryParams.role = this.role;
+    }
+    if (this.status) {
+      this.queryParams.status = this.status;
+    }
+
+    this.router.navigate([], {
+      queryParams: this.queryParams
+    });
+
+    this.filter.emit(this.queryParams);
+  }
+
+  clearFilter() {
+    this.queryParams = {};
+    this.searchText = '';
+    this.role = '';
+    this.status = '';
+
+    this.router.navigate([], {
+      queryParams: this.queryParams
+    });
+
+    this.filter.emit(this.queryParams);
   }
 
   onClose() {

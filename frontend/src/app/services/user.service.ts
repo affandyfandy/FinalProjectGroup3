@@ -15,8 +15,16 @@ export class UserService {
 
   constructor(private htpp: HttpClient, private authService: AuthService) { }
 
-  getUsers(page: number = 0, size: number = 10, sort: string = ''): Observable<Page<User>> {
+  getUsers(page: number = 0, size: number = 10, sort: string = '', search: string): Observable<Page<User>> {
     let params = new HttpParams().set('page', page).set('size', size).set('sort', sort); 
+
+    if (search) {
+      const searchParams = new URLSearchParams(search);
+      searchParams.forEach((value, key) => {
+          params = params.set(key, value);
+      });
+  }
+
     return this.htpp.get<Page<User>>(this.authApiUrl, { params });
   }
 

@@ -24,7 +24,7 @@
             <th *ngFor="let header of headers"
                 (click)="sortData(header.key)"
                 class="px-6 py-3 text-left text-sm font-medium text-primary cursor-pointer">
-                {{ header.label }}
+                {{ header.value }}
                 <ng-icon *ngIf="header.key !== 'no' && header.key !== ''" [name]="getSortIcon(header.key)"></ng-icon>
             </th>
           </tr>
@@ -94,4 +94,9 @@
   *ngIf="showFilterModal"
   (filter)="onApplyFilter($event)"
   (close)="onCloseFilter()"
+  [fields]="userFieldSearch"
+  [type]="type"
+  [searchText]="searchText"
+  [role]="role"
+  [status]="status"
 ></app-filter-modal>

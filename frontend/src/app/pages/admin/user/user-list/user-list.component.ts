@@ -5,11 +5,11 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDown, heroChevronUp, heroChevronUpDown, heroEllipsisVertical } from '@ng-icons/heroicons/outline';
 import { User } from '../../../../model/user.model';
 import { UserService } from '../../../../services/user.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
 import { DeleteModalComponent } from '../../../../main/components/modal/delete-modal/delete-modal.component';
 import { FilterModalComponent } from '../../../../main/components/modal/filter-modal/filter-modal.component';
-import { KeyLabel } from '../../../../model/key-label.model';
+import { KeyValue } from '../../../../model/key-value.model';
 
 @Component({
   selector: 'app-user-list',
@@ -47,55 +47,88 @@ export class UserListComponent implements OnInit {
   showDeleteModal: boolean = false;
   showFilterModal: boolean = false;
 
-  headers: KeyLabel[] = [
-    { key: 'no', label: 'No' },
-    { key: 'email', label: 'Email' },
-    { key: 'fullName', label: 'Full Name' },
-    { key: 'phone', label: 'Phone' },
-    { key: 'role', label: 'Role' },
-    { key: 'lastModifiedBy', label: 'Last Modified By' },
-    { key: 'lastModifiedDate', label: 'Last Modified Date' },
-    { key: 'status', label: 'Status' },
-    { key: '', label: '' }
+  queryParam: string = '';
+
+  headers: KeyValue[] = [
+    { key: 'no', value: 'No' },
+    { key: 'email', value: 'Email' },
+    { key: 'fullName', value: 'Full Name' },
+    { key: 'phone', value: 'Phone' },
+    { key: 'role', value: 'Role' },
+    { key: 'lastModifiedBy', value: 'Last Modified By' },
+    { key: 'lastModifiedDate', value: 'Last Modified Date' },
+    { key: 'status', value: 'Status' },
+    { key: '', value: '' }
   ];
 
-  userFieldSearch: KeyLabel[] = [
-    { key: 'email', label: 'Email' },
-    { key: 'fullName', label: 'Full Name' },
-    { key: 'phone', label: 'Phone' },
-    { key: 'role', label: 'Role' },
-    { key: 'phone', label: 'Phone' },
-    { key: 'dateOfBirth', label: 'Date of Birth' },
-    { key: 'address', label: 'Address' },
-    { key: 'status', label: 'Status' },
-    { key: 'createdBy', label: 'Created By' },
-    { key: 'createdDate', label: 'Created Date' },
-    { key: 'lastModifiedBy', label: 'Last Modified By' },
-    { key: 'lastModifiedDate', label: 'Last Modified Date' },
+  userFieldSearch: KeyValue[] = [
+    { key: 'email', value: 'Email' },
+    { key: 'fullName', value: 'Full Name' },
+    { key: 'phone', value: 'Phone' },
+    { key: 'role', value: 'Role' },
+    { key: 'phone', value: 'Phone' },
+    { key: 'dateOfBirth', value: 'Date of Birth' },
+    { key: 'address', value: 'Address' },
+    { key: 'status', value: 'Status' },
+    { key: 'createdBy', value: 'Created By' },
+    { key: 'createdDate', value: 'Created Date' },
+    { key: 'lastModifiedBy', value: 'Last Modified By' },
+    { key: 'lastModifiedDate', value: 'Last Modified Date' },
   ];
   
   sortDirection: { [key: string]: string } = {};
   currentSort: string = '';
 
+  type: string = '';
+  searchText: string = '';
+  status: string = '';
+  role: string = '';
+
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ){}
 
   ngOnInit(): void {
-    this.loadUsers(this.currentPage);
+    this.queryParam = this.getQueryParamsAsString(this.activatedRoute.snapshot.queryParams);
+    this.loadUsers(this.currentPage, this.pageSize, '', this.queryParam);
   }
 
-  loadUsers(page: number = 1, size: number = 10, sort: string = ''): void {
-    this.userService.getUsers(page - 1, size, sort).subscribe((data) => {
+  loadUsers(page: number = 1, size: number = 10, sort: string = '', search: any = {}): void {
+    this.userService.getUsers(page - 1, size, sort, search).subscribe((data) => {
       this.users = data.content;
       this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1);
       this.totalElements = data.totalElements;
-
-      console.log('Total pages:', this.totalPages);
-      console.log('Total elements:', this.totalElements);
-
     });
+  }
+
+  getQueryParamsAsString(params: any): string {
+    const queryArray = [];
+    let foundFirstQuery = false;
+
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        const value = params[key];
+        queryArray.push(`${key}=${encodeURIComponent(params[key])}`);
+
+        if (key === 'role') {
+          this.role = value;
+        }
+
+        if (key === 'status') {
+          this.status = value;
+        }
+
+        if (key !== 'role' && key !== 'status' && !foundFirstQuery) {
+          this.type = key;
+          this.searchText = value;
+          foundFirstQuery = true;
+        }
+      }
+    }
+
+    return queryArray.join('&');
   }
 
   changePage(page: number): void {
@@ -192,8 +225,11 @@ export class UserListComponent implements OnInit {
     this.showDeleteModal = false;
   }
 
-  onApplyFilter(filter: { searchText: string, status: string }) {
-    console.log('Filtering...', event);
+  onApplyFilter(queryParams: any) {
+    this.queryParam = this.getQueryParamsAsString(queryParams);
+    console.log('Query Params:', this.queryParam); 
+    this.loadUsers(this.currentPage, this.pageSize, '', this.queryParam);
+    this.showFilterModal = false;
   }
 
   onCloseFilter() {
