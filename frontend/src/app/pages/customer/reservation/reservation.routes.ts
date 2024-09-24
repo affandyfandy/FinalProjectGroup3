@@ -6,7 +6,7 @@ export const ReservationRoutes: Routes = [
         loadComponent: () => import('./reservation-list/reservation-list.component').then(m => m.ReservationListComponent)
     },
     {
-        path: 'reschedule',
-        loadComponent: () => import('./reschedule-form/reschedule-form.component').then(m => m.RescheduleFormComponent)
+        path: 'create',
+        loadComponent: () => import('./reservation-form/reservation-form.component').then(m => m.ReservationFormComponent)
     }
 ];

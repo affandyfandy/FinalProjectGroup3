@@ -76,7 +76,7 @@ export class ReservationListComponent implements OnInit {
   }
 
   createReservation() {
-    this.router.navigate(['/admin/reservation/create']);
+    this.router.navigate(['/reservation/create']);
   }
 
   changePage(page: number): void {
