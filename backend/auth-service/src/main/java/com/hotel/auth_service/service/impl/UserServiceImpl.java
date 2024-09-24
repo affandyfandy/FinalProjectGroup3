@@ -1,11 +1,13 @@
 package com.hotel.auth_service.service.impl;
 
+import com.hotel.auth_service.criteria.UserSearchCriteria;
 import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.entity.Status;
 import com.hotel.auth_service.entity.User;
 import com.hotel.auth_service.mapper.UserMapper;
 import com.hotel.auth_service.repository.UserRepository;
 import com.hotel.auth_service.service.UserService;
+import com.hotel.auth_service.spesification.UserSpesification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +37,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::toUserDto);
+    public Page<UserDto> getAllUsers(Pageable pageable, UserSearchCriteria criteria) {
+        UserSpesification userSpesification = new UserSpesification(criteria);
+        return userRepository.findAll(userSpesification, pageable).map(userMapper::toUserDto);
     }
 
     @Override
@@ -47,6 +50,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
+
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new IllegalStateException("User with email " + userDto.getEmail() + " already exists");
+        }
+
         User user = userMapper.toUserEntity(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userMapper.toUserDto(userRepository.save(user));
@@ -56,6 +64,11 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDto> updateUser(String email, UserDto userDto) {
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {
+
+            if (userDto.getPhoto() == null ) {
+                userDto.setPhoto("https://ui-avatars.com/api/?name=" + userDto.getFullName().replace(" ", "+"));
+            }
+
             User user = userMapper.toUserEntity(userDto);
             user.setEmail(existingUser.get().getEmail());
             user = userRepository.save(user);
