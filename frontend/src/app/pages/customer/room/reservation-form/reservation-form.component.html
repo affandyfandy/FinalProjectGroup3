@@ -4,10 +4,8 @@
 
   <form (ngSubmit)="submitReservation()">
     <label>Check-In Date:</label>
-    <input type="date" [(ngModel)]="reservation.checkInDate" name="checkInDate" required>
 
     <label>Check-Out Date:</label>
-    <input type="date" [(ngModel)]="reservation.checkOutDate" name="checkOutDate" required>
 
     <button type="submit" class="btn btn-primary">Submit Reservation</button>
   </form>
