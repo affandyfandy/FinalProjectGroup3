@@ -6,11 +6,12 @@
     <h1 class="text-2xl font-bold text-gray-800 mb-6">
       {{ action }}
     </h1>
-    <form class="space-y-6" [formGroup]="roomForm" (ngSubmit)="onSubmit()">
+    <form *ngIf="action !== 'Import Room Data'" class="space-y-6" [formGroup]="roomForm" (ngSubmit)="onSubmit()">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-4">
           <div class="bg-gray-100 p-4 rounded-lg">
             <div class="bg-gray-300 w-32 h-32 mx-auto mb-2"></div>
+            <input type="file" (change)="onFileSelect($event)" accept="image/*">
             <p class="text-center text-sm text-gray-600">Upload Photo</p>
           </div>
           <div>
@@ -95,13 +96,13 @@
       </div>
       <div class="flex justify-center space-x-3">
         <button *ngIf="action !== 'Room Details'" (click)="onClose()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Cancel</button>
-        <button *ngIf="action !== 'Room Details'" type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
+        <button *ngIf="action !== 'Room Details'" [disabled]="!roomForm.valid" type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
       </div>
     </form>
 
 
     <!-- File Upload Form -->
-    <form *ngIf="action === 'upload'" class="flex flex-col gap-4">
+    <form *ngIf="action === 'Import Room Data'" class="flex flex-col gap-4">
       <label class="flex flex-col text-gray-700">
         Select File:
         <input type="file" (change)="onFileChange($event)" class="mt-2 p-2 border border-gray-300 rounded focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200"/>

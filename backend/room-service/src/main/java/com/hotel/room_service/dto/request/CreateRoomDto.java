@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -40,12 +42,8 @@ public class CreateRoomDto {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal price;
 
-    // @NotNull(message = "Hotel ID is required")
-    // private UUID hotelId;
-
-    @NotBlank(message = "Photo URL is required")
-    // @URL(message = "Photo must be a valid URL")
-    private String photo;
+    // @NotBlank(message = "Photo URL is required")
+    private MultipartFile multipartFile;
 
     @NotBlank(message = "Facility description is required")
     @Size(max = 500, message = "Facility description must not exceed 500 characters")

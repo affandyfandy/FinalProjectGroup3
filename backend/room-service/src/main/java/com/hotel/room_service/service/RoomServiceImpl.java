@@ -1,16 +1,18 @@
 package com.hotel.room_service.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hotel.room_service.entity.Room;
 import com.hotel.room_service.entity.Status;
@@ -172,6 +174,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void saveAll(List<Room> listRoom) {
         roomRepository.saveAll(listRoom);
+    }
+
+    @Override
+    public String byteToString(MultipartFile file) throws IOException {
+        byte[] imageBytes = file.getBytes();
+        return Base64.getEncoder().encodeToString(imageBytes);
     }
 
 }

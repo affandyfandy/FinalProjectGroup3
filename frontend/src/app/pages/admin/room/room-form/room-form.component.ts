@@ -35,14 +35,13 @@ export class RoomFormComponent implements OnInit {
   roomStatus = Object.values(Status); 
   selectedRoomStatus: Status = Status.ACTIVE; 
   roomFacility = Object.values(Facility);
-
   selectedFacility: Facility[] = [];
   facilityList: string[] = [];
+  selectedFile?: File;
 
   roomForm: FormGroup;
   isVisible = true;
   showFileUpload = false;
-  selectedFile: File | null = null;
   message: string | null = null;
 
   constructor(
@@ -66,7 +65,7 @@ export class RoomFormComponent implements OnInit {
     console.log(this.route.snapshot.url);
     const currentRoute = this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path;
     console.log(currentRoute);
-    this.action = currentRoute === 'edit' ? 'Edit Room' : (currentRoute === 'create' ? 'Add New Room' : 'Room Details');
+    this.action = currentRoute === 'edit' ? 'Edit Room' : (currentRoute === 'create' ? 'Add New Room' : (currentRoute === 'import' ? 'Import Room Data' : 'Room Details'));
     this.roomId = this.route.snapshot.paramMap.get('id');
     this.loadRoom();
   }
@@ -161,8 +160,19 @@ export class RoomFormComponent implements OnInit {
           }
         });
       }
+      this.onClose();
     }
-    this.router.navigate(['/admin/rooms']);
+  }
+
+  onFileSelect(event: any): void {
+    const file = event.target.files[0];
+    console.log(file);
+    if (file) {
+      this.selectedFile = file;
+      this.roomForm.patchValue({
+        multipartFile: file
+      });
+    }
   }
 
   onClose(): void {

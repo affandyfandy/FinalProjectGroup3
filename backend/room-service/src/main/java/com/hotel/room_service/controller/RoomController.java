@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,8 +54,11 @@ public class RoomController {
     }   
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewRoom(@RequestBody CreateRoomDto newRoom){
+    public ResponseEntity<?> createNewRoom(@RequestBody CreateRoomDto newRoom,
+                @RequestParam("image") MultipartFile multipartFile) throws IOException{
+        String photo = roomService.byteToString(newRoom.getMultipartFile());
         Room room = roomMapper.toEntity(newRoom);
+        room.setPhoto(photo);
         ReadRoomDto roomDto = roomMapper.toDto(roomService.create(room));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }

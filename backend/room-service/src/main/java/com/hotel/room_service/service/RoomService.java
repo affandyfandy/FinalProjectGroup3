@@ -2,9 +2,11 @@ package com.hotel.room_service.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hotel.room_service.entity.Room;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -22,5 +24,6 @@ public interface RoomService {
     Room updateRoom(UUID id, Room room);
     void deleteRoom(UUID id);
     void saveAll(List<Room> listRoom);
+    String byteToString(MultipartFile file) throws IOException;
 
 }
