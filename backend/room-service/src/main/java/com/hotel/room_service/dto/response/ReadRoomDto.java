@@ -1,6 +1,7 @@
 package com.hotel.room_service.dto.response;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
 
@@ -24,4 +25,8 @@ public class ReadRoomDto {
     private BigDecimal price;
     private String photo;
     private ArrayList<String> facility;
+    private String createdBy;
+    private String lastModifiedBy;
+    private LocalDate createdDate;
+    private LocalDate lastModifiedDate;
 }

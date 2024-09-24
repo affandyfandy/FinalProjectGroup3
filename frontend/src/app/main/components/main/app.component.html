@@ -2,6 +2,7 @@
   <app-header class="fixed top-0 left-0 right-0" *ngIf="!isAuthPage()"></app-header>
 
   <div class="flex-grow" [ngClass]="{'pt-[55px]': !isAuthPage()}">
+    <app-toast></app-toast>
     <router-outlet></router-outlet>
   </div>
 

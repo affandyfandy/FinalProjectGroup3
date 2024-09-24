@@ -1,0 +1,84 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-5 flex justify-between items-end">
+    <div>
+      <h1 class="text-2xl font-bold text-primary mb-2">Manage Reservations</h1>
+      <p class="text-sm text-gray-600">Manage your bookings or create a new reservation.</p>
+    </div>
+    <div class="flex space-x-2">
+      <button (click)="createReservation()"
+      class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        Add New Reservation
+      </button>
+      <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        Export Data
+      </button>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <!-- Dynamic table headers for Reservations -->
+          <th *ngFor="let header of ['No', 'Reservation ID', 'Room ID', 'Guest', 'Reservation Date', 'Check-in', 'Check-out', 'Status', '']"
+              class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
+              {{ header }}
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- Iterate over reservations data -->
+        <tr *ngFor="let reservation of reservations; let i = index" class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+          <td (click)="openDetailsModal(reservation)" class="cursor-pointer px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ reservation.id }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.room.roomNumber }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.userId }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.reservationDate | date }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.checkInDate | date }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.checkOutDate | date }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': reservation.status === 'CONFIRMED',
+                    'bg-red-100 text-red-800': reservation.status !== 'CONFIRMED'
+                  }">
+              {{ reservation.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="totalPages > 1" class="mt-4 flex justify-center">
+    <button class="px-4 py-2 mx-2 bg-gray-200" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+    <button class="px-4 py-2 mx-2 bg-gray-200" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+
+  <!-- Modal for Reservation Details -->
+<ng-container *ngIf="selectedReservation">
+  <div class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="modal-background absolute inset-0 bg-black opacity-50" (click)="closeDetailsModal()"></div>
+    <div class="modal-content relative bg-white rounded-lg shadow-lg p-6 z-10">
+      <h2 class="text-xl font-bold mb-4">Reservation Details</h2>
+
+      <!-- Close button -->
+      <button (click)="closeDetailsModal()"
+              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-20">
+        &times;
+      </button>
+
+      <div class="space-y-2">
+        <p><strong>Reservation ID:</strong> {{ selectedReservation.id }}</p>
+        <p><strong>Created By:</strong> {{ selectedReservation.createdBy }}</p>
+        <p><strong>Created At:</strong> {{ selectedReservation.createdTime | date }}</p>
+        <p><strong>Updated By:</strong> {{ selectedReservation.updatedBy }}</p>
+        <p><strong>Updated At:</strong> {{ selectedReservation.updatedTime | date }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+
+</div>

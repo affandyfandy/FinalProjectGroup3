@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
-
     @Query(nativeQuery = true, value = "SELECT * FROM rooms WHERE status LIKE 'ACTIVE'")
     Page<Room> findAllActiveRooms(Pageable pageable);
 

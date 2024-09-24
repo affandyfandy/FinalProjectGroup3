@@ -1,11 +1,8 @@
 package com.hotel.room_service.dto.request;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
-import com.hotel.room_service.entity.Facility;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -52,5 +49,5 @@ public class CreateRoomDto {
 
     @NotBlank(message = "Facility description is required")
     @Size(max = 500, message = "Facility description must not exceed 500 characters")
-    private ArrayList<String> facility;
+    private List<String> facility;
 }

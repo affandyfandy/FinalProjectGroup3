@@ -17,10 +17,14 @@ export class RoomService {
     getAllRooms(
         pageNo: number,
         pageSize: number, 
+        sortBy: string,
+        sortOrder: string
     ): Observable<RoomResponse> {
         const params = new HttpParams()
         .set('pageNo', pageNo.toString())
-        .set('pageSize', pageSize.toString());
+        .set('pageSize', pageSize.toString())
+        .set('sortBy', sortBy.toString())
+        .set('sortOrder', sortOrder.toString());
         return this.http.get<RoomResponse>(this.baseUrl, { params });
     }
 
@@ -38,32 +42,46 @@ export class RoomService {
         return this.http.get<Room>(`${this.baseUrl}/${id}`);
     }
 
+    deleteRoom(id: string): Observable<any> {
+        return this.http.delete<Room>(`${this.baseUrl}/${id}`);
+    }
+
     activateRoom(id: string): Observable<Room> {
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.put<Room>(`${this.baseUrl}/${id}/activate`, {});
+        return this.http.put<Room>(`${this.baseUrl}/${id}/activate`, { headers });
     }
 
     deactivateRoom(id: string): Observable<Room> {
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.put<Room>(`${this.baseUrl}/${id}/deactivate`, {});
+        return this.http.put<Room>(`${this.baseUrl}/${id}/deactivate`, { headers });
     }
 
     editRoomData(id: string, roomData: Room): Observable<Room>{
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData);
+        return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData, { headers });
     }
 
     createRoom(roomData: Room): Observable<Room>{
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
-        return this.http.post<Room>(`${this.baseUrl}/create`, roomData);
+        return this.http.post<Room>(`${this.baseUrl}/create`, roomData, { headers });
+    }
+
+    importRoom(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.http.post<any>(`${this.baseUrl}/import`, formData, {
+          observe: 'events',
+          reportProgress: true,
+          responseType: 'text' as 'json'
+        });
     }
     
 }

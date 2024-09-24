@@ -9,8 +9,8 @@
           class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
           Add New Room
         </button>
-        <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
-          Export Data
+        <button (click)="importData()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+          Import Data
         </button>
         <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
           <span class="sr-only">Toggle Filters</span>
@@ -22,22 +22,23 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <!-- Use *ngFor for dynamic table headers -->
-              <th *ngFor="let header of ['No', 'Room Number', 'Room Type', 'Price', 'Last Modified Date', 'Last Modified By', 'Status', '']" 
-                  class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
-                {{ header }}
+              <th *ngFor="let header of ['No', 'Room Number', 'Room Type', 'Price', 'Last Modified Date', 'Last Modified By', 'Status']"
+                  (click)="sortData(header.toLowerCase().replace(' ', ''))"
+                  class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider cursor-pointer">
+                  {{ header }}
+                  <ng-icon *ngIf="header !== 'No'" name="heroChevronUpDown"></ng-icon>
               </th>
             </tr>
-          </thead>
+          </thead>          
           <tbody class="bg-white divide-y divide-gray-200">
             <!-- Use *ngFor to iterate over rooms data -->
             <tr *ngFor="let room of rooms; let i = index" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ room.roomNumber }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.roomType }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price | currency:'IDR':'symbol':'1.0-0' }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">2024-09-20</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">admin</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.price | currency:'Rp':'symbol':'1.0-0' }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.lastModifiedDate }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ room.lastModifiedBy}}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                   <div class="flex items-center">
                       <!-- Checkbox to represent the Switch -->
@@ -62,12 +63,22 @@
                     <ul class="list-none p-2 m-0">
                       <li (click)="editRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
                       <li (click)="viewRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Detail</li>
+                      <li (click)="deleteRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Delete</li>
                     </ul>
                   </div>
                 </td>
             </tr>
           </tbody>
         </table>
+    </div>
+    <div class="flex items-center justify-center mt-5">
+      <button
+      *ngFor="let page of totalPages"
+      (click)="onPageChange(page)"
+      class="px-3 py-1 m-1 text-sm font-medium bg-primary text-white rounded-lg border border-transparent  rounded hover:bg-white hover:border-primary hover:text-primary"
+      [ngClass]="{'bg-primary text-white': currentPage === page, 'bg-gray-300': currentPage !== page}">
+      {{ page }}
+      </button>
     </div>
 </div>
 
