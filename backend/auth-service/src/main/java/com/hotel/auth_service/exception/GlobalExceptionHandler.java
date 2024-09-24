@@ -75,9 +75,6 @@ public class GlobalExceptionHandler {
             errorResponse.put(MESSAGE, ex.getMessage());
         }
 
-        errorResponse.put("exception", ex.getClass().getSimpleName());
-        errorResponse.put("stackTrace", ex.getStackTrace());
-
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

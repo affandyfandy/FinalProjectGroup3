@@ -1,5 +1,6 @@
 package com.hotel.auth_service.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    @NotBlank(message = "Email should not be blank")
     private String email;
+
+    @NotBlank(message = "Password should not be blank")
     private String password;
     private String role;
     private String fullName;

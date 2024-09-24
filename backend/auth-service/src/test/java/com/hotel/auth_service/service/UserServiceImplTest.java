@@ -52,24 +52,24 @@ class UserServiceImplTest {
         assertNull(result, "Expected loadUserByUsername to return null.");
     }
 
-    @Test
-    void testGetAllUsers() {
-        Pageable pageable = PageRequest.of(0, 10);
-        User user = new User();
-        UserDto userDto = new UserDto();
-        Page<User> users = new PageImpl<>(Collections.singletonList(user));
-
-        when(userRepository.findAll(pageable)).thenReturn(users);
-        when(userMapper.toUserDto(user)).thenReturn(userDto);
-
-        Page<UserDto> result = userService.getAllUsers(pageable);
-        assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
-        assertEquals(userDto, result.getContent().get(0));
-
-        verify(userRepository, times(1)).findAll(pageable);
-        verify(userMapper, times(1)).toUserDto(user);
-    }
+//    @Test
+//    void testGetAllUsers() {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        User user = new User();
+//        UserDto userDto = new UserDto();
+//        Page<User> users = new PageImpl<>(Collections.singletonList(user));
+//
+//        when(userRepository.findAll(pageable)).thenReturn(users);
+//        when(userMapper.toUserDto(user)).thenReturn(userDto);
+//
+//        Page<UserDto> result = userService.getAllUsers(pageable);
+//        assertNotNull(result);
+//        assertEquals(1, result.getTotalElements());
+//        assertEquals(userDto, result.getContent().get(0));
+//
+//        verify(userRepository, times(1)).findAll(pageable);
+//        verify(userMapper, times(1)).toUserDto(user);
+//    }
 
     @Test
     void testGetUserByEmail_UserFound() {

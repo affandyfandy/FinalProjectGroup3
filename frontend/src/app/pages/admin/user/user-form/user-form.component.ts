@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import { User } from '../../../../model/user.model';
 
@@ -15,7 +15,12 @@ import { User } from '../../../../model/user.model';
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss'
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit { 
+
+  user: any = {};
+  isEditMode: boolean = false;
+  isViewMode: boolean = false;
+  
   email = '';
   fullName = '';
   password = '';
@@ -25,7 +30,37 @@ export class UserFormComponent {
   role = 'CUSTOMER';
   address = '';
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private userService: UserService, 
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    const selectedEmail = this.route.snapshot.paramMap.get('id');
+    if (selectedEmail) {
+      this.email = selectedEmail;
+      this.loadUser(this.email);
+      this.isEditMode = this.route.snapshot.url.map(segment => segment.path).includes('edit');
+      this.isViewMode = !this.isEditMode;
+    }
+  }
+
+  loadUser(email: string) {
+    this.userService.getUserById(email).subscribe(
+      response => {
+        this.user = response;
+        this.email = this.user.email;
+        this.fullName = this.user.fullName;
+        this.password = this.user.password;
+        this.phone = this.user.phone;
+        this.dateOfBirth = this.user.dateOfBirth;
+        this.status = this.user.status;
+        this.role = this.user.role;
+        this.address = this.user.address;
+      }
+    );
+  }
 
   onSubmit(form: NgForm) {
     if (form.valid) {
@@ -48,8 +83,7 @@ export class UserFormComponent {
     }
   }
 
-  cancel() {
-    console.log('Cancel clicked');
-    // Handle cancel action
+  onCancel() {
+    this.router.navigate(['/admin/users']);
   }
 }
