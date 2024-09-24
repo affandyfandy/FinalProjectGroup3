@@ -34,7 +34,8 @@ export class RoomFormComponent implements OnInit {
   selectedRoomStatus: Status = Status.ACTIVE; 
   roomFacility = Object.values(Facility);
 
-  selectedFacility: string[] = [];
+  selectedFacility: Facility[] = [];
+  facilityList: string[] = [];
 
   roomForm: FormGroup;
   isVisible = true;
@@ -93,8 +94,35 @@ export class RoomFormComponent implements OnInit {
 
   updateSelectedFacilities(): void {
     if (this.room?.facility) {
-      this.selectedFacility = [...this.room.facility];
+      this.selectedFacility = this.room.facility.map((facility: Facility) => facility);
+    } else {
+      this.selectedFacility = [];
     }
+    // console.log(this.selectedFacility);
+
+    this.selectedFacility.forEach((facility) => {
+      if (facility.toString() === 'TELEVISION'){
+        this.facilityList.push('Television');
+      }
+      else if (facility.toString() === 'REFRIGERATOR'){
+        this.facilityList.push('Refrigerator');
+      }
+      else if (facility.toString() === 'MINIBAR'){
+        this.facilityList.push('Minibar');
+      }
+      else if (facility.toString() === 'WIFI'){
+        this.facilityList.push('Wi-Fi');
+      }
+      else if (facility.toString() === 'COFFEE_MAKER'){
+        this.facilityList.push('Coffee Maker');
+      }
+      else if (facility.toString() === 'HAIR_DRYER'){
+        this.facilityList.push('Hair Dryer');
+      }
+    })
+    console.log(this.facilityList);
+    console.log("kesini dulu");
+    console.log(this.roomFacility);
   }
 
   onSubmit(): void {

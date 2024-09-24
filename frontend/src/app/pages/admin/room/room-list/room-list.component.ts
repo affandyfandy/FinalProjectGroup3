@@ -42,7 +42,10 @@ export class RoomListComponent {
 
   selectedRoom: Room | null = null;
   showOptions: boolean = false;
+
   isModalVisible: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
 
   constructor(
     private roomService: RoomService,
@@ -166,5 +169,13 @@ export class RoomListComponent {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadRooms(this.currentPage);
+  }
+
+  openModal() {
+    this.isModalVisible = true;
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
   }
 }
