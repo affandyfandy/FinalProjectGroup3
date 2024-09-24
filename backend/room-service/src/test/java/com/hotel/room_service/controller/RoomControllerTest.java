@@ -54,7 +54,7 @@ public class RoomControllerTest {
     }
 
     @AfterEach
-    private void cleanup(){
+    public void cleanup(){
         room = null;
     }
 

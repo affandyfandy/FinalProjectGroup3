@@ -15,8 +15,8 @@ export class UserService {
 
   constructor(private htpp: HttpClient, private authService: AuthService) { }
 
-  getUsers(page: number = 0, size: number = 10): Observable<Page<User>> {
-    let params = new HttpParams().set('page', page).set('size', size); 
+  getUsers(page: number = 0, size: number = 10, sort: string = ''): Observable<Page<User>> {
+    let params = new HttpParams().set('page', page).set('size', size).set('sort', sort); 
     return this.htpp.get<Page<User>>(this.authApiUrl, { params });
   }
 

@@ -1,61 +1,97 @@
 <div class="container mx-auto px-4 py-8">
   <div class="mb-5 flex justify-between items-end">
-      <div>
-        <h1 class="text-2xl font-bold text-primary mb-2">Manage User</h1>
-        <p class="text-sm text-gray-600">Manage the user for system</p>
-      </div>
-      <a href="/user/create" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
-        Create User
-      </a>
+    <div>
+      <h1 class="text-2xl font-bold text-primary mb-2">Manage Users</h1>
+      <p class="text-sm text-gray-600">Manage your hotel's users</p>
+    </div>
+    <div class="flex space-x-2">
+      <button (click)="createUser()" 
+        class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        Add New User
+      </button>
+      <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        Export Data
+      </button>
+      <button (click)="filterUser()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+          <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
+      </button>
+    </div>
   </div>
-  <div class="overflow-x-auto bg-white rounded-lg shadow">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <!-- Use *ngFor for dynamic table headers -->
-          <th *ngFor="let header of ['No', 'Email', 'Full Name', 'Last Modified By', 'Last Modified Date', 'Status', '']" 
-              class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
-            {{ header }}
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <!-- Use *ngFor to iterate over rooms data -->
-        <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ i + 1 }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ user.email }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.fullName }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.lastModifiedBy }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.lastModifiedDate }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
-              <div class="flex items-center">
-                  <!-- Checkbox to represent the Switch -->
-                  <input type="checkbox" [checked]="user.status === 'ACTIVE'" (change)="toggleItemStatus(user)" />
-                  
-                  <!-- Conditional styling based on room status -->
-                  <span 
-                    class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                    [ngClass]="{
-                      'bg-green-100 text-green-800': user.status === 'ACTIVE',
-                      'bg-red-100 text-red-800': user.status !== 'ACTIVE'
-                    }">
-                    {{ user.status }}
-                  </span>
-              </div>
-          </td>
-          <!-- <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <button (click)="toggleOptions($event, room)" class="text-gray-400 hover:text-gray-500">
-                <ng-icon name="heroEllipsisVertical" class="h-5 w-5"></ng-icon>
-              </button>
-              <div *ngIf="selectedRoom === room && showOptions" class="absolute bg-white border border-gray-300 shadow-lg rounded-lg mt-2">
-                <ul class="list-none p-2 m-0">
-                  <li (click)="editRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
-                  <li (click)="viewRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">View</li>
-                </ul>
-              </div>
-            </td> -->
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th *ngFor="let header of headers"
+                (click)="sortData(header.key)"
+                class="px-6 py-3 text-left text-sm font-medium text-primary cursor-pointer">
+                {{ header.label }}
+                <ng-icon *ngIf="header.key !== 'no' && header.key !== ''" [name]="getSortIcon(header.key)"></ng-icon>
+            </th>
+          </tr>
+        </thead>          
+        <tbody class="bg-white divide-y divide-gray-200">
+          <!-- Use *ngFor to iterate over rooms data -->
+          <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] font-medium text-primary">{{ user.email }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.fullName }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.phone }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.role }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.lastModifiedBy }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.lastModifiedDate }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">
+                <div class="flex items-center">
+                    <!-- Checkbox to represent the Switch -->
+                    <input type="checkbox" [checked]="user.status === 'ACTIVE'" (change)="toggleItemStatus(user)" />
+                    
+                    <!-- Conditional styling based on room status -->
+                    <span 
+                      class="ml-2 px-2 inline-flex text-[13px] leading-5 font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-green-100 text-green-800': user.status === 'ACTIVE',
+                        'bg-red-100 text-red-800': user.status !== 'ACTIVE'
+                      }">
+                      {{ user.status }}
+                    </span>
+                </div>
+            </td>
+            <td class="py-4 whitespace-nowrap text-sm font-medium">
+                <button (click)="toggleOptions($event, user)" class="text-gray-400 hover:text-gray-500">
+                  <ng-icon name="heroEllipsisVertical" class="h-5 w-5"></ng-icon>
+                </button>
+                <div *ngIf="selectedUser === user && showOptions" class="absolute bg-white border border-gray-300 shadow-lg rounded-lg mt-2">
+                  <ul class="list-none p-2 m-0">
+                    <li (click)="editUser(user)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
+                    <li (click)="viewUser(user)" class="p-2 cursor-pointer hover:bg-gray-100">Detail</li>
+                    <li (click)="deleteUser(user)" class="p-2 cursor-pointer hover:bg-gray-100">Delete</li>
+                  </ul>
+                </div>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  <div class="flex items-center justify-center mt-5">
+    <button
+    *ngFor="let page of totalPages"
+    (click)="onPageChange(page)"
+    class="px-3 py-1 m-1 text-sm font-medium bg-primary text-white rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary"
+    [ngClass]="{'bg-primary text-white': currentPage === page, 'bg-gray-300': currentPage !== page}">
+    {{ page }}
+    </button>
   </div>
 </div>
+
+<app-delete-modal
+  *ngIf="showDeleteModal"
+  [entityId]="selectedUser!.email"
+  [entityType]="'user'"
+  (confirm)="onDeleteConfirmed()"
+  (cancel)="onCancelDelete()"
+></app-delete-modal>
+
+<app-filter-modal
+  *ngIf="showFilterModal"
+  (filter)="onApplyFilter($event)"
+  (close)="onCloseFilter()"
+></app-filter-modal>
