@@ -162,4 +162,10 @@ public class RoomServiceImpl implements RoomService {
         }
         return findRoom;
     }
+
+    @Override
+    public void deleteRoom(UUID id) {
+        Room findRoom = findById(id);
+        roomRepository.delete(findRoom);
+    }
 }

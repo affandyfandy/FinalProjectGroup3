@@ -42,6 +42,10 @@ export class RoomService {
         return this.http.get<Room>(`${this.baseUrl}/${id}`);
     }
 
+    deleteRoom(id: string): Observable<any> {
+        return this.http.delete<Room>(`${this.baseUrl}/${id}`);
+    }
+
     activateRoom(id: string): Observable<Room> {
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value

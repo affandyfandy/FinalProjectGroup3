@@ -106,12 +106,6 @@ export class RoomListComponent {
     this.selectedRoom = this.selectedRoom === room ? null : room;
     this.showOptions = this.selectedRoom === room ? !this.showOptions : true;
   }
-
-  // changePage(page: number): void {
-  //   this.currentPage = page;
-  //   this.loadRooms(this.currentPage);
-  //   // this.toastService.showToast('Changed page', 'success');
-  // }
   
   createRoom() {
     this.router.navigate(['/admin/rooms/create']);
@@ -127,6 +121,21 @@ export class RoomListComponent {
     console.log('View room', room);
     this.selectedRoom = room;
     this.router.navigate(['/admin/rooms', this.selectedRoom?.id, 'view']);
+  }
+
+  deleteRoom(room: Room): void {
+    console.log('Delete room:', room);
+    this.selectedRoom = room;
+    
+    this.roomService.deleteRoom(this.selectedRoom.id).subscribe({
+      next: () => {
+        console.log('Room deleted successfully');
+        this.loadRooms(this.currentPage);
+      },
+      error: (err) => {
+        console.error('Error deleting room:', err);
+      }
+    });
   }
 
   sortData(header: string) {

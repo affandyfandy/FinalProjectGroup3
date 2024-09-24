@@ -19,4 +19,5 @@ public interface RoomService {
     Page<Room> findAllActiveSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
     Room updateStatus(UUID id, String status);
     Room updateRoom(UUID id, Room room);
+    void deleteRoom(UUID id);
 }

@@ -34,10 +34,7 @@ export class RoomFormComponent implements OnInit {
   selectedRoomStatus: Status = Status.ACTIVE; 
   roomFacility = Object.values(Facility);
 
-  selectedFacilities: { [key: string]: boolean } = this.roomFacility.reduce((acc, facility) => {
-    acc[facility] = false;
-    return acc;
-  }, {} as { [key: string]: boolean });
+  selectedFacility: string[] = [];
 
   roomForm: FormGroup;
   isVisible = true;
@@ -51,11 +48,11 @@ export class RoomFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router) {
     this.roomForm = this.fb.group({
-      roomType: [''],
-      roomNumber: [''],
-      capacity: [''],
-      status: [''],
-      price: [''],
+      roomType: ['',[Validators.required]],
+      roomNumber: ['',[Validators.required]],
+      capacity: ['',[Validators.required, Validators.pattern('^[0-9]+$')]],
+      status: ['',[Validators.required]],
+      price: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       photo: [''],
       facility: [[]]
     });
@@ -82,11 +79,13 @@ export class RoomFormComponent implements OnInit {
             status: this.room.status,
             price: this.room.price,
             photo: this.room.photo,
+            facility: this.room.facility,
           });
           this.updateSelectedFacilities();
         },
         error: (err) => {
           console.error('Error fetching room:', err);
+          this.message = err;
         }
       });
     }
@@ -94,22 +93,14 @@ export class RoomFormComponent implements OnInit {
 
   updateSelectedFacilities(): void {
     if (this.room?.facility) {
-      this.roomFacility.forEach((facility) => {
-        this.selectedFacilities[facility] = this.room?.facility.includes(facility) || false;
-      });
-    } else {
-      // Ensure all facilities are set to false if room is null or undefined
-      this.roomFacility.forEach((facility) => {
-        this.selectedFacilities[facility] = false;
-      });
+      this.selectedFacility = [...this.room.facility];
     }
   }
 
   onSubmit(): void {
     if (this.roomForm.valid) {
       const roomData = {
-        ...this.roomForm.value,
-        facility: this.getSelectedFacilities()
+        ...this.roomForm.value
       };
 
       console.log(roomData);
@@ -131,14 +122,11 @@ export class RoomFormComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error creating room:', err);
+            this.message = err;
           }
         });
       }
     }
-  }
-
-  getSelectedFacilities(): string[] {
-    return Object.keys(this.selectedFacilities).filter((key) => this.selectedFacilities[key]);
   }
 
   onClose(): void {
@@ -146,20 +134,21 @@ export class RoomFormComponent implements OnInit {
     this.cancel.emit();
   }
 
-  onFacilityChange(facility: Facility, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const checked = input.checked;
-    const facilities = this.roomForm.get('facility')?.value as Facility[];
-    console.log(facilities);
+  onFacilityChange(facility: string, event: Event) {
+    const facilities = this.roomForm.get('facility')?.value || [];
+    const isChecked = (event.target as HTMLInputElement).checked;
   
-    if (checked) {
-      this.roomForm.patchValue({
-        facility: [...facilities, facility]
-      });
+    if (isChecked) {
+      var upperCaseFacility = facility.toUpperCase();
+      upperCaseFacility = upperCaseFacility.replace(' ', '_');
+      facilities.push(upperCaseFacility);
     } else {
-      this.roomForm.patchValue({
-        facility: facilities.filter(f => f !== facility)
-      });
+      const index = facilities.indexOf(facility);
+      if (index > -1) {
+        facilities.splice(index, 1);
+      }
     }
+    console.log(facilities);
+    this.roomForm.get('facility')?.setValue(facilities);
   }
 }

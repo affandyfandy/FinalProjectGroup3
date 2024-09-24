@@ -1,6 +1,7 @@
 package com.hotel.room_service.controller;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -118,6 +120,12 @@ public class RoomController {
         Room updateRoom = roomService.updateRoom(id, roomMapper.toEntity(dto));
         ReadRoomDto readRoomDto = roomMapper.toDto(updateRoom);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(readRoomDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRoom(@PathVariable("id") UUID id){
+        roomService.deleteRoom(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Collections.singletonMap("status", "success"));
     }
 
 }
