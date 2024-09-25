@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/outline';
 import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RoomFormComponent } from '../room-form/room-form.component';
 import { Room, RoomResponse } from '../../../../model/room.model';
 import { RoomService } from '../../../../services/room.service';
@@ -41,19 +41,30 @@ export class RoomListComponent implements OnInit{
   isModalVisible: boolean = false;
   action: string = 'detail';
 
+  checkIn: string = '';
+  checkOut: string = '';
+  guest: number = 1;
+
   constructor(
     private roomService: RoomService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ){}
 
   ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.checkIn = params['checkIn'];
+      this.checkOut = params['checkOut'];
+      this.guest = +params['guest'];
+    });
+
     this.isAdmin = this.authService.isAdmin();
     this.loadRooms(this.currentPage);
   }
 
   loadRooms(currentPage: number) {
-    this.roomService.getAllActiveRooms(currentPage-1, this.pageSize).subscribe({
+    this.roomService.getAvailableRooms(this.checkIn, this.checkOut, this.guest, currentPage-1, this.pageSize).subscribe({
       next: (response: RoomResponse) => {
         console.log("Full response:", response);
         this.rooms = response.content;
@@ -64,7 +75,6 @@ export class RoomListComponent implements OnInit{
       error: (err) => {
         this.error = 'Nothing to see..';
         console.error(err);
-        // this.toastService.showToast('Failed to load products', 'error');
       }
     });
   }
