@@ -8,7 +8,7 @@ import { User } from '../../../../model/user.model';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft, heroEllipsisVertical, heroExclamationTriangle, heroInformationCircle, heroStar } from '@ng-icons/heroicons/outline';
-import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid, heroInformationCircleSolid, heroHomeSolid, heroCreditCardSolid } from '@ng-icons/heroicons/solid';
+import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid, heroInformationCircleSolid, heroHomeSolid, heroCreditCardSolid, heroUserCircleSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-reservation-form',
@@ -21,7 +21,7 @@ import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid, heroInfor
   templateUrl: './reservation-form.component.html',
   styleUrl: './reservation-form.component.scss',
   providers: [
-    provideIcons({ heroEllipsisVertical, heroChevronLeft, heroUserSolid, heroStarSolid, heroExclamationTriangle, heroHomeSolid, heroCreditCardSolid})
+    provideIcons({ heroEllipsisVertical, heroChevronLeft, heroUserSolid, heroUserCircleSolid, heroStarSolid, heroExclamationTriangle, heroHomeSolid, heroCreditCardSolid})
   ]
 })
 export class ReservationFormComponent implements OnInit {

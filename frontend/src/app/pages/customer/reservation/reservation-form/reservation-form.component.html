@@ -21,9 +21,9 @@
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
           <div class="p-4 text-lg font-semibold">
             <ng-container>
-              <ng-icon name="heroHomeSolid" class="h-5 w-5 mr-3"></ng-icon>
+              <ng-icon name="heroUserCircleSolid" class="h-5 w-5 mr-3"></ng-icon>
             </ng-container>
-            {{room?.roomType}} ROOM (max. {{room?.capacity}} adults)
+            Customer Information
           </div>
           <div class="p-4">
             <div class="grid grid-cols-2 gap-4">
@@ -110,6 +110,7 @@
             </div>
           </div>
           <div class="p-4">
+            <p class="text-sm text-gray-600 mb-4">{{ room?.roomType }} ROOM (max. {{ room?.capacity }} adults)</p>
             <p class="text-sm text-gray-600 mb-4">Check-in: {{ queryParam.checkIn | date:'fullDate' }}</p>
             <p class="text-sm text-gray-600 mb-4">Check-out: {{ queryParam.checkOut | date:'fullDate' }}</p>
             <div class="border-t pt-4">
@@ -134,7 +135,7 @@
             <label for="terms" class="text-sm font-medium leading-none">By clicking this box, I agree that I have read and accept the Terms of Use and Privacy Policy.</label>
           </div>
   
-          <button class="mt-4 w-full bg-primary text-white py-2 rounded-md">Reserve Now</button>
+          <button class="mt-4 w-full bg-primary text-white py-2 rounded-md">Book Now</button>
         </div>
       </div>
     </div>
