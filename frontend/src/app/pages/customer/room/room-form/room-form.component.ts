@@ -138,9 +138,9 @@ export class RoomFormComponent implements OnInit {
     if (this.rsvpForm.valid) {
       const formValues = this.rsvpForm.value;
       const queryParams = {
+        roomId: this.room?.id,
         checkIn: formValues.checkIn,
-        checkOut: formValues.checkOut,
-        roomId: this.room?.id
+        checkOut: formValues.checkOut
       };
       this.router.navigate(['reservation/create'], { queryParams });
     } else {
