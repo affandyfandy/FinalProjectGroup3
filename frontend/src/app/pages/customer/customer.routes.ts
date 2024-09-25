@@ -15,9 +15,9 @@ export const CustomerRoutes: Routes = [
                 .then(m => m.UserRoutes)
     },
     {
-      path: RouterConfig.RESERVATION.path,
-      loadChildren: () =>
-          import('./reservation/reservation.routes')
-              .then(m => m.ReservationRoutes)
-  }
+        path: RouterConfig.RESERVATION.path,
+        loadChildren: () =>
+            import('./reservation/reservation.routes')
+                .then(m => m.ReservationRoutes)
+    }
 ];

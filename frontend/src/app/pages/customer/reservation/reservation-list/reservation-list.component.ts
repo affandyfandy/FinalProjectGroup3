@@ -35,22 +35,17 @@ export class ReservationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReservations(this.currentPage);
-    this.reservationService.getAllReservationsWithRooms().subscribe(reservations => {
-      console.log(reservations);
-    });
-
-    this.rescheduleForm = this.fb.group({
-      checkInDate: [''],
-      checkOutDate: ['']
-    });
   }
 
   loadReservations(page: number): void {
-    this.reservationService.getAllReservations(page - 1, this.pageSize).subscribe({
+    this.reservationService.getAllReservationsWithRooms(page - 1, this.pageSize).subscribe({
       next: (response: any) => {
-        this.reservations = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
+        this.reservations = response;
+        // this.reservations = response.content;
+        // this.totalElements = response.totalElements;
+        // this.totalPages = response.totalPages;
+
+        console.log(response);
       },
       error: (err) => {
         this.error = 'Failed to load reservations';
@@ -76,7 +71,7 @@ export class ReservationListComponent implements OnInit {
   }
 
   createReservation() {
-    this.router.navigate(['/reservation/create']);
+    this.router.navigate(['/rooms']);
   }
 
   changePage(page: number): void {

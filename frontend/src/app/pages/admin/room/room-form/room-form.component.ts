@@ -35,15 +35,15 @@ export class RoomFormComponent implements OnInit {
   roomStatus = Object.values(Status); 
   selectedRoomStatus: Status = Status.ACTIVE; 
   roomFacility = Object.values(Facility);
-
   selectedFacility: Facility[] = [];
   facilityList: string[] = [];
+  selectedFile?: File;
 
   roomForm: FormGroup;
   isVisible = true;
   showFileUpload = false;
-  selectedFile: File | null = null;
   message: string | null = null;
+  photoUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -66,7 +66,7 @@ export class RoomFormComponent implements OnInit {
     console.log(this.route.snapshot.url);
     const currentRoute = this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path;
     console.log(currentRoute);
-    this.action = currentRoute === 'edit' ? 'Edit Room' : (currentRoute === 'create' ? 'Add New Room' : 'Room Details');
+    this.action = currentRoute === 'edit' ? 'Edit Room' : (currentRoute === 'create' ? 'Add New Room' : (currentRoute === 'import' ? 'Import Room Data' : 'Room Details'));
     this.roomId = this.route.snapshot.paramMap.get('id');
     this.loadRoom();
   }
@@ -82,10 +82,11 @@ export class RoomFormComponent implements OnInit {
             capacity: this.room.capacity,
             status: this.room.status,
             price: this.room.price,
-            photo: this.room.photo,
+            // photo: this.room.photo,
             facility: this.room.facility,
           });
           this.updateSelectedFacilities();
+          this.photoUrl = this.room.photo;
         },
         error: (err) => {
           console.error('Error fetching room:', err);
@@ -123,24 +124,32 @@ export class RoomFormComponent implements OnInit {
         this.facilityList.push('Hair Dryer');
       }
     })
-    console.log(this.facilityList);
-    console.log("kesini dulu");
-    console.log(this.roomFacility);
+
   }
 
   onSubmit(): void {
     if (this.roomForm.valid) {
       const roomData = {
-        ...this.roomForm.value
+        ...this.roomForm.value,
+        facility: this.roomForm.value.facility.map((f: string) => Facility[f as keyof typeof Facility])
       };
+      const formData = new FormData();
+      formData.append('roomData', JSON.stringify(this.roomForm.value));
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+      console.log("FormData before sending:");
+      for (let [key, value] of (formData as any).entries()) {
+          console.log(key, value);
+      }
 
-      console.log(roomData);
       if (this.action === 'Edit Room' && this.roomId) {
         this.roomService.editRoomData(this.roomId, roomData).subscribe({
           next: (updatedRoom) => {
             console.log('Room updated successfully:', updatedRoom);
             this.save.emit(updatedRoom);
             this.toastService.showToast('Room updated successfully!', 'success');
+            this.navigateToRoomList();
           },
           error: (err) => {
             console.error('Error updating room:', err);
@@ -148,11 +157,12 @@ export class RoomFormComponent implements OnInit {
           }
         });
       } else if (this.action === 'Add New Room') {
-        this.roomService.createRoom(roomData).subscribe({
+        this.roomService.createRoom(formData).subscribe({
           next: (createdRoom) => {
             console.log('Room created successfully:', createdRoom);
             this.save.emit(createdRoom);
             this.toastService.showToast('Room created successfully!', 'success');
+            this.navigateToRoomList();
           },
           error: (err) => {
             console.error('Error creating room:', err);
@@ -162,7 +172,20 @@ export class RoomFormComponent implements OnInit {
         });
       }
     }
-    this.router.navigate(['/admin/rooms']);
+  }
+
+  navigateToRoomList(): void {
+    this.router.navigateByUrl('/admin/rooms', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/admin/rooms']); // Refreshes the component
+    });
+  }
+
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      console.log('Selected file:', this.selectedFile);
+    }
   }
 
   onClose(): void {
@@ -173,20 +196,25 @@ export class RoomFormComponent implements OnInit {
   onFacilityChange(facility: string, event: Event) {
     const facilities = this.roomForm.get('facility')?.value || [];
     const isChecked = (event.target as HTMLInputElement).checked;
-  
+
+    let upperCaseFacility = facility.toUpperCase();
+    upperCaseFacility = upperCaseFacility.replace(' ', '_');
+    upperCaseFacility = upperCaseFacility.replace('-', '');
+
     if (isChecked) {
-      var upperCaseFacility = facility.toUpperCase();
-      upperCaseFacility = upperCaseFacility.replace(' ', '_');
-      facilities.push(upperCaseFacility);
+        if (!facilities.includes(upperCaseFacility)) {
+            facilities.push(upperCaseFacility);
+        }
     } else {
-      const index = facilities.indexOf(facility);
-      if (index > -1) {
-        facilities.splice(index, 1);
-      }
+        const index = facilities.indexOf(upperCaseFacility);
+        if (index > -1) {
+            facilities.splice(index, 1);
+        }
     }
+
     console.log(facilities);
     this.roomForm.get('facility')?.setValue(facilities);
-  }
+}
 
   onFileChange(event: any): void {
     this.selectedFile = event.target.files[0];

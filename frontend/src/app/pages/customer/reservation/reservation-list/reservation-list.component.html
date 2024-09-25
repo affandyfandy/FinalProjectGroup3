@@ -29,7 +29,7 @@
       </div>
 
       <div class="text-sm text-gray-600">
-        <p><strong>Room ID:</strong> {{ reservation.room.roomNumber }}</p>
+        <p><strong>Room Number:</strong> {{ reservation.room.roomNumber }}</p>
         <p><strong>Guest:</strong> {{ reservation.userId }}</p>
         <p><strong>Reservation Date:</strong> {{ reservation.reservationDate | date }}</p>
         <p><strong>Check-in:</strong> {{ reservation.checkInDate | date }}</p>
@@ -53,7 +53,8 @@
     <div class="fixed inset-0 flex items-center justify-center z-50">
       <div class="modal-background absolute inset-0 bg-black opacity-50" (click)="closeRescheduleModal()"></div>
       <div class="modal-content relative bg-white rounded-lg shadow-lg p-6 z-10">
-        <h2 class="text-xl font-bold mb-4">Reschedule Reservation #{{ selectedReservation.id }}</h2>
+        <h2 class="text-xl font-bold mb-4">Reschedule Reservation</h2>
+        <span>ID : {{ selectedReservation.id }} </span>
 
         <!-- Close button -->
         <button (click)="closeRescheduleModal()"
@@ -63,12 +64,7 @@
 
         <form [formGroup]="rescheduleForm">
           <div class="space-y-4">
-            <div>
-              <label for="reservationId" class="block text-sm font-medium text-gray-700">Reservation ID</label>
-              <input type="text" id="reservationId" name="reservationId" [value]="selectedReservation.id" readonly
-                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-            </div>
-
+            <div></div>
             <div>
               <label for="checkInDate" class="block text-sm font-medium text-gray-700">New Check-in Date</label>
               <input formControlName="checkInDate" type="date" id="checkInDate" name="checkInDate"

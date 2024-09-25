@@ -1,5 +1,6 @@
 package com.hotel.reservation_service.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +34,15 @@ public class ReservationController {
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
+    }
+
+    @GetMapping("/unavailable-room-ids")
+    public Page<UUID> getUnavailableRoomIds(
+            @RequestParam(required = false, defaultValue = "") List<UUID> roomIds,
+            @RequestParam(required = false) LocalDate checkInDate,
+            @RequestParam(required = false) LocalDate checkOutDate,
+            Pageable pageable) {
+        return reservationService.getUnavailableRoomIds(roomIds, checkInDate, checkOutDate, pageable);
     }
 
     @GetMapping

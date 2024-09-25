@@ -10,7 +10,7 @@ export interface Reservation {
   userId: string;
   roomId: string;
   room: Room;
-  amount: number;
+  amount: Payment;
   createdBy?: string;
   createdTime?: string;
   updatedBy?: string;

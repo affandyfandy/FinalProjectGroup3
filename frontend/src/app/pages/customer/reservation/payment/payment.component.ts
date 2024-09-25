@@ -8,20 +8,19 @@ import { User } from '../../../../model/user.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-reservation-form',
+  selector: 'app-payment-form',
   standalone: true,
   imports: [
     CommonModule
   ],
-  templateUrl: './reservation-form.component.html',
-  styleUrl: './reservation-form.component.scss'
+  templateUrl: './payment.component.html'
 })
-export class ReservationFormComponent implements OnInit {
+export class PaymentComponent implements OnInit {
 
   user: User | null = null;
   room: Room | null = null;
-
   queryParam: any = {};
+  isPaymentSuccess: boolean = false; // Control modal visibility
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -49,7 +48,12 @@ export class ReservationFormComponent implements OnInit {
       });
     }
   }
-  confirmReservation() {
-    this.router.navigate(['/reservation/payment']);
+
+  onSubmit(): void {
+    this.isPaymentSuccess = true;
+  }
+
+  submitPayment(): void {
+    this.router.navigate(['/reservation']);
   }
 }

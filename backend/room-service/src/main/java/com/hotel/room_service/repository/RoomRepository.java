@@ -10,12 +10,16 @@ import org.springframework.stereotype.Repository;
 import com.hotel.room_service.entity.Room;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
     @Query(nativeQuery = true, value = "SELECT * FROM rooms WHERE status LIKE 'ACTIVE'")
     Page<Room> findAllActiveRooms(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM rooms WHERE status LIKE 'ACTIVE' AND capacity >= :capacity")
+    Page<Room> findAllActiveRoomsAndCapacityGreaterThanEqual(int capacity, Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM rooms WHERE status LIKE :status")
     Page<Room> findAllByStatus(@Param("status") String status, Pageable pageable);
