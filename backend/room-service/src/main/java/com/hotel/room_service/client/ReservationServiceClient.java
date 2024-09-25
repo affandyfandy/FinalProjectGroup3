@@ -14,8 +14,8 @@ import java.util.UUID;
 public interface ReservationServiceClient {
 
     @GetMapping("/api/v1/reservations/unavailable-room-ids")
-    Page<UUID> getUnavailableRoomIds(@RequestParam List<UUID> roomIds,
-                                     @RequestParam LocalDate checkInDate,
-                                     @RequestParam LocalDate checkOutDate,
+    Page<UUID> getUnavailableRoomIds(@RequestParam(required = false, defaultValue = "") List<UUID> roomIds,
+                                     @RequestParam(required = false) LocalDate checkInDate,
+                                     @RequestParam(required = false) LocalDate checkOutDate,
                                      Pageable pageable);
 }

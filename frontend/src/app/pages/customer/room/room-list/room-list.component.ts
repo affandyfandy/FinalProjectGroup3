@@ -6,7 +6,7 @@ import { heroEllipsisVertical, heroStar, heroUser } from '@ng-icons/heroicons/ou
 import { heroAdjustmentsHorizontalSolid, heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomFormComponent } from '../room-form/room-form.component';
-import { Room, RoomResponse } from '../../../../model/room.model';
+import { Facility, Room, RoomResponse } from '../../../../model/room.model';
 import { RoomService } from '../../../../services/room.service';
 import { AuthService } from '../../../../services/auth/auth.service';
 
@@ -54,9 +54,9 @@ export class RoomListComponent implements OnInit{
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.checkIn = params['checkIn'];
-      this.checkOut = params['checkOut'];
-      this.guest = +params['guest'];
+      this.checkIn = params['checkIn'] !== undefined ? params['checkIn'] : '';
+      this.checkOut = params['checkOut'] !== undefined ? params['checkOut'] : '';
+      this.guest = params['guest'] !== undefined ? +params['guest'] : 1; 
     });
 
     this.isAdmin = this.authService.isAdmin();
@@ -99,7 +99,18 @@ export class RoomListComponent implements OnInit{
     this.loadRooms(this.currentPage);
   }
 
-  createReservation(id: string): void{
+  createReservation(id: string, facility: Facility[]): void{
+    const currentUrl = this.router.url.split('?')[0];
+
+    const queryParams: any = {};
+
+    queryParams['checkIn'] = this.checkIn;
+    queryParams['checkOut'] = this.checkOut;
+    
+    this.router.navigate([currentUrl, id], {
+      queryParams: queryParams,
+      relativeTo: this.activatedRoute,
+    });
   }
 
 }
