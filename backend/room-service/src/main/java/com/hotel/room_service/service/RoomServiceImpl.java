@@ -76,72 +76,74 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Page<Room> search(int pageNo, int pageSize, String status, String facility, String roomType, Integer capacity, BigDecimal lowerLimit,
-            BigDecimal upperLimit) {
-            Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public Page<Room> search(int pageNo, int pageSize, String status, String facility, String roomType, Integer capacity, BigDecimal lowerLimit) {
+        // Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(Sort.Direction.ASC,"status");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         // Search by status only
-        if (status != null && facility == null && roomType == null && capacity == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && facility == null && roomType == null && capacity == null && lowerLimit == null) {
+            System.out.println("Masuk ke sini status only");
             return roomRepository.findAllByStatus(status, pageable);
         }
 
         // Search by status and facility
-        if (status != null && facility != null && roomType == null && capacity == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && facility != null && roomType == null && capacity == null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndFacility(status, facility, pageable);
         }
 
         // Search by status and roomType
-        if (status != null && roomType != null && facility == null && capacity == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && roomType != null && facility == null && capacity == null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndRoomType(status, roomType, pageable);
         }
 
         // Search by status and capacity
-        if (status != null && capacity != null && facility == null && roomType == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && capacity != null && facility == null && roomType == null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndCapacity(status, capacity, pageable);
         }
 
-        // Search by status, lowerLimit, and upperLimit (for price range)
-        if (status != null && lowerLimit != null && upperLimit != null && facility == null && roomType == null && capacity == null) {
-            return roomRepository.findAllByStatusAndPriceRange(status, lowerLimit, upperLimit, pageable);
+        // Search by status, lowerLimit, an (for price range)
+        if (status != null && lowerLimit != null && facility == null && roomType == null && capacity == null) {
+            return roomRepository.findAllByStatusAndPriceRange(status, lowerLimit, pageable);
         }
 
         // Search by status, facility, and roomType
-        if (status != null && facility != null && roomType != null && capacity == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && facility != null && roomType != null && capacity == null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndFacilityAndRoomType(status, facility, roomType, pageable);
         }
 
         // Search by status, facility, and capacity
-        if (status != null && facility != null && capacity != null && roomType == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && facility != null && capacity != null && roomType == null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndFacilityAndCapacity(status, facility, capacity, pageable);
         }
 
         // Search by status, facility, and price range
-        if (status != null && facility != null && lowerLimit != null && upperLimit != null && roomType == null && capacity == null) {
-            return roomRepository.findAllByStatusAndFacilityAndPriceRange(status, facility, lowerLimit, upperLimit, pageable);
+        if (status != null && facility != null && lowerLimit != null && roomType == null && capacity == null) {
+            return roomRepository.findAllByStatusAndFacilityAndPriceRange(status, facility, lowerLimit, pageable);
         }
 
         // Search by status, facility, roomType, and capacity
-        if (status != null && facility != null && roomType != null && capacity != null && lowerLimit == null && upperLimit == null) {
+        if (status != null && facility != null && roomType != null && capacity != null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndFacilityAndRoomTypeAndCapacity(status, facility, roomType, capacity, pageable);
         }
 
         // Search by status, facility, roomType, and price range
-        if (status != null && facility != null && roomType != null && lowerLimit != null && upperLimit != null && capacity == null) {
-            return roomRepository.findAllByStatusAndFacilityAndRoomTypeAndPriceRange(status, facility, roomType, lowerLimit, upperLimit, pageable);
+        if (status != null && facility != null && roomType != null && lowerLimit != null && capacity == null) {
+            return roomRepository.findAllByStatusAndFacilityAndRoomTypeAndPriceRange(status, facility, roomType, lowerLimit, pageable);
         }
 
         // Search by status, roomType, and price range
-        if (status != null && roomType != null && lowerLimit != null && upperLimit != null && facility == null && capacity == null) {
-            return roomRepository.findAllByStatusAndRoomTypeAndPriceRange(status, roomType, lowerLimit, upperLimit, pageable);
+        if (status != null && roomType != null && lowerLimit != null && facility == null && capacity == null) {
+            return roomRepository.findAllByStatusAndRoomTypeAndPriceRange(status, roomType, lowerLimit, pageable);
         }
 
         // Search by status, roomType, and capacity
-        if (status != null && roomType != null && capacity != null && facility == null && lowerLimit == null && upperLimit == null) {
+        if (status != null && roomType != null && capacity != null && facility == null && lowerLimit == null) {
             return roomRepository.findAllByStatusAndRoomTypeAndCapacity(status, roomType, capacity, pageable);
         }
 
         // Search by status, roomType, capacity, and price range
-        if (status != null && roomType != null && capacity != null && lowerLimit != null && upperLimit != null && facility == null) {
-            return roomRepository.findAllByStatusAndRoomTypeAndCapacityAndPriceRange(status, roomType, capacity, lowerLimit, upperLimit, pageable);
+        if (status != null && roomType != null && capacity != null && lowerLimit != null && facility == null) {
+            return roomRepository.findAllByStatusAndRoomTypeAndCapacityAndPriceRange(status, roomType, capacity, lowerLimit, pageable);
         }
 
         // If no filters match, return all rooms

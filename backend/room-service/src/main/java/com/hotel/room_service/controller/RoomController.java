@@ -135,11 +135,9 @@ public class RoomController {
         @RequestParam(required = false) String facility,
         @RequestParam(required = false) Integer capacity,
         @RequestParam(required = false) String roomType,
-        @RequestParam(required = false) BigDecimal lowerLimitPrice,
-        @RequestParam(required = false) BigDecimal upperLimitPrice
-        )
+        @RequestParam(required = false) BigDecimal lowerLimitPrice)
     {
-        Page<Room> listRoom = roomService.search(pageNo, pageSize, status, facility, roomType, capacity, lowerLimitPrice, upperLimitPrice);
+        Page<Room> listRoom = roomService.search(pageNo, pageSize, status, facility, roomType, capacity, lowerLimitPrice);
         List<ReadRoomDto> listRoomDto = roomMapper.toListDto(listRoom.getContent());
         Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
