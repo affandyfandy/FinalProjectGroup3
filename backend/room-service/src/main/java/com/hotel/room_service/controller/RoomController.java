@@ -2,6 +2,7 @@ package com.hotel.room_service.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +47,14 @@ public class RoomController {
     public RoomController(RoomService roomService, RoomMapper roomMapper){
         this.roomService = roomService;
         this.roomMapper = roomMapper;
+    }
+
+    @GetMapping("/available")
+    public Page<ReadRoomDto> getAvailableRooms(@RequestParam LocalDate checkIn,
+                                               @RequestParam LocalDate checkOut,
+                                               @RequestParam(required = false, defaultValue = "1") int capacity,
+                                               Pageable pageable) {
+        return roomService.getAvailableRooms(checkIn, checkOut, capacity, pageable);
     }
 
     @GetMapping("/{id}")

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { bootstrapFacebook, bootstrapInstagram, bootstrapLinkedin, bootstrapTwitterX, bootstrapYoutube } from '@ng-icons/bootstrap-icons';
 import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 
@@ -6,7 +7,8 @@ import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/c
   selector: 'app-home',
   standalone: true,
   imports: [
-    NgIconComponent
+    NgIconComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -24,5 +26,19 @@ import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/c
   ]
 })
 export class HomeComponent {
+  searchRoomForm: FormGroup;
 
+  constructor(private fb: FormBuilder) {
+    this.searchRoomForm = this.fb.group({
+      checkIn: ['', Validators.required],
+      checkOut: ['', Validators.required],
+      guest: ['', [Validators.required, Validators.min(1), Validators.max(5)]]
+    });
+  }
+
+  onSubmit(): void {
+    if (this.searchRoomForm.valid) {
+      console.log(this.searchRoomForm.value);
+    }
+  }
 }

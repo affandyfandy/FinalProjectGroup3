@@ -14,6 +14,22 @@ export class RoomService {
 
     constructor(private http: HttpClient, private authService: AuthService){}
 
+    getAvailableRooms(
+        checkIn: string,
+        checkOut: string,
+        capacity: number = 1,
+        page: number,
+        size: number
+    ): Observable<RoomResponse> {
+        const params = new HttpParams()
+        .set('checkIn', checkIn)
+        .set('checkOut', checkOut)
+        .set('capacity', capacity.toString())
+        .set('pageNo', page.toString())
+        .set('pageSize', size.toString());
+        return this.http.get<RoomResponse>(`${this.baseUrl}/available`, { params });
+    }
+
     getAllRooms(
         pageNo: number,
         pageSize: number, 

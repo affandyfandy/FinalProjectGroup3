@@ -1,5 +1,6 @@
 package com.hotel.reservation_service.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,4 +19,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID>,
 
     @Query("SELECT r FROM Reservation r WHERE (:status IS NULL OR r.status = :status) AND (:userId IS NULL OR r.userId = :userId)")
     Page<Reservation> searchReservations(@Param("status") ReservationStatus status, @Param("userId") String userId, Pageable pageable);
+
+    @Query("SELECT r FROM Reservation r WHERE r.roomId IN :roomIds AND (r.checkInDate <= :checkOutDate AND r.checkOutDate >= :checkInDate)")
+    Page<Reservation> findConflictingReservations(@Param("roomIds") List<UUID> roomIds,
+                                                  @Param("checkInDate") LocalDate checkInDate,
+                                                  @Param("checkOutDate") LocalDate checkOutDate,
+                                                  Pageable pageable);
+
 }
