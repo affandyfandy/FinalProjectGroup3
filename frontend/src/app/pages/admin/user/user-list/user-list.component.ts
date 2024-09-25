@@ -51,9 +51,8 @@ export class UserListComponent implements OnInit {
 
   headers: KeyValue[] = [
     { key: 'no', value: 'No' },
-    { key: 'email', value: 'Email' },
     { key: 'fullName', value: 'Full Name' },
-    { key: 'phone', value: 'Phone' },
+    { key: 'email', value: 'Email' },
     { key: 'role', value: 'Role' },
     { key: 'lastModifiedBy', value: 'Last Modified By' },
     { key: 'lastModifiedDate', value: 'Last Modified Date' },

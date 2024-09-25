@@ -6,23 +6,32 @@ import { AuthService } from '../../../../services/auth/auth.service';
 import { RoomService } from '../../../../services/room.service';
 import { User } from '../../../../model/user.model';
 import { CommonModule } from '@angular/common';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroChevronLeft, heroEllipsisVertical, heroExclamationTriangle, heroInformationCircle, heroStar } from '@ng-icons/heroicons/outline';
+import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid, heroInformationCircleSolid, heroHomeSolid, heroCreditCardSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-reservation-form',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    NgIconComponent
+    
   ],
   templateUrl: './reservation-form.component.html',
-  styleUrl: './reservation-form.component.scss'
+  styleUrl: './reservation-form.component.scss',
+  providers: [
+    provideIcons({ heroEllipsisVertical, heroChevronLeft, heroUserSolid, heroStarSolid, heroExclamationTriangle, heroHomeSolid, heroCreditCardSolid})
+  ]
 })
 export class ReservationFormComponent implements OnInit {
 
   user: User | null = null;
   room: Room | null = null;
-  
+
   queryParam: any = {};
-  
+  totalDays: number = 0;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -43,11 +52,19 @@ export class ReservationFormComponent implements OnInit {
       this.userService.getUserById(this.authService.getUserInformation()[1].value).subscribe((user: User) => {
         this.user = user;
       });
+      this.getTotalDays();
 
       this.roomService.getRoomById(this.queryParam.roomId).subscribe((room: Room) => {
         this.room = room;
       });
     }
   }
-  
+  confirmReservation() {
+    this.router.navigate(['/reservation/payment']);
+  }
+
+  getTotalDays(): void{
+    this.totalDays = this.queryParam.checkIn - this.queryParam.checkOut;
+    console.log(this.totalDays);
+  }
 }

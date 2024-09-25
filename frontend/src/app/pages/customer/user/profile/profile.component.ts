@@ -3,22 +3,36 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../../../model/user.model';
 import { UserService } from '../../../../services/user.service';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroChevronLeft } from '@ng-icons/heroicons/outline';
+import { Router } from '@angular/router';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIconComponent
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
+  providers: [
+    provideIcons({ heroChevronLeft })
+  ]
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
   editForm: FormGroup;
+  isEditMode: boolean = false;
+  isViewMode: boolean = false;
   
-  constructor(private userService: UserService, private fb: FormBuilder) { 
+  constructor(
+    private userService: UserService, 
+    private fb: FormBuilder, 
+    private router: Router,
+    private toastService: ToastService) { 
     this.editForm = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -69,10 +83,15 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         console.log('update user success', response);
         location.reload();
+        this.toastService.showToast('Profile updated successful!', 'success');
       },
       error: (error) => {
         console.error('update user error', error);
+        this.toastService.showToast('Error updating user data', 'error');
       }
     });
+  }
+  onCancel() {
+    this.router.navigate(['/']);
   }
 }

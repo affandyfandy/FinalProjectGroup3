@@ -1,19 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, NgModule, OnInit, Output } from '@angular/core';
+import { FormsModule, NgForm, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import { User } from '../../../../model/user.model';
+import { NgIconComponent, NgIconsModule, provideIcons } from '@ng-icons/core';
+import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
-    CommonModule
+    NgIconComponent
   ],
   templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.scss'
+  styleUrl: './user-form.component.scss',
+  providers: [
+    provideIcons({ heroChevronLeft })
+  ]
 })
 export class UserFormComponent implements OnInit { 
 

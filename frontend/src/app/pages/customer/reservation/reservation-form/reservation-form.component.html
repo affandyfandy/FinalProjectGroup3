@@ -1,60 +1,142 @@
-<div class="w-3/4 py-20 mx-auto">
-  <div class="mb-10">
-    <h1 class="text-4xl font-bold text-primary mb-2">Finalize your reservation</h1>
-    <p class="text-sm text-gray-600">Book with confidence</p>
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8 flex items-center">
+    <ng-icon name="heroChevronLeft"></ng-icon>
+    <a href="/rooms" class="cursor-pointer">Back</a>
   </div>
-
-  <div class="flex flex-col space-y-14 mt-5">
-    <div class="flex flex-col space-y-5">
-      <h2 class="text-2xl">Hotel BITWAY</h2>
-      <div class="flex flex-row">
-        <div class="w-2/5 flex flex-row space-x-20 pe-10">
-          <div class="flex flex-col gap-2 ">
-            <span>Email</span>
-            <span>Full Name</span>
-            <span>Phone</span>
-          </div>
-          <div class="flex flex-col gap-2">
-            <span>{{ user?.email }}</span>
-            <span>{{ user?.fullName }}</span>
-            <span>{{ user?.phone }}</span>
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Secure your reservation</h1>
+    <div class="flex flex-col lg:flex-row gap-6">
+      <div class="lg:w-2/3 space-y-6">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+          <div class="bg-gray-100 p-4">
+            <div class="flex items-center text-sm font-normal">
+              <ng-container>
+                <ng-icon name="heroExclamationTriangle" class="h-5 w-5 mr-3"></ng-icon>
+              </ng-container>
+              Check the latest COVID-19 restrictions before you travel. 
+            </div>
           </div>
         </div>
-        <div class="h-[130px] border-slate-200 border-2"></div>
-        <div class="ps-10 flex flex-col gap-2">
-          <div class="flex flex-row">
-            <span class="w-[34%]">Address</span>
-            <span>St. TB Simatupang No.19, RT.7/RW.9, West Cilandak, Cilandak District, South Jakarta City, Special Capital Region of Jakarta 12430</span>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+          <div class="p-4 text-lg font-semibold">
+            <ng-container>
+              <ng-icon name="heroHomeSolid" class="h-5 w-5 mr-3"></ng-icon>
+            </ng-container>
+            {{room?.roomType}} ROOM (max. {{room?.capacity}} adults)
           </div>
-          <div class="flex flex-row">
-            <span class="w-[20%]">Check-in date</span>
-            <span>{{ queryParam.checkIn | date:'fullDate' }}</span>
+          <div class="p-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input id="fullName" [value]="user?.fullName" disabled class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                <input id="phone" [value]="user?.phone" disabled class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input id="email" [value]="user?.email" disabled class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+              </div>
+              <div>
+                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                <input id="address" [value]="user?.address" disabled class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+              </div>
+            </div>
           </div>
-          <div class="flex flex-row">
-            <span class="w-[20%]">Check-out date</span>
-            <span>{{ queryParam.checkOut | date:'fullDate' }}</span>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+          <div class="p-4 text-lg font-semibold">
+            <ng-container>
+              <ng-icon name="heroCreditCardSolid" class="h-5 w-5 mr-3"></ng-icon>
+            </ng-container>
+            Payment Details
           </div>
-          <div class="flex flex-row">
-            <span class="w-[20%]">Room Type</span>
-            <span>{{ room?.roomType }}</span>
+          <div class="p-4">
+            <div class="space-y-4">
+              <div>
+                <label for="cardNumber" class="block text-sm font-medium text-gray-700">Card Number</label>
+                <input id="cardNumber" placeholder="1234 5678 9012 3456" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+              </div>
+              <div class="grid grid-cols-3 gap-4">
+                <div class="col-span-2">
+                  <label for="expiryDate" class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                  <div class="flex gap-2">
+                    <select class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                      <option>Month</option>
+                    </select>
+                    <select class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                      <option>Year</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label for="securityCode" class="block text-sm font-medium text-gray-700">Security Code</label>
+                  <input id="securityCode" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                </div>
+              </div>
+              <div>
+                <label for="billingAddress" class="block text-sm font-medium text-gray-700">Billing Address</label>
+                <input id="billingAddress" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+              </div>
+            </div>
           </div>
-          <div class="flex flex-row">
-            <span class="w-[20%]">Room Number</span>
-            <span>{{ room?.roomNumber }}</span>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+          <div class="p-4">
+            <h3 class="font-semibold mb-4">Important information about your booking</h3>
+            <ul class="list-disc pl-5 space-y-2 text-sm">
+              <li>This rate is non-refundable. If you change or cancel your booking you will not get a refund or credit to use for a future stay.</li>
+              <li>Stay extensions will require a new reservation.</li>
+              <li>No refunds will be issued for late check-in or early check-out.</li>
+              <li>This property's policy is to refuse certain bookings for the purpose of group events or parties.</li>
+            </ul>
           </div>
+        </div>
+      </div>
+
+      <div class="lg:w-1/3">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+          <div class="p-4">
+            <h3 class="text-lg font-semibold">Lakeside Hotel BITWAY</h3>
+            <div class="flex items-center">
+              <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let index = index">
+                <ng-icon name="heroStarSolid" class="h-5 w-5 text-yellow-500"></ng-icon>
+              </ng-container>
+              <span class="ml-2 text-sm text-gray-600">5/5 (1,234 reviews)</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <p class="text-sm text-gray-600 mb-4">Check-in: {{ queryParam.checkIn | date:'fullDate' }}</p>
+            <p class="text-sm text-gray-600 mb-4">Check-out: {{ queryParam.checkOut | date:'fullDate' }}</p>
+            <div class="border-t pt-4">
+              <div class="flex justify-between mb-2">
+                <span>1 night</span>
+                <span>{{ room?.price | currency:'Rp':'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="flex justify-between mb-2">
+                <span>Taxes</span>
+                <span>Rp0</span>
+              </div>
+              <div class="flex justify-between font-bold mt-4 pt-4 border-t">
+                <span>Total</span>
+                <span>{{ room?.price | currency:'Rp':'symbol':'1.0-0' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="terms" class="rounded text-primary-600 border-gray-300 focus:ring-primary-500" />
+            <label for="terms" class="text-sm font-medium leading-none">By clicking this box, I agree that I have read and accept the Terms of Use and Privacy Policy.</label>
+          </div>
+  
+          <button class="mt-4 w-full bg-primary text-white py-2 rounded-md">Reserve Now</button>
         </div>
       </div>
     </div>
-    <div class="flex flex-col space-y-4">
-      <div class="flex flex-col">
-        <span class="text-3xl font-bold text-primary">Total</span>
-        <span class="text-2xl font-semibold text-primary">{{ room?.price | currency:'Rp':'symbol':'1.0-0' }}</span>
-      </div>
-      <div class="flex gap-5">
-        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md shadow-sm">Confirm</button>
-        <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-sm">Cancel</button>
-      </div>
-    </div>
   </div>
-
 </div>

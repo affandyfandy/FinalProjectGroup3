@@ -7,7 +7,7 @@
     <div class="flex space-x-2">
       <button (click)="createReservation()"
       class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
-        Add New Reservation
+        Create Reservation
       </button>
       <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
         Export Data
@@ -20,9 +20,10 @@
       <thead class="bg-gray-50">
         <tr>
           <!-- Dynamic table headers for Reservations -->
-          <th *ngFor="let header of ['No', 'Reservation ID', 'Room Number', 'Guest', 'Reservation Date', 'Check-in', 'Check-out', 'Status', '']"
+          <th *ngFor="let header of ['No', 'Room Number', 'Guest', 'Reservation Date', 'Check-in', 'Check-out', 'Status']"
               class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
               {{ header }}
+              <ng-icon *ngIf="header !== 'No'" name="heroChevronUpDown"></ng-icon>
           </th>
         </tr>
       </thead>
@@ -30,7 +31,6 @@
         <!-- Iterate over reservations data -->
         <tr *ngFor="let reservation of reservations; let i = index" class="hover:bg-gray-50">
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-          <td (click)="openDetailsModal(reservation)" class="cursor-pointer px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ reservation.id }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.room.roomNumber }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.userId }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ reservation.reservationDate | date }}</td>
@@ -44,6 +44,18 @@
                   }">
               {{ reservation.status }}
             </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button (click)="toggleOptions($event, reservation)" class="text-gray-400 hover:text-gray-500">
+              <ng-icon name="heroEllipsisVertical" class="h-5 w-5"></ng-icon>
+            </button>
+            <div *ngIf="selectedReservation === reservation && showOptions" class="absolute bg-white border border-gray-300 shadow-lg rounded-lg mt-2">
+              <ul class="list-none p-2 m-0">
+                <li (click)="editRsvp(reservation)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
+                <li (click)="viewRsvp(reservation)" class="p-2 cursor-pointer hover:bg-gray-100">Detail</li>
+                <li (click)="deleteRsvp(reservation)" class="p-2 cursor-pointer hover:bg-gray-100">Delete</li>
+              </ul>
+            </div>
           </td>
         </tr>
       </tbody>

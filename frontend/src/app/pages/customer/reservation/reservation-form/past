@@ -1,0 +1,60 @@
+<div class="w-3/4 py-20 mx-auto">
+  <div class="mb-10">
+    <h1 class="text-4xl font-bold text-primary mb-2">Finalize your reservation</h1>
+    <p class="text-sm text-gray-600">Book with confidence</p>
+  </div>
+
+  <div class="flex flex-col space-y-14 mt-5">
+    <div class="flex flex-col space-y-5">
+      <h2 class="text-2xl">Hotel BITWAY</h2>
+      <div class="flex flex-row">
+        <div class="w-2/5 flex flex-row space-x-20 pe-10">
+          <div class="flex flex-col gap-2 ">
+            <span>Email</span>
+            <span>Full Name</span>
+            <span>Phone</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <span>{{ user?.email }}</span>
+            <span>{{ user?.fullName }}</span>
+            <span>{{ user?.phone }}</span>
+          </div>
+        </div>
+        <div class="h-[130px] border-slate-200 border-2"></div>
+        <div class="ps-10 flex flex-col gap-2">
+          <div class="flex flex-row">
+            <span class="w-[34%]">Address</span>
+            <span>St. TB Simatupang No.19, RT.7/RW.9, West Cilandak, Cilandak District, South Jakarta City, Special Capital Region of Jakarta 12430</span>
+          </div>
+          <div class="flex flex-row">
+            <span class="w-[20%]">Check-in date</span>
+            <span>{{ queryParam.checkIn | date:'fullDate' }}</span>
+          </div>
+          <div class="flex flex-row">
+            <span class="w-[20%]">Check-out date</span>
+            <span>{{ queryParam.checkOut | date:'fullDate' }}</span>
+          </div>
+          <div class="flex flex-row">
+            <span class="w-[20%]">Room Type</span>
+            <span>{{ room?.roomType }}</span>
+          </div>
+          <div class="flex flex-row">
+            <span class="w-[20%]">Room Number</span>
+            <span>{{ room?.roomNumber }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col space-y-4">
+      <div class="flex flex-col">
+        <span class="text-3xl font-bold text-primary">Total</span>
+        <span class="text-2xl font-semibold text-primary">Rp. {{ room?.price }}</span>
+      </div>
+      <div class="flex gap-5">
+        <button (click)="confirmReservation()" type="submit" class="px-4 py-2 bg-primary text-white rounded-md shadow-sm">Confirm</button>
+        <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-sm">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>
