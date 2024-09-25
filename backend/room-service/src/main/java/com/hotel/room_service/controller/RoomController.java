@@ -2,6 +2,7 @@ package com.hotel.room_service.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +23,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
@@ -45,16 +49,38 @@ public class RoomController {
         this.roomMapper = roomMapper;
     }
 
+    @GetMapping("/available")
+    public Page<ReadRoomDto> getAvailableRooms(@RequestParam LocalDate checkIn,
+                                               @RequestParam LocalDate checkOut,
+                                               @RequestParam(required = false, defaultValue = "1") int capacity,
+                                               Pageable pageable) {
+        return roomService.getAvailableRooms(checkIn, checkOut, capacity, pageable);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getRoomDetails(@PathVariable UUID id){
         Room room = roomService.findById(id) != null ? roomService.findById(id) : null;
         ReadRoomDto roomDto = roomMapper.toDto(room);
+        roomDto.setPhotoUrl(roomService.byteToString(room.getPhoto()));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }   
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewRoom(@RequestBody CreateRoomDto newRoom){
+    public ResponseEntity<?> createNewRoom(
+        @RequestParam("roomData") String roomDataJson,
+        @RequestParam(value="image", required = false) MultipartFile multipartFile) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        CreateRoomDto newRoom = objectMapper.readValue(roomDataJson, CreateRoomDto.class);
+
+        byte[] photo = null;
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            photo = roomService.encoded(multipartFile);
+        }
         Room room = roomMapper.toEntity(newRoom);
+        if (photo != null) {
+            room.setPhoto(photo);
+        }
         ReadRoomDto roomDto = roomMapper.toDto(roomService.create(room));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }

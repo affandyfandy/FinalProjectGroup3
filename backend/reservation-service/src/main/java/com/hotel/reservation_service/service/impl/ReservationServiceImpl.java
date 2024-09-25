@@ -1,11 +1,14 @@
 package com.hotel.reservation_service.service.impl;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,6 +35,19 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationServiceImpl(ReservationRepository reservationRepository, TemplateEngine templateEngine) {
         this.reservationRepository = reservationRepository;
         this.templateEngine = templateEngine;
+    }
+
+    @Override
+    public Page<UUID> getUnavailableRoomIds(List<UUID> roomIds, LocalDate checkInDate, LocalDate checkOutDate, Pageable pageable) {
+        Page<Reservation> conflictingReservations = reservationRepository
+                .findConflictingReservations(roomIds, checkInDate, checkOutDate, pageable);
+
+        List<UUID> unavailableRoomIds = conflictingReservations.stream()
+                .map(Reservation::getRoomId)
+                .distinct()
+                .toList();
+
+        return new PageImpl<>(unavailableRoomIds, pageable, conflictingReservations.getTotalElements());
     }
 
     @Override

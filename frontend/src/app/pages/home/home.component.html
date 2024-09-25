@@ -4,21 +4,21 @@
       <h1 class="text-4xl font-bold text-center text-primary mb-6">Welcome to BITWAY</h1>
       <p class="text-center text-lg text-primary mb-8">Book your perfect stay at unbeatable prices, designed for your budget and comfort!</p>
     </div>
-    <form class="bg-white rounded-md p-5 drop-shadow-md flex flex-row space-x-5 absolute top-[40%] left-1/2 transform -translate-x-1/2">
+    <form [formGroup]="searchRoomForm" (ngSubmit)="onSubmit()" class="bg-white rounded-md p-5 drop-shadow-md flex flex-row space-x-5 absolute top-[40%] left-1/2 transform -translate-x-1/2">
       <div class="flex flex-col space-y-2">
         <label class="text-primary" for="checkIn">Check-in</label>
-        <input type="date" name="checkIn" id="checkIn" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
+        <input type="date" formControlName="checkIn" name="checkIn" id="checkIn" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
       </div>
       <div class="flex flex-col space-y-2">
         <label class="text-primary" for="checkOut">Check-out</label>
-        <input type="date" name="checkOut" id="checkOut" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
+        <input type="date" formControlName="checkOut" name="checkOut" id="checkOut" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
       </div>
       <div class="flex flex-col space-y-2">
         <label class="text-primary" for="guest">Guest</label>
-        <input type="number" placeholder="Number of guests" name="guest" id="guest" [min]="1" [max]="5" class="bg-neutral-100 w-52 p-3 border-none rounded-md cursor-pointer">
+        <input type="number" formControlName="guest" placeholder="Number of guests" name="guest" id="guest" [min]="1" [max]="5" class="bg-neutral-100 w-52 p-3 border-none rounded-md cursor-pointer">
       </div>
       <div class="flex flex-col items-end justify-end">
-        <button class="bg-primary text-white p-3 rounded-md w-36">Search</button>
+        <button type="submit" class="bg-primary text-white p-3 rounded-md w-36" [disabled]="!searchRoomForm.valid">Search</button>
       </div>
     </form>
   </div>

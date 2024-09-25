@@ -1,6 +1,7 @@
 package com.hotel.reservation_service.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -31,13 +32,13 @@ public class Reservation extends AuditEntity {
     private UUID id;
 
     @Column(nullable = false)
-    private LocalDateTime reservationDate;
+    private LocalDate reservationDate;
 
     @Column(nullable = false)
-    private LocalDateTime checkInDate;
+    private LocalDate checkInDate;
 
     @Column(nullable = false)
-    private LocalDateTime checkOutDate;
+    private LocalDate checkOutDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

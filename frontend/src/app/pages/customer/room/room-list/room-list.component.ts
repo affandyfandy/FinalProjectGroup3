@@ -89,4 +89,7 @@ export class RoomListComponent implements OnInit{
     this.loadRooms(this.currentPage);
   }
 
+  createReservation(id: string): void{
+  }
+
 }

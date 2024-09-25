@@ -29,7 +29,7 @@
               {{ room.capacity }} Guests
             </p>
           </div>
-          <button class="bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+          <button (click)="createReservation(room.id)" class="bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
             Book
           </button>
         </div>
