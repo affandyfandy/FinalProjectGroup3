@@ -12,7 +12,7 @@
         <button (click)="importData()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
           Import Data
         </button>
-        <button class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        <button (click)="filterRoom()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
           <span class="sr-only">Toggle Filters</span>
             <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
         </button>
@@ -63,7 +63,7 @@
                     <ul class="list-none p-2 m-0">
                       <li (click)="editRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Edit</li>
                       <li (click)="viewRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Detail</li>
-                      <li (click)="deleteRoom(room)" class="p-2 cursor-pointer hover:bg-gray-100">Delete</li>
+                      <li (click)="deleteRoomButton(room)" class="p-2 cursor-pointer hover:bg-gray-100">Delete</li>
                     </ul>
                   </div>
                 </td>
@@ -81,5 +81,23 @@
       </button>
     </div>
 </div>
+
+<app-delete-modal
+  *ngIf="showDeleteModal"
+  [entityId]="selectedRoom!.roomNumber"
+  [entityType]="'room'"
+  (confirm)="onDeleteConfirmed()"
+  (cancel)="onCancelDelete()"
+></app-delete-modal>
+
+<app-filter-modal
+  *ngIf="showFilterModal"
+  (filter)="onApplyFilter($event)"
+  (close)="onCloseFilter()"
+  [fields]="roomFieldSearch"
+  [type]="type"
+  [searchText]="searchText"
+  [status]="status"
+></app-filter-modal>
 
   

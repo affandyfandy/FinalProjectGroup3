@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Room, RoomResponse } from '../../../../model/room.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { RoomService } from '../../../../services/room.service';
@@ -10,6 +10,9 @@ import { RoomFormComponent } from '../room-form/room-form.component';
 import { heroChevronDown, heroChevronUp, heroChevronUpDown, heroEllipsisVertical } from '@ng-icons/heroicons/outline';
 import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@ng-icons/heroicons/solid';
 import { ToastService } from '../../../../services/toast.service';
+import { DeleteModalComponent } from '../../../../main/components/modal/delete-modal/delete-modal.component';
+import { FilterModalComponent } from '../../../../main/components/modal/filter-modal/filter-modal.component';
+import { KeyValue } from '../../../../model/key-value.model';
 
 @Component({
   selector: 'app-room-list',
@@ -18,7 +21,9 @@ import { ToastService } from '../../../../services/toast.service';
     CommonModule,
     FormsModule,
     RoomFormComponent,
-    NgIconComponent
+    NgIconComponent,
+    DeleteModalComponent,
+    FilterModalComponent
   ],
   templateUrl: './room-list.component.html',
   providers: [
@@ -48,14 +53,39 @@ export class RoomListComponent {
   modalTitle: string = '';
   modalMessage: string = '';
 
+  showDeleteModal: boolean = false;
+  showFilterModal: boolean = false;
+
+  roomFieldSearch: KeyValue[] = [
+    { key: 'roomNumber', value: 'Room Number' },
+    { key: 'capacity', value: 'Capacity' },
+    { key: 'roomType', value: 'Room Type' },
+    { key: 'price', value: 'Price' },
+    { key: 'status', value: 'Status' },
+    { key: 'createdBy', value: 'Created By' },
+    { key: 'createdDate', value: 'Created Date' },
+    { key: 'lastModifiedBy', value: 'Last Modified By' },
+    { key: 'lastModifiedDate', value: 'Last Modified Date' },
+  ];
+  
+  sortDirection: { [key: string]: string } = {};
+  currentSort: string = '';
+
+  type: string = '';
+  searchText: string = '';
+  status: string = '';
+
+  queryParam: string = '';
+
   constructor(
     private roomService: RoomService,
-    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private toastService: ToastService
   ){}
 
   ngOnInit(): void {
+    this.queryParam = this.getQueryParamsAsString(this.activatedRoute.snapshot.queryParams);
     this.loadRooms(this.currentPage);
   }
 
@@ -130,21 +160,31 @@ export class RoomListComponent {
     this.router.navigate(['/admin/rooms', this.selectedRoom?.id, 'view']);
   }
 
-  deleteRoom(room: Room): void {
-    console.log('Delete room:', room);
+  onDeleteConfirmed(): void {  
+    if (this.selectedRoom) {
+      this.roomService.deleteRoom(this.selectedRoom.id).subscribe({
+        next: () => {
+          console.log('Room deleted successfully');
+          this.loadRooms(this.currentPage);
+          this.toastService.showToast('Room deleted successfully!', 'success');
+        },
+        error: (err) => {
+          console.error('Error deleting room:', err);
+          this.toastService.showToast('Error deleting room: ' + err, 'error');
+        }
+      });
+    }
+    this.showDeleteModal = false;
+  }
+
+  deleteRoomButton(room: Room): void {
     this.selectedRoom = room;
-    
-    this.roomService.deleteRoom(this.selectedRoom.id).subscribe({
-      next: () => {
-        console.log('Room deleted successfully');
-        this.loadRooms(this.currentPage);
-        this.toastService.showToast('Room deleted successfully!', 'success');
-      },
-      error: (err) => {
-        console.error('Error deleting room:', err);
-        this.toastService.showToast('Error deleting room: ' + err, 'error');
-      }
-    });
+    this.showDeleteModal = true;
+    this.showOptions = false;
+  }
+
+  onCancelDelete() {
+    this.showDeleteModal = false;
   }
 
   sortData(header: string) {
@@ -183,5 +223,45 @@ export class RoomListComponent {
 
   closeModal() {
     this.isModalVisible = false;
+  }
+
+  filterRoom(): void {
+    this.showFilterModal = true;
+    this.showOptions = false;
+  }
+
+  onApplyFilter(queryParams: any) {
+    this.queryParam = this.getQueryParamsAsString(queryParams);
+    console.log('Query Params:', this.queryParam); 
+    this.loadRooms(this.currentPage);
+    this.showFilterModal = false;
+  }
+
+  onCloseFilter() {
+    this.showFilterModal = false;
+  }
+
+  getQueryParamsAsString(params: any): string {
+    const queryArray = [];
+    let foundFirstQuery = false;
+
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        const value = params[key];
+        queryArray.push(`${key}=${encodeURIComponent(params[key])}`);
+
+        if (key === 'status') {
+          this.status = value;
+        }
+
+        // if (key !== '' && key !== 'status' && !foundFirstQuery) {
+        //   this.type = key;
+        //   this.searchText = value;
+        //   foundFirstQuery = true;
+        // }
+      }
+    }
+
+    return queryArray.join('&');
   }
 }

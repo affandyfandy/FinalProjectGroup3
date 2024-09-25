@@ -83,7 +83,9 @@ export class RoomService {
         return this.http.put<Room>(`${this.baseUrl}/${id}`, roomData, { headers });
     }
 
-    createRoom(roomData: Room): Observable<Room>{
+    createRoom(roomData: FormData): Observable<Room>{
+        console.log("roomData");
+        console.log(roomData);
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
@@ -97,6 +99,17 @@ export class RoomService {
           observe: 'events',
           reportProgress: true,
           responseType: 'text' as 'json'
+        });
+    }
+
+    encodePhoto(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result as string); 
+          };
+          reader.onerror = reject; 
+          reader.readAsDataURL(file); 
         });
     }
     

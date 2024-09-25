@@ -1,10 +1,11 @@
 package com.hotel.room_service.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.Base64;
 
 import com.hotel.room_service.client.ReservationServiceClient;
 import com.hotel.room_service.dto.RoomMapper;
@@ -12,6 +13,7 @@ import com.hotel.room_service.dto.response.ReadRoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hotel.room_service.entity.Room;
 import com.hotel.room_service.entity.Status;
@@ -180,6 +182,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+
+    public byte[] encoded(MultipartFile file) throws IOException {
+        return file.getBytes();
+        // return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+    @Override
+    public String byteToString(byte[] file) {
+        return Base64.getEncoder().encodeToString(file);
+    }
+
     public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable) {
         Page<Room> activeRooms = roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(capacity, pageable);
         List<UUID> roomIds = activeRooms.stream().map(Room::getId).toList();
