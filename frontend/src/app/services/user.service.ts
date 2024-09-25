@@ -80,4 +80,14 @@ export class UserService {
 
     return of(null);
   }
+
+  uploadUserPhoto(id: string, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    return this.htpp.post(`${this.authApiUrl}/${id}/photo`, formData);
+  }
+
+  getUserPhoto(id: string): Observable<Blob> {
+    return this.htpp.get(`${this.authApiUrl}/${id}/photo`, { responseType: 'blob' });
+  }
 }

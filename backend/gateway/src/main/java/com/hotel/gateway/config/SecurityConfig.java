@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .pathMatchers("/api/v1/auth/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .pathMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
+                        .pathMatchers(HttpMethod.GET, "/api/v1/users/images/**").permitAll()
                         .pathMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/**").permitAll()
                         .pathMatchers("/api/v1/room/edit/**").hasAuthority("ADMIN")
