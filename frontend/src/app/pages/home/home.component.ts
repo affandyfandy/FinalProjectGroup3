@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { bootstrapFacebook, bootstrapInstagram, bootstrapLinkedin, bootstrapTwitterX, bootstrapYoutube } from '@ng-icons/bootstrap-icons';
 import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 
@@ -27,8 +28,9 @@ import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/c
 })
 export class HomeComponent {
   searchRoomForm: FormGroup;
+  queryParams: any = {};
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.searchRoomForm = this.fb.group({
       checkIn: ['', Validators.required],
       checkOut: ['', Validators.required],
@@ -38,7 +40,14 @@ export class HomeComponent {
 
   onSubmit(): void {
     if (this.searchRoomForm.valid) {
-      console.log(this.searchRoomForm.value);
+      this.queryParams = {
+        checkIn: this.searchRoomForm.value.checkIn,
+        checkOut: this.searchRoomForm.value.checkOut,
+        guest: this.searchRoomForm.value.guest
+      };
+      this.router.navigate(['/rooms'], {
+        queryParams: this.queryParams
+      });
     }
   }
 }
