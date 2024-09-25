@@ -19,7 +19,7 @@ public interface RoomService {
     Room update(UUID id, Room room);
     Page<Room> findAllSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
     Page<Room> search(int pageNo, int pageSize, String status, String facility, String roomType, Integer capacity,
-                BigDecimal lowerLimit, BigDecimal upperLimit);
+                BigDecimal lowerLimit);
     Room findById(UUID id);
     Page<Room> findAllActiveSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
     Room updateStatus(UUID id, String status);

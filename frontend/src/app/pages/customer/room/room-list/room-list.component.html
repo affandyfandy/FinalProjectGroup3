@@ -1,7 +1,15 @@
 <div *ngIf="!isAdmin" class="container mx-auto px-4 py-8">
-  <div class="mb-5">
-    <h1 class="text-2xl font-bold text-primary mb-2">Explore Our Rooms</h1>
-    <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
+  <div class="mb-5 flex justify-between items-end">
+    <div>
+      <h1 class="text-2xl font-bold text-primary mb-2">Explore Our Rooms</h1>
+      <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
+    </div>
+    <div class="flex space-x-2">
+      <button (click)="filterRoom()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+        <span class="sr-only">Toggle Filters</span>
+          <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
+      </button>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -48,3 +56,14 @@
     </button>
   </div>
 </div>
+
+
+<app-filter-modal
+  *ngIf="showFilterModal"
+  (filter)="onApplyFilter($event)"
+  (close)="onCloseFilter()"
+  [fields]="roomFieldSearch"
+  [type]="type"
+  [searchText]="searchText"
+  [status]="status"
+></app-filter-modal>

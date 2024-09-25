@@ -113,4 +113,34 @@ export class RoomService {
         });
     }
     
+    filterRooms(
+        pageNo: number = 0,
+        pageSize: number = 10,
+        status?: string,
+        facility?: string,
+        capacity?: number,
+        roomType?: string,
+        lowerLimitPrice?: number
+      ): Observable<RoomResponse>{
+        let params = new HttpParams()
+          .set('pageNo', pageNo.toString())
+          .set('pageSize', pageSize.toString());
+        if (status) {
+          params = params.set('status', status);
+        }
+        if (facility) {
+          params = params.set('facility', facility);
+        }
+        if (capacity !== undefined) {
+          params = params.set('capacity', capacity.toString());
+        }
+        if (roomType) {
+          params = params.set('roomType', roomType);
+        }
+        if (lowerLimitPrice !== undefined) {
+          params = params.set('lowerLimitPrice', lowerLimitPrice.toString());
+        }
+    
+        return this.http.get<RoomResponse>(`${this.baseUrl}/search`, { params });
+      }
 }
