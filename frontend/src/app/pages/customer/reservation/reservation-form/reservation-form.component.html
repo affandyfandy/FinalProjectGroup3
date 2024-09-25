@@ -15,9 +15,9 @@
             <span>Phone</span>
           </div>
           <div class="flex flex-col gap-2">
-            <span>email</span>
-            <span>full name</span>
-            <span>phone</span>
+            <span>{{ user?.email }}</span>
+            <span>{{ user?.fullName }}</span>
+            <span>{{ user?.phone }}</span>
           </div>
         </div>
         <div class="h-[130px] border-slate-200 border-2"></div>
@@ -28,19 +28,19 @@
           </div>
           <div class="flex flex-row">
             <span class="w-[20%]">Check-in date</span>
-            <span>2024</span>
+            <span>{{ queryParam.checkIn | date:'fullDate' }}</span>
           </div>
           <div class="flex flex-row">
             <span class="w-[20%]">Check-out date</span>
-            <span>2024</span>
+            <span>{{ queryParam.checkOut | date:'fullDate' }}</span>
           </div>
           <div class="flex flex-row">
             <span class="w-[20%]">Room Type</span>
-            <span>Single</span>
+            <span>{{ room?.roomType }}</span>
           </div>
           <div class="flex flex-row">
             <span class="w-[20%]">Room Number</span>
-            <span>204</span>
+            <span>{{ room?.roomNumber }}</span>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
     <div class="flex flex-col space-y-4">
       <div class="flex flex-col">
         <span class="text-3xl font-bold text-primary">Total</span>
-        <span class="text-2xl font-semibold text-primary">Rp. 0</span>
+        <span class="text-2xl font-semibold text-primary">Rp. {{ room?.price }}</span>
       </div>
       <div class="flex gap-5">
         <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md shadow-sm">Confirm</button>

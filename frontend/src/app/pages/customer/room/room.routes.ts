@@ -6,10 +6,6 @@ export const RoomRoutes: Routes = [
         loadComponent: () => import('./room-list/room-list.component').then(m => m.RoomListComponent)
     },
     {
-        path: 'create',
-        loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
-    },
-    {
         path: ':id',
         loadComponent: () => import('./room-form/room-form.component').then(m => m.RoomFormComponent)
     }

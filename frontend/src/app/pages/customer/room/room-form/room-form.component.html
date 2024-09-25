@@ -32,54 +32,52 @@
                     </div>
                 </div>
             </div>
-            <div class="space-y-4">
-                <div>
-                    <label for="roomNumber" class="block text-sm font-medium text-gray-700">Room Number</label>
+            <div class="flex flex-col gap-5">
+              <div class=" flex flex-row gap-5">
+                <div class="flex flex-row gap-3">
+                  <div class="flex flex-col">
+                    <span>Room Number:</span>
+                    <span>Room Type:</span>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <span>{{ room?.roomNumber }}</span>
+                    <span>{{ room?.roomType }}</span>
+                  </div>
+                </div>
+                <div class="border-2"></div>
+                <div class="flex flex-row gap-5">
+                  <div class="flex flex-col">
+                    <span>Room Price:</span>
+                    <span>Room Capacity:</span>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <span>{{ room?.price }}</span>
+                    <span>{{ room?.capacity }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-row justify-between gap-5">
+                <div class="w-full">
+                    <label for="checkIn" class="block text-sm font-medium text-gray-700">Check-in</label>
                     <input
-                        type="text"
-                        id="roomNumber"
-                        name="roomNumber"
+                        type="date"
+                        id="checkIn"
+                        name="checkIn"
+                        [(ngModel)]="checkIn"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                        [value]="room?.roomNumber"
-                        readonly
                     />
                 </div>
-                
-                <div>
-                    <label for="roomType" class="block text-sm font-medium text-gray-700">Room Type</label>
+                <div class="w-full">
+                    <label for="checkOut" class="block text-sm font-medium text-gray-700">Check-out</label>
                     <input
-                        type="text"
-                        id="roomType"
-                        name="roomType"
+                        type="date"
+                        id="checkOut"
+                        name="checkOut"
+                        [(ngModel)]="checkOut"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                        [value]="room?.roomType"
-                        readonly
                     />
                 </div>
-                
-                <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                    <input
-                        type="text"
-                        id="price"
-                        name="price"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                        [value]="room?.price"
-                        readonly
-                    />
-                </div>
-                
-                <div>
-                    <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
-                    <input
-                        type="text"
-                        id="capacity"
-                        name="capacity"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                        [value]="room?.capacity"
-                        readonly
-                    />
-                </div>
+              </div>
             </div>
         </div>
     </form>

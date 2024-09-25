@@ -2,10 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Room, RoomType, Status } from '../../../../model/room.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../../../../services/room.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
+import { RouterConfig } from '../../../../config/route.constants';
 
 @Component({
   selector: 'app-room-form',
@@ -13,7 +14,8 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgIconComponent
+    NgIconComponent,
+    FormsModule
   ],
   templateUrl: './room-form.component.html',
   providers: [
@@ -26,19 +28,29 @@ export class RoomFormComponent implements OnInit {
   roomStatus: Status = Status.ACTIVE;
   roomId: string | null = null;
 
+  checkIn: string = '';
+  checkOut: string = '';
+
+  queryParam: any = {};
+
   constructor(
     private roomService: RoomService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.roomId = this.route.snapshot.paramMap.get('id');
+    this.roomId = this.activatedRoute.snapshot.paramMap.get('id');
     if (this.roomId) {
       this.roomService.getRoomById(this.roomId).subscribe((room: Room) => {
         this.room = room;
       });
     }
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.checkIn = params['checkIn'] !== undefined ? params['checkIn'] : '';
+      this.checkOut = params['checkOut'] !== undefined ? params['checkOut'] : '';
+    });
   }
 
   goBack(): void {
@@ -47,7 +59,13 @@ export class RoomFormComponent implements OnInit {
 
   bookRoom() {
     if (this.roomId) {
-        this.router.navigate(['/reservation', this.roomId]);
+        this.queryParam['roomId'] = this.roomId;
+        this.queryParam['checkIn'] = this.checkIn;
+        this.queryParam['checkOut'] = this.checkOut;
+
+        this.router.navigate([RouterConfig.RESERVATION.link, 'create'], {
+          queryParams: this.queryParam
+        });
     }
   }
 }
