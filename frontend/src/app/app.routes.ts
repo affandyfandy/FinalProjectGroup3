@@ -35,6 +35,5 @@ export const routes: Routes = [
     {
         path: RouterConfig.NOT_FOUND.path,
         loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent),
-    }
-
+    },
 ];

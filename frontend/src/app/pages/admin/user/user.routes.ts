@@ -10,7 +10,11 @@ export const UserRoutes: Routes = [
         loadComponent: () => import('./user-form/user-form.component').then(m => m.UserFormComponent)
     },
     {
-        path: 'edit/:id',
+        path: ':id/edit',
+        loadComponent: () => import('./user-form/user-form.component').then(m => m.UserFormComponent)
+    },
+    {
+        path: ':id',
         loadComponent: () => import('./user-form/user-form.component').then(m => m.UserFormComponent)
     }
 ];

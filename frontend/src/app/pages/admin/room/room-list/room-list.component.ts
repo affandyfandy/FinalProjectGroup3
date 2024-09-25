@@ -56,7 +56,6 @@ export class RoomListComponent {
   ){}
 
   ngOnInit(): void {
-    // this.isAdmin = this.authService.isAdmin();
     this.loadRooms(this.currentPage);
   }
 

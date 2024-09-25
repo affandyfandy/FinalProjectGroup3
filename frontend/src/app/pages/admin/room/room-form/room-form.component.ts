@@ -149,6 +149,7 @@ export class RoomFormComponent implements OnInit {
             console.log('Room updated successfully:', updatedRoom);
             this.save.emit(updatedRoom);
             this.toastService.showToast('Room updated successfully!', 'success');
+            this.navigateToRoomList();
           },
           error: (err) => {
             console.error('Error updating room:', err);
@@ -161,6 +162,7 @@ export class RoomFormComponent implements OnInit {
             console.log('Room created successfully:', createdRoom);
             this.save.emit(createdRoom);
             this.toastService.showToast('Room created successfully!', 'success');
+            this.navigateToRoomList();
           },
           error: (err) => {
             console.error('Error creating room:', err);
@@ -169,20 +171,14 @@ export class RoomFormComponent implements OnInit {
           }
         });
       }
-      this.onClose();
     }
   }
 
-  // onFileSelect(event: any): void {
-  //   const file = event.target.files[0];
-  //   console.log(file);
-  //   if (file) {
-  //     this.selectedFile = file;
-  //     this.roomForm.patchValue({
-  //       multipartFile: file
-  //     });
-  //   }
-  // }
+  navigateToRoomList(): void {
+    this.router.navigateByUrl('/admin/rooms', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/admin/rooms']); // Refreshes the component
+    });
+  }
 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
