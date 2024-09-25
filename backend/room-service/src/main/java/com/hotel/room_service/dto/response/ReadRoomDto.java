@@ -23,7 +23,7 @@ public class ReadRoomDto {
     private Integer capacity;
     private String status;
     private BigDecimal price;
-    private String photo;
+    private String photoUrl;
     private ArrayList<String> facility;
     private String createdBy;
     private String lastModifiedBy;
