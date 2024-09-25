@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.hotel.room_service.entity.Room;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Repository

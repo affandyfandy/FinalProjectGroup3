@@ -57,11 +57,11 @@
             <form [formGroup]="rsvpForm" (ngSubmit)="onSubmit()">
               <div class="flex flex-col space-y-2 mb-4">
                 <label for="checkIn">Check-in</label>
-                <input type="date" formControlName="checkIn" name="checkIn" id="checkIn" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
+                <input type="date" formControlName="checkIn" [(ngModel)]="checkIn" name="checkIn" id="checkIn" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
               </div>
               <div class="flex flex-col space-y-2 mb-4">
                 <label for="checkOut">Check-out</label>
-                <input type="date" formControlName="checkOut" name="checkOut" id="checkOut" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
+                <input type="date" formControlName="checkOut" [(ngModel)]="checkOut" name="checkOut" id="checkOut" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
               </div>
               <div class="flex flex-col items-end justify-end">
                 <button type="submit" class="w-full bg-gray-800 text-white py-2 rounded-lg mb-4" [disabled]="!rsvpForm.valid">Book Now</button>

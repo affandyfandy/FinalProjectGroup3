@@ -78,7 +78,6 @@ export class RoomFormComponent implements OnInit {
       this.checkIn = params['checkIn'] !== undefined ? params['checkIn'] : '';
       this.checkOut = params['checkOut'] !== undefined ? params['checkOut'] : '';
     });
-
   }
 
   goBack(): void {
@@ -139,9 +138,9 @@ export class RoomFormComponent implements OnInit {
     if (this.rsvpForm.valid) {
       const formValues = this.rsvpForm.value;
       const queryParams = {
+        roomId: this.room?.id,
         checkIn: formValues.checkIn,
-        checkOut: formValues.checkOut,
-        roomId: this.room?.id
+        checkOut: formValues.checkOut
       };
       this.router.navigate(['reservation/create'], { queryParams });
     } else {
