@@ -50,8 +50,8 @@ public class RoomController {
     }
 
     @GetMapping("/available")
-    public Page<ReadRoomDto> getAvailableRooms(@RequestParam LocalDate checkIn,
-                                               @RequestParam LocalDate checkOut,
+    public Page<ReadRoomDto> getAvailableRooms(@RequestParam(required = false, defaultValue = "") LocalDate checkIn,
+                                               @RequestParam(required = false, defaultValue = "") LocalDate checkOut,
                                                @RequestParam(required = false, defaultValue = "1") int capacity,
                                                Pageable pageable) {
         return roomService.getAvailableRooms(checkIn, checkOut, capacity, pageable);

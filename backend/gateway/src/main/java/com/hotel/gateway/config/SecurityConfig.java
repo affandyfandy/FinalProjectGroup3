@@ -43,7 +43,6 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .pathMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/**").permitAll()
-                        .pathMatchers("/api/v1/rooms/**").permitAll()
                         .pathMatchers("/api/v1/room/edit/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/create/**").hasAuthority("ADMIN")
                         .anyExchange().authenticated()

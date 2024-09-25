@@ -253,4 +253,8 @@ export class RoomFormComponent implements OnInit {
       this.message = 'Please select a file first';
     }
   }
+
+  getRoomDescription(): void{
+    
+  }
 }

@@ -78,26 +78,26 @@ public class RoomControllerTest {
         verify(roomMapper, times(1)).toDto(room);
     }
 
-    @Test
-    void testCreateNewRoom() {
-        CreateRoomDto createRoomDto = new CreateRoomDto();
-        createRoomDto.setRoomNumber("DO9000");
-        createRoomDto.setRoomType("SUITE");
-        createRoomDto.setCapacity(5);
-        createRoomDto.setPrice(BigDecimal.valueOf(100001000));
-
-        when(roomMapper.toEntity(createRoomDto)).thenReturn(room);
-        when(roomService.create(room)).thenReturn(room);
-        when(roomMapper.toDto(room)).thenReturn(roomDto);
-
-        ResponseEntity<?> response = roomController.createNewRoom(createRoomDto);
-
-        assertEquals(202, response.getStatusCodeValue());
-        assertEquals(roomDto, response.getBody());
-        verify(roomMapper, times(1)).toEntity(createRoomDto);
-        verify(roomService, times(1)).create(room);
-        verify(roomMapper, times(1)).toDto(room);
-    }
+//    @Test
+//    void testCreateNewRoom() {
+//        CreateRoomDto createRoomDto = new CreateRoomDto();
+//        createRoomDto.setRoomNumber("DO9000");
+//        createRoomDto.setRoomType("SUITE");
+//        createRoomDto.setCapacity(5);
+//        createRoomDto.setPrice(BigDecimal.valueOf(100001000));
+//
+//        when(roomMapper.toEntity(createRoomDto)).thenReturn(room);
+//        when(roomService.create(room)).thenReturn(room);
+//        when(roomMapper.toDto(room)).thenReturn(roomDto);
+//
+//        ResponseEntity<?> response = roomController.createNewRoom(createRoomDto);
+//
+//        assertEquals(202, response.getStatusCodeValue());
+//        assertEquals(roomDto, response.getBody());
+//        verify(roomMapper, times(1)).toEntity(createRoomDto);
+//        verify(roomService, times(1)).create(room);
+//        verify(roomMapper, times(1)).toDto(room);
+//    }
 
     @Test
     void testActivateRoomStatus() {

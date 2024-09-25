@@ -38,9 +38,9 @@ public class ReservationController {
 
     @GetMapping("/unavailable-room-ids")
     public Page<UUID> getUnavailableRoomIds(
-            @RequestParam List<UUID> roomIds,
-            @RequestParam LocalDate checkInDate,
-            @RequestParam LocalDate checkOutDate,
+            @RequestParam(required = false, defaultValue = "") List<UUID> roomIds,
+            @RequestParam(required = false) LocalDate checkInDate,
+            @RequestParam(required = false) LocalDate checkOutDate,
             Pageable pageable) {
         return reservationService.getUnavailableRoomIds(roomIds, checkInDate, checkOutDate, pageable);
     }
