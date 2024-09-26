@@ -2,11 +2,11 @@ package com.hotel.reservation_service.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.UUID;
 
 import com.hotel.reservation_service.audit.Auditable;
-
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -54,5 +54,10 @@ public class Reservation extends Auditable<String> {
 
     @Column(nullable = true)
     private BigDecimal amount;
+
+    @PrePersist
+    public void prePersist() {
+        this.reservationDate = LocalDate.now();
+    }
 
 }

@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RoomService {
+    List<Room> findAll();
     Room create(Room room);
     Room update(UUID id, Room room);
     Page<Room> findAllSorted(int pageNo, int pageSize, String sortBy, String sortOrder);

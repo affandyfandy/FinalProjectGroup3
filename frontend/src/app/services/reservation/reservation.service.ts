@@ -7,6 +7,8 @@ import { RoomService } from '../room.service';
 import { Room } from '../../model/room.model';
 import { AuthService } from '../auth/auth.service';
 import { RangeDates } from '../../model/range-dates';
+import { UserService } from '../user.service';
+import { User } from '../../model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +16,34 @@ import { RangeDates } from '../../model/range-dates';
 export class ReservationService {
   private apiUrl = `${AppConstants.BASE_API_V1_URL}/reservations`;
 
-  constructor(private http: HttpClient, private roomService : RoomService, 
+  constructor(private http: HttpClient, private roomService : RoomService, private userService: UserService,
     private authService: AuthService
   ) {}
 
+  getAllReservationsWithRoomsAndUsers(page: number = 0, size: number = 10): Observable<Reservation[]> {
+    return this.getAllReservations(page, size).pipe(
+      switchMap((reservationsResponse: any) => {
+        const reservations: Reservation[] = reservationsResponse.content;
+
+        const enrichedReservationsObservables = reservations.map((reservation: Reservation) => 
+          forkJoin({
+            room: this.roomService.getRoomById(reservation.roomId),
+            user: this.userService.getUserById(reservation.userId)
+          }).pipe(
+            map(({ room, user }) => ({
+              ...reservation,
+              room,
+              user
+            }))
+          )
+        );
+
+        return forkJoin(enrichedReservationsObservables);
+      }),
+      map((reservationsWithRoomsAndUsers: Reservation[]) => reservationsWithRoomsAndUsers)
+    );
+  }
+  
   getAllReservationsWithRooms(page: number = 0, size: number = 10): Observable<Reservation[]> {
     return this.getAllReservations(page, size).pipe(
       switchMap((reservationsResponse: any) => {

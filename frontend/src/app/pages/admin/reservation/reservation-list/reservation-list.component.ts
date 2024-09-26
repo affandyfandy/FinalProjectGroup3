@@ -50,7 +50,7 @@ export class ReservationListComponent implements OnInit {
   }  
 
   loadReservations(page: number): void {
-    this.reservationService.getAllReservationsWithRooms(page - 1, this.pageSize).subscribe({
+    this.reservationService.getAllReservationsWithRoomsAndUsers(page - 1, this.pageSize).subscribe({
       next: (response: any) => {
         this.reservations = response;
         // this.reservations = response.content;

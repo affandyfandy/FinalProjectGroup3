@@ -136,6 +136,10 @@ export class RoomService {
         );
     }
     
+    getAllRoomsAsList(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/list/all`);
+    }
+
     filterRooms(
         pageNo?: number,
         pageSize?: number,
