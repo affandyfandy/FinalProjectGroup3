@@ -1,7 +1,8 @@
 package com.hotel.room_service.controller;
 
-import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,10 +11,14 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
@@ -40,6 +44,7 @@ import com.hotel.room_service.service.RoomService;
 public class RoomController {
 
     private static final Logger log = LoggerFactory.getLogger(RoomController.class);
+    private final Path rootLocation = Paths.get("src/main/resources/static/images");
 
     public RoomService roomService;
     public RoomMapper roomMapper;
@@ -61,28 +66,18 @@ public class RoomController {
     public ResponseEntity<?> getRoomDetails(@PathVariable UUID id){
         Room room = roomService.findById(id) != null ? roomService.findById(id) : null;
         ReadRoomDto roomDto = roomMapper.toDto(room);
-        roomDto.setPhotoUrl(roomService.byteToString(room.getPhoto()));
+//        roomDto.setPhotoUrl(roomService.byteToString(room.getPhoto()));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
     }   
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewRoom(
-        @RequestParam("roomData") String roomDataJson,
-        @RequestParam(value="image", required = false) MultipartFile multipartFile) throws IOException {
+        @RequestPart("roomData") CreateRoomDto roomDto) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        CreateRoomDto newRoom = objectMapper.readValue(roomDataJson, CreateRoomDto.class);
+        Room room = roomService.create(roomMapper.toEntity(roomDto));
+        ReadRoomDto readRoomDto = roomMapper.toDto(room);
 
-        byte[] photo = null;
-        if (multipartFile != null && !multipartFile.isEmpty()) {
-            photo = roomService.encoded(multipartFile);
-        }
-        Room room = roomMapper.toEntity(newRoom);
-        if (photo != null) {
-            room.setPhoto(photo);
-        }
-        ReadRoomDto roomDto = roomMapper.toDto(roomService.create(room));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(readRoomDto);
     }
 
     @PutMapping("/{id}/activate")
@@ -168,4 +163,33 @@ public class RoomController {
         }
     }
 
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<?> uploadUserPhoto(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
+        try {
+            ReadRoomDto updatedUser = roomService.uploadRoomPhoto(id, file);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<?> getImage(@PathVariable String filename) {
+        try {
+            Path filePath = rootLocation.resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
+        }
+    }
 }

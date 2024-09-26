@@ -2,8 +2,8 @@ package com.hotel.room_service.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class ReadRoomDto {
     private Integer capacity;
     private String status;
     private BigDecimal price;
-    private String photoUrl;
+    private String photo;
     private ArrayList<String> facility;
     private String createdBy;
     private String lastModifiedBy;

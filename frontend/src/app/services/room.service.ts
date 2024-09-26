@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AppConstants } from "../config/app.constants";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { catchError, map, Observable, of } from "rxjs";
 import { Room, RoomResponse } from "../model/room.model";
 import { AuthService } from "./auth/auth.service";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class RoomService {
 
     private baseUrl = `${AppConstants.BASE_API_V1_URL}/room`;
 
-    constructor(private http: HttpClient, private authService: AuthService){}
+    constructor(private http: HttpClient, private authService: AuthService, private sanitizer: DomSanitizer){}
 
     getAvailableRooms(
         checkIn: string,
@@ -84,11 +85,10 @@ export class RoomService {
     }
 
     createRoom(roomData: FormData): Observable<Room>{
-        console.log("roomData");
-        console.log(roomData);
         const headers = new HttpHeaders({
             'Logged-User': this.authService.getUserInformation()[1].value
         });
+
         return this.http.post<Room>(`${this.baseUrl}/create`, roomData, { headers });
     }
 
@@ -111,6 +111,29 @@ export class RoomService {
           reader.onerror = reject; 
           reader.readAsDataURL(file); 
         });
+    }
+    
+    uploadRoomPhoto(id: string, file: File): Observable<any> {
+        const formData: FormData = new FormData();
+        formData.append('file', file);
+        return this.http.post(`${this.baseUrl}/${id}/photo`, formData);
+    }
+
+    getRoomPhoto(photo: string): Observable<Blob> {
+        return this.http.get(`${this.baseUrl}${photo}`, { responseType: 'blob' });
+    }
+
+    fetchRoomPhoto(photo: string): Observable<SafeUrl | null> {
+        return this.getRoomPhoto(photo).pipe(
+            map((response: Blob) => {
+                const objectUrl = URL.createObjectURL(response);
+                const safeUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+                return safeUrl;
+            }),
+            catchError((error) => {
+                return of(null);
+            })
+        );
     }
     
     filterRooms(

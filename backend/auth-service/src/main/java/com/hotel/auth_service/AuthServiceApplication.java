@@ -1,16 +1,16 @@
 package com.hotel.auth_service;
 
-import com.hotel.auth_service.config.RsaKeyConfigProperties;
-import com.hotel.auth_service.entity.Role;
-import com.hotel.auth_service.entity.User;
-import com.hotel.auth_service.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.hotel.auth_service.config.RsaKeyConfigProperties;
+import com.hotel.auth_service.entity.Role;
+import com.hotel.auth_service.entity.User;
+import com.hotel.auth_service.repository.UserRepository;
 
 @EnableConfigurationProperties(RsaKeyConfigProperties.class)
 @SpringBootApplication

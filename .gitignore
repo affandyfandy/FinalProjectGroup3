@@ -1,0 +1,5 @@
+
+*.log
+/backend/gateway/*.log
+/backend/auth-service/src/main/resources/static/images
+/backend/room-service/src/main/resources/static/images

@@ -5,10 +5,14 @@ import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,12 +28,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.service.UserService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private static final String USER_NOT_FOUND = "User not found";
 
+    private static final String USER_NOT_FOUND = "User not found";
+    private final Path rootLocation = Paths.get("src/main/resources/static/images");
     private final UserService userService;
 
     @Autowired
@@ -83,5 +92,33 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<?> uploadUserPhoto(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        try {
+            UserDto updatedUser = userService.uploadUserPhoto(id, file);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> getUserPhoto(@PathVariable String filename) {
+        try {
+            Path filePath = rootLocation.resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"" )
+                        .body(resource);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
