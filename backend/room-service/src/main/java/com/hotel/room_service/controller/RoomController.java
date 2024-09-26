@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hotel.room_service.criteria.RoomSearchCriteria;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
@@ -55,12 +56,15 @@ public class RoomController {
     }
 
     @GetMapping("/available")
-    public Page<ReadRoomDto> getAvailableRooms(@RequestParam(required = false, defaultValue = "") LocalDate checkIn,
+    public ResponseEntity<?> getAvailableRooms(@RequestParam(required = false, defaultValue = "") LocalDate checkIn,
                                                @RequestParam(required = false, defaultValue = "") LocalDate checkOut,
                                                @RequestParam(required = false, defaultValue = "1") int capacity,
                                                @RequestParam(defaultValue = "0", required = false) int pageNo,
                                                @RequestParam(defaultValue = "10", required = false) int pageSize) {
-        return roomService.getAvailableRooms(checkIn, checkOut, capacity, pageNo, pageSize);
+        Page<Room> pageRoom = roomService.getAvailableRooms(checkIn, checkOut, capacity, pageNo, pageSize);
+        List<ReadRoomDto> listRoomDto = roomMapper.toListDto(pageRoom.getContent());
+        Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, pageRoom.getPageable(), pageRoom.getTotalElements());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
     }
 
     @GetMapping("/{id}")
@@ -127,13 +131,9 @@ public class RoomController {
     public ResponseEntity<?> filterRooms(
         @RequestParam(defaultValue = "0", required = false) int pageNo,
         @RequestParam(defaultValue = "10", required = false) int pageSize,
-        @RequestParam(required = false) String status,
-        @RequestParam(required = false) String facility,
-        @RequestParam(required = false) Integer capacity,
-        @RequestParam(required = false) String roomType,
-        @RequestParam(required = false) BigDecimal lowerLimitPrice)
+        RoomSearchCriteria criteria)
     {
-        Page<Room> listRoom = roomService.search(pageNo, pageSize, status, facility, roomType, capacity, lowerLimitPrice);
+        Page<Room> listRoom = roomService.getAllRoomByQuery(pageNo, pageSize, criteria);
         List<ReadRoomDto> listRoomDto = roomMapper.toListDto(listRoom.getContent());
         Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, listRoom.getPageable(), listRoom.getTotalElements());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
