@@ -7,6 +7,10 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroCalendarDays, heroChevronLeft, heroCreditCard, heroMapPin } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
+import { Room } from '../../../../model/room.model';
+import { RoomService } from '../../../../services/room.service';
+import { User } from '../../../../model/user.model';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-reservation-form',
@@ -29,6 +33,8 @@ export class ReservationFormComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   reservationId?: string | null = null;
+  room?: Room;
+  user?: User;
 
   reservationForm: FormGroup;
 
@@ -36,9 +42,14 @@ export class ReservationFormComponent implements OnInit {
     private fb: FormBuilder,
     private reservationService: ReservationService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router, 
+    private roomService: RoomService,
+    private userService: UserService) {
     this.reservationForm = this.fb.group({
       customerName: ['', Validators.required],
+      customerEmail: ['', Validators.required],
+      customerPhone: ['', Validators.required],
+      customerAddress: ['', Validators.required],
       roomType: ['', Validators.required],
       checkInDate: ['', Validators.required],
       checkOutDate: ['', Validators.required],
@@ -65,11 +76,34 @@ export class ReservationFormComponent implements OnInit {
             checkOutDate: this.reservation.checkOutDate,
             status: this.reservation.status
           });
+          if (this.reservation.roomId) {
+            this.roomService.getRoomById(this.reservation.roomId).subscribe({
+              next: (room) => {
+                this.room = room;
+              },
+              error: (err) => {
+                console.error('Error fetching room details:', err);
+              }
+            });
+          }
+          console.log(this.reservation.userId);
+          if (this.reservation.userId){
+            this.userService.getUserById(this.reservation.userId).subscribe({
+              next: (user) => {
+                this.user = user;
+                console.log(this.user);
+              },
+              error: (err) => {
+                console.error('Error fetching user details:', err);
+              }
+            });
+          }
         },
         error: (err) => {
-          console.error('Error fetching reservation:', err);
+          console.error('Error fetching user:', err);
         }
       });
+
     }
   }
 
