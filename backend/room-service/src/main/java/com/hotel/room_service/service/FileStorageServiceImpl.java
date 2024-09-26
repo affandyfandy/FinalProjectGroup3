@@ -1,14 +1,14 @@
 package com.hotel.room_service.service;
 
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService{
@@ -54,7 +54,9 @@ public class FileStorageServiceImpl implements FileStorageService{
     public void deleteFile(String fileName) {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Files.delete(filePath);
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Could not delete file " + fileName, ex);
         }
