@@ -17,7 +17,7 @@ import { SafeUrl } from '@angular/platform-browser';
     CommonModule,
     ReactiveFormsModule,
     NgIconComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './room-form.component.html',
   providers: [
