@@ -28,7 +28,7 @@ public interface RoomService {
     byte[] encoded(MultipartFile file) throws IOException;
     String byteToString(byte[] file);
 
-    Page<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize);
+    Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize);
 
     ReadRoomDto uploadRoomPhoto(UUID id, MultipartFile file);
 }

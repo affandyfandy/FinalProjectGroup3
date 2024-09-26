@@ -177,16 +177,13 @@ export class RoomService {
         return this.http.get<RoomResponse>(`${this.baseUrl}/search`, { params });
       }
 
-    getRooms(page: number = 0, size: number = 10, sort: string = '', search: string): Observable<Page<Room>> {
-    let params = new HttpParams().set('page', page).set('size', size).set('sort', sort); 
+    filterRoomTypes(roomType: string, pageNo: number = 0, pageSize: number = 10): Observable<any> {
+    let params = new HttpParams()
+        .set('roomType', roomType)
+        .set('pageNo', pageNo.toString())
+        .set('pageSize', pageSize.toString());
 
-    if (search) {
-        const searchParams = new URLSearchParams(search);
-        searchParams.forEach((value, key) => {
-            params = params.set(key, value);
-        });
-    }
-
-    return this.http.get<Page<Room>>(this.baseUrl, { params });
+    console.log('Filtering rooms by type:', roomType);
+    return this.http.get<any>(this.baseUrl + '/search', { params });
     }
 }

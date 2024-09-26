@@ -85,8 +85,8 @@ export class ReservationFormComponent implements OnInit {
       customerPhone: [''],
       customerAddress: [''],
       roomId: [''],
-      checkInDate: [{value: null, disabled: true}],
-      checkOutDate: [{value: null, disabled: true}],
+      checkInDate: [],
+      checkOutDate: [],
       status: [''],
       reservationDate: [''],
       accountNumber: [''],
@@ -96,6 +96,11 @@ export class ReservationFormComponent implements OnInit {
 
     const today = new Date();
     this.checkInMinDate = today;
+
+    if (this.router.url.includes('create')) { 
+      this.reservationForm.get('checkInDate')?.disable();
+      this.reservationForm.get('checkOutDate')?.disable();
+    }
   }
 
   ngOnInit(): void {

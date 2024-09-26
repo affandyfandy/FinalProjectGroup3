@@ -60,6 +60,7 @@ export class LoginComponent {
         }
         else {
           this.router.navigate(['/']);
+          this.toastService.showToast("Login successful!", 'success');  
         }
       },
       (error) => {

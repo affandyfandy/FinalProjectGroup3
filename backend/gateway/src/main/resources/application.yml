@@ -10,15 +10,15 @@ spring:
         - id: auth-service
           uri: http://localhost:8081
           predicates:
-                - Path=/api/v1/auth/**,/api/v1/users/**
+                - Path=/api/v1/auth/**,/api/v1/users/**,/auth-service/**
         - id: reservation-service
           uri: http://localhost:8082
           predicates:
-                - Path=/api/v1/payments/**,/api/v1/reservations/**
+                - Path=/api/v1/payments/**,/api/v1/reservations/**,/reservation-service/**
         - id: room-service
           uri: http://localhost:8083
           predicates:
-                - Path=/api/v1/room/**
+                - Path=/api/v1/room/**,/room-service/**
 
 rsa:
     public-key: classpath:certs/public-key.pem
