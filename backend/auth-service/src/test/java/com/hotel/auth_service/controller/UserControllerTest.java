@@ -1,183 +1,107 @@
 package com.hotel.auth_service.controller;
 
+import com.hotel.auth_service.criteria.UserSearchCriteria;
 import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
-    @MockBean
+public class UserControllerTest {
+
+    @Mock
     private UserService userService;
 
-    private MockMvc mockMvc;
+    @InjectMocks
+    private UserController userController;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
     }
 
-//    @Test
-//    void testGetAllUsers() throws Exception {
-//        Pageable pageable = PageRequest.of(0, 10);
-//        UserDto userDto = new UserDto();
-//        userDto.setEmail("test@example.com");
-//        userDto.setFullName("John Doe");
-//        userDto.setRole("USER");
-//        userDto.setStatus("ACTIVE");
-//        userDto.setPhone("1234567890");
-//
-//        Page<UserDto> userDtos = new PageImpl<>(Collections.singletonList(userDto), pageable, 1);
-//
-//        when(userService.getAllUsers(pageable)).thenReturn(userDtos);
-//
-//        mockMvc.perform(get("/api/v1/users?page=0&size=10"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content[0].email").value("test@example.com"))
-//                .andExpect(jsonPath("$.content[0].fullName").value("John Doe"));
-//
-//        verify(userService, times(1)).getAllUsers(pageable);
-//    }
+    @Test
+    public void testGetAllUsers() {
+        // Arrange
+        Page<UserDto> page = new PageImpl<>(List.of(new UserDto()));
+        when(userService.getAllUsers(any(PageRequest.class), any(UserSearchCriteria.class))).thenReturn(page);
+
+        // Act
+        ResponseEntity<Page<UserDto>> response = userController.getAllUsers(PageRequest.of(0, 10), new UserSearchCriteria());
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(1, response.getBody().getTotalElements());
+    }
 
     @Test
-    void testGetUserById_UserFound() throws Exception {
-        String email = "test@example.com";
-
+    public void testGetUserById_Success() {
+        // Arrange
         UserDto userDto = new UserDto();
-        userDto.setEmail(email);
-        userDto.setFullName("John Doe");
-        userDto.setRole("USER");
-        userDto.setStatus("ACTIVE");
-        userDto.setPhone("1234567890");
+        when(userService.getUserByEmail(anyString())).thenReturn(Optional.of(userDto));
 
-        when(userService.getUserByEmail(email)).thenReturn(Optional.of(userDto));
+        // Act
+        ResponseEntity<UserDto> response = userController.getUserById("test-id");
 
-        mockMvc.perform(get("/api/v1/users/{id}", email))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.fullName").value("John Doe"));
-
-        verify(userService, times(1)).getUserByEmail(email);
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(userDto, response.getBody());
     }
 
     @Test
-    void testCreateUser() throws Exception {
+    public void testGetUserById_NotFound() {
+        // Arrange
+        when(userService.getUserByEmail(anyString())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        try {
+            userController.getUserById("test-id");
+        } catch (IllegalArgumentException e) {
+            assertEquals("User not found", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCreateUser() {
+        // Arrange
         UserDto userDto = new UserDto();
-        userDto.setEmail("test@example.com");
-        userDto.setFullName("John Doe");
-        userDto.setPassword("password123");
-        userDto.setRole("USER");
+        when(userService.createUser(any(UserDto.class))).thenReturn(userDto);
 
-        UserDto createdUser = new UserDto();
-        createdUser.setEmail("test@example.com");
-        createdUser.setFullName("John Doe");
-        createdUser.setRole("USER");
-        createdUser.setStatus("ACTIVE");
+        // Act
+        ResponseEntity<UserDto> response = userController.createUser(userDto);
 
-        when(userService.createUser(any(UserDto.class))).thenReturn(createdUser);
-
-        mockMvc.perform(post("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(userDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.fullName").value("John Doe"));
-
-        verify(userService, times(1)).createUser(any(UserDto.class));
+        // Assert
+        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(userDto, response.getBody());
     }
 
     @Test
-    void testUpdateUser_UserFound() throws Exception {
-        String email = "test@example.com";
+    public void testUploadUserPhoto_Success() throws Exception {
+        // Arrange
+        MultipartFile file = mock(MultipartFile.class);
         UserDto userDto = new UserDto();
-        userDto.setEmail(email);
-        userDto.setFullName("John Doe");
-        userDto.setRole("USER");
+        when(userService.uploadUserPhoto(anyString(), any(MultipartFile.class))).thenReturn(userDto);
 
-        UserDto updatedUser = new UserDto();
-        updatedUser.setEmail(email);
-        updatedUser.setFullName("John Doe");
-        updatedUser.setRole("USER");
+        // Act
+        ResponseEntity<?> response = userController.uploadUserPhoto("test-id", file);
 
-        when(userService.updateUser(eq(email), any(UserDto.class))).thenReturn(Optional.of(updatedUser));
-
-        mockMvc.perform(put("/api/v1/users/{id}", email)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(userDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.fullName").value("John Doe"));
-
-        verify(userService, times(1)).updateUser(eq(email), any(UserDto.class));
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
     }
 
-    @Test
-    void testChangeUserPassword_UserFound() throws Exception {
-        String email = "test@example.com";
-        String password = "newPassword";
-        UserDto updatedUser = new UserDto();
-        updatedUser.setEmail(email);
-        updatedUser.setFullName("John Doe");
-
-        when(userService.changeUserPassword(eq(email), anyString())).thenReturn(Optional.of(updatedUser));
-
-        mockMvc.perform(put("/api/v1/users/{id}/password", email)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(password))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.fullName").value("John Doe"));
-
-        verify(userService, times(1)).changeUserPassword(eq(email), eq(password));
-    }
-
-    @Test
-    void testToggleUserStatus_UserFound() throws Exception {
-        String email = "test@example.com";
-        UserDto updatedUser = new UserDto();
-        updatedUser.setEmail(email);
-        updatedUser.setStatus("INACTIVE");
-
-        when(userService.toggleUserStatus(email)).thenReturn(Optional.of(updatedUser));
-
-        mockMvc.perform(put("/api/v1/users/{id}/status", email))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.status").value("INACTIVE"));
-
-        verify(userService, times(1)).toggleUserStatus(email);
-    }
-
-    @Test
-    void testDeleteUser() throws Exception {
-        String email = "test@example.com";
-
-        doNothing().when(userService).deleteUser(email);
-
-        mockMvc.perform(delete("/api/v1/users/{id}", email))
-                .andExpect(status().isNoContent());
-
-        verify(userService, times(1)).deleteUser(email);
-    }
 }

@@ -23,8 +23,4 @@ public interface ReservationService {
     Reservation createReservation(Reservation reservation);
     Reservation updateReservation(UUID id, Reservation reservation);
     void deleteReservation(UUID id);
-    byte[] generateCustomerReservationPdf(String userId);
-    byte[] generateAdminReportPdf(String filter);
-
-    
 }

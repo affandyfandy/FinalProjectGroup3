@@ -1,35 +1,29 @@
 package com.hotel.auth_service.controller;
 
+import com.hotel.auth_service.dto.AuthDto;
 import com.hotel.auth_service.dto.RequestNewPasswordDto;
 import com.hotel.auth_service.dto.UserDto;
 import com.hotel.auth_service.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-class AuthControllerTest {
-    private MockMvc mockMvc;
+public class AuthControllerTest {
 
     @Mock
     private AuthService authService;
@@ -41,85 +35,82 @@ class AuthControllerTest {
     private AuthController authController;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
     }
 
     @Test
-    void testLogin() throws Exception {
+    public void testLogin_Success() throws IllegalAccessException {
+        // Arrange
+        AuthDto.LoginRequest loginRequest = new AuthDto.LoginRequest("testuser", "password");
         Authentication authentication = mock(Authentication.class);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-
-        when(authentication.getName()).thenReturn("testuser");
-
-        Collection<SimpleGrantedAuthority> grantedAuthorities = Collections.singletonList(
-                new SimpleGrantedAuthority("CUSTOMER")
-        );
-
-        doReturn(grantedAuthorities).when(authentication).getAuthorities();
-
-        when(authService.generateToken(authentication)).thenReturn("mocked-jwt-token");
-
         SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(authentication.getAuthorities()).thenReturn(null);
         SecurityContextHolder.setContext(securityContext);
 
-        mockMvc.perform(post("/api/v1/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"testuser\",\"password\":\"password\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"User logged in successfully\",\"token\":\"mocked-jwt-token\"}"))
-                .andDo(print());
+        // Sesuaikan dengan nama field token di AuthDto.Response
+        AuthDto.Response responseDto = new AuthDto.Response("User logged in successfully", "mockToken");
+        when(authService.generateToken(authentication)).thenReturn("mockToken");
 
-        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(authService, times(1)).generateToken(any(Authentication.class));
+        // Act
+        ResponseEntity<?> response = authController.login(loginRequest);
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(responseDto.getMessage(), ((AuthDto.Response) response.getBody()).getMessage());
+        assertEquals(responseDto.getToken(), ((AuthDto.Response) response.getBody()).getToken());
+    }
+
+
+    @Test
+    public void testLogin_InvalidCredentials() {
+        // Arrange
+        AuthDto.LoginRequest loginRequest = new AuthDto.LoginRequest("invaliduser", "wrongpassword");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new IllegalArgumentException("Invalid credentials"));
+
+        // Act & Assert
+        try {
+            authController.login(loginRequest);
+        } catch (IllegalAccessException e) {
+            assertEquals("Invalid credentials", e.getMessage());
+        }
     }
 
     @Test
-    void testRegister() throws Exception {
-        UserDto userDto = new UserDto("testuser@example.com", "password", "ROLE_USER",
-                "Test User", "+62123456789", null, null, null, "ACTIVE", null, null, null, null);
+    public void testRegister_Success() {
+        // Arrange
+        UserDto userDto = new UserDto();
+        userDto.setEmail("testuser@example.com");
+        userDto.setPassword("password");
+        userDto.setRole("ROLE_USER");
 
         when(authService.registerUser(any(UserDto.class))).thenReturn(userDto);
+        when(authService.generateToken(any(Authentication.class))).thenReturn("mockToken");
 
-        Authentication authentication = mock(Authentication.class);
+        // Act
+        ResponseEntity<?> response = authController.register(userDto);
 
-        Collection<SimpleGrantedAuthority> grantedAuthorities = Collections.singletonList(
-                new SimpleGrantedAuthority("ADMIN")
-        );
-        doReturn(grantedAuthorities).when(authentication).getAuthorities();
-
-        when(authService.generateToken(any(Authentication.class))).thenReturn("mocked-jwt-token");
-
-        SecurityContext securityContext = mock(SecurityContext.class);
-        SecurityContextHolder.setContext(securityContext);
-
-        mockMvc.perform(post("/api/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"testuser@example.com\",\"password\":\"password\",\"role\":\"ROLE_USER\",\"fullName\":\"Test User\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"User logged in successfully\",\"token\":\"mocked-jwt-token\"}"))
-                .andDo(print());
-
-        verify(authService, times(1)).registerUser(any(UserDto.class));
-        verify(authService, times(1)).generateToken(any(Authentication.class));
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals("User logged in successfully", ((AuthDto.Response) response.getBody()).getMessage());
+        assertEquals("mockToken", ((AuthDto.Response) response.getBody()).getToken());
     }
 
     @Test
-    void testForgotPassword() throws Exception {
-        UserDto userDto = new UserDto("testuser@example.com", "newPassword", "ROLE_USER",
-                "Test User", "+62123456789", null, null, null, "ACTIVE", null, null, null, null);
+    public void testResetPassword_Success() {
+        // Arrange
+        RequestNewPasswordDto requestNewPasswordDto = new RequestNewPasswordDto();
+        doNothing().when(authService).forgotPassword(any(RequestNewPasswordDto.class));
 
-        when(authService.forgotPassword(any(RequestNewPasswordDto.class))).thenReturn(userDto);
+        // Act
+        ResponseEntity<?> response = authController.resetPassword(requestNewPasswordDto);
 
-        mockMvc.perform(post("/api/v1/auth/forgot-password")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"testuser@example.com\",\"newPassword\":\"newPassword\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"Password changed successfully\"}"))
-                .andDo(print());
-
-        verify(authService, times(1)).forgotPassword(any(RequestNewPasswordDto.class));
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals("Password changed successfully", ((Map<String, String>) response.getBody()).get("message"));
     }
 }

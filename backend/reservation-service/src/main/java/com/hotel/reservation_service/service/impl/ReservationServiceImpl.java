@@ -1,12 +1,9 @@
 package com.hotel.reservation_service.service.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.repository.ReservationRepository;
@@ -95,45 +89,5 @@ public class ReservationServiceImpl implements ReservationService {
     public void deleteReservation(UUID id) {
         Reservation reservation = getReservationById(id);
         reservationRepository.delete(reservation);
-    }
-
-    @Override
-    public byte[] generateCustomerReservationPdf(String userId) {
-        List<Reservation> reservations = reservationRepository.findByUserId(userId);
-        Context context = new Context();
-        context.setVariable("reservations", reservations);
-
-        String htmlContent = templateEngine.process("reservation_template", context);
-        return convertHtmlToPdf(htmlContent);
-    }
-
-    @Override
-    public byte[] generateAdminReportPdf(String filter) {
-        List<Reservation> reservations;
-
-        if (filter == null || filter.isEmpty()) {
-            reservations = reservationRepository.findAll();
-        } else {
-            reservations = reservationRepository.findAll(); 
-        }
-
-        Context context = new Context();
-        context.setVariable("reservations", reservations);
-
-        String htmlContent = templateEngine.process("admin_report_template", context);
-        return convertHtmlToPdf(htmlContent);
-    }
-
-
-    private byte[] convertHtmlToPdf(String htmlContent) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ITextRenderer renderer = new ITextRenderer();
-            renderer.setDocumentFromString(htmlContent);
-            renderer.layout();
-            renderer.createPDF(outputStream);
-            return outputStream.toByteArray();
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating PDF", e);
-        }
     }
 }

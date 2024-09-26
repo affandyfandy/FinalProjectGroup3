@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -19,9 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "payments")
-public class Payment extends AuditEntity {
+public class Payment {
 
     @Id
     @GeneratedValue

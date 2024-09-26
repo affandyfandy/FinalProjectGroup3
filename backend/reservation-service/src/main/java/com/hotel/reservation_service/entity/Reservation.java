@@ -2,16 +2,11 @@ package com.hotel.reservation_service.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.hotel.reservation_service.audit.Auditable;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "reservations")
-public class Reservation extends AuditEntity {
+public class Reservation extends Auditable<String> {
 
     @Id
     @GeneratedValue
@@ -52,5 +47,10 @@ public class Reservation extends AuditEntity {
 
     @Column(nullable = true)
     private BigDecimal amount;
+
+    @PrePersist
+    public void prePersist() {
+        this.reservationDate = LocalDate.now();
+    }
 
 }
