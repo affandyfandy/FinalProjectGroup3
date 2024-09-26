@@ -31,4 +31,5 @@ export class AppComponent implements OnInit {
   isAuthPage(): boolean {
     return this.router.url.includes('auth');
   }
+  
 }

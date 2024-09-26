@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,8 @@ export class LoginComponent {
   constructor(
     private authService: AuthService, 
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastService: ToastService
   ) {
     this.forgotForm = this.fb.group({
       email_forgot: ['', [Validators.required, Validators.email]],
@@ -54,6 +56,7 @@ export class LoginComponent {
       (success) => {
         if (this.authService.isAdmin()){
           this.router.navigate(['/admin'])
+          this.toastService.showToast("Login successful!", 'success');
         }
         else {
           this.router.navigate(['/']);
@@ -61,6 +64,7 @@ export class LoginComponent {
       },
       (error) => {
         console.error('Error logging in', error);
+        this.toastService.showToast("Email and password didn't match!", 'error');
       }
     );
   }

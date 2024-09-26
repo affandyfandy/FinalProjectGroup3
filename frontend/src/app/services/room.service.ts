@@ -140,6 +140,7 @@ export class RoomService {
         pageNo: number = 0,
         pageSize: number = 10,
         status?: string,
+        roomNumber?: string,
         facility?: string,
         capacity?: number,
         roomType?: string,
@@ -163,6 +164,7 @@ export class RoomService {
         if (lowerLimitPrice !== undefined) {
           params = params.set('lowerLimitPrice', lowerLimitPrice.toString());
         }
+        console.log("params in service " + params);
     
         return this.http.get<RoomResponse>(`${this.baseUrl}/search`, { params });
       }

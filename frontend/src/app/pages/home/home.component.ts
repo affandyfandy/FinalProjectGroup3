@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -12,6 +12,7 @@ import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/c
   selector: 'app-home',
   standalone: true,
   imports: [
+    CommonModule,
     NgIconComponent,
     ReactiveFormsModule,
     MatDatepickerModule,
@@ -62,6 +63,19 @@ export class HomeComponent {
     const today = new Date();
     this.checkInMinDate = today.toISOString().split('T')[0];
   }
+
+  galleryItems = [
+    { src: '/assets/images/socgal1.jpg', alt: 'Two men walking in a hallway', className: 'col-span-1 row-span-1' },
+    { src: '/assets/images/socgal2.jpg', alt: 'Number 27 on an elevator', className: 'col-span-1 row-span-1' },
+    { src: '/assets/images/socgal3.jpg', alt: 'Promotional image for a luxury event', className: 'col-span-1 row-span-2' },
+    { src: '/assets/images/socgal4.jpg', alt: 'Event poster', className: 'col-span-1 row-span-1' },
+    { src: '/assets/images/socgal5.jpg', alt: 'Various food dishes', className: 'col-span-1 row-span-2' },
+    { src: '/assets/images/socgal6.jpg', alt: 'Person working with pottery', className: 'col-span-1 row-span-1' },
+    { src: '/assets/images/socgal7.jpg', alt: 'Person looking at their phone', className: 'col-span-1 row-span-1' },
+    { src: '/assets/images/socgal8.jpg', alt: 'Wedding couple', className: 'col-span-1 row-span-2' },
+    { src: '/assets/images/socgal9.jpg', alt: 'Outdoor scene with furniture', className: 'col-span-1 row-span-1' },
+    { src: '/assets/images/socgal10.jpg', alt: 'Traditional decorative items', className: 'col-span-1 row-span-1' },
+  ];
 
   onSubmit(): void {
     console.log(this.searchRoomForm.value);

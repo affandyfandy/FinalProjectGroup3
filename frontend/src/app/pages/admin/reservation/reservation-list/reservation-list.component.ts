@@ -8,12 +8,24 @@ import { Reservation } from '../../../../model/reservation.model';
 import { NgIf, NgFor, CurrencyPipe, DatePipe } from '@angular/common';
 import { RoomService } from '../../../../services/room.service';
 import { Room } from '../../../../model/room.model';
+import { ToastService } from '../../../../services/toast.service';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroEllipsisVertical, heroChevronUpDown } from '@ng-icons/heroicons/outline';
+import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, DatePipe],
+  imports: [CommonModule, CurrencyPipe, DatePipe,NgIconComponent],
   templateUrl: './reservation-list.component.html',
+  providers: [
+    provideIcons({
+      heroEllipsisVertical,
+      heroUserSolid,
+      heroStarSolid,
+      heroAdjustmentsHorizontalSolid,
+      heroChevronUpDown})
+  ]
 })
 export class ReservationListComponent implements OnInit {
   reservations: Reservation[] = [];
@@ -24,8 +36,14 @@ export class ReservationListComponent implements OnInit {
   pageSize: number = 10;
   error: string = '';
   selectedReservation: Reservation | null = null;
+  showOptions: boolean = false; 
+  showDeleteModal: boolean = false;
 
-  constructor(private reservationService: ReservationService, private router: Router, private roomService: RoomService) {}
+  constructor(
+    private reservationService: ReservationService, 
+    private router: Router, 
+    private roomService: RoomService,
+    private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.loadReservations(this.currentPage);
@@ -89,4 +107,51 @@ export class ReservationListComponent implements OnInit {
   get endIndex(): number {
     return Math.min(this.currentPage * this.pageSize, this.totalElements);
   }
+
+  toggleOptions(event: Event, room: any) {
+    event.stopPropagation(); // Prevent event from propagating to parent elements
+    this.selectedReservation = this.selectedReservation === room ? null : room;
+    this.showOptions = this.selectedReservation === room ? !this.showOptions : true;
+  }
+
+  editRsvp(rsvp: Reservation) {
+    console.log('Edit rsvp', rsvp);
+    this.selectedReservation = rsvp;
+    this.router.navigate(['/admin/reservation', this.selectedReservation.id, 'edit']);
+  }
+
+  viewRsvp(rsvp: Reservation) {
+    console.log('View rsvp', rsvp);
+    this.selectedReservation = rsvp;
+    this.router.navigate(['/admin/reservation', this.selectedReservation?.id, 'view']);
+  }
+
+  onDeleteConfirmed(): void {  
+    if (this.selectedReservation) {
+      this.roomService.deleteRoom(this.selectedReservation.id).subscribe({
+        next: () => {
+          console.log('Room deleted successful!');
+          this.loadReservations(this.currentPage);
+          this.toastService.showToast('Room deleted successful!', 'success');
+        },
+        error: (err) => {
+          console.error('Error deleting room:', err);
+          this.toastService.showToast('Error deleting room: ' + err, 'error');
+        }
+      });
+    }
+    this.showDeleteModal = false;
+  }
+
+  deleteRsvp(rsvp: Reservation): void {
+    this.selectedReservation = rsvp;
+    this.showDeleteModal = true;
+    this.showOptions = false;
+  }
+
+  onCancelDelete() {
+    this.showDeleteModal = false;
+  }
+
+
 }

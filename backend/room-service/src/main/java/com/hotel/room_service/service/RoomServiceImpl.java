@@ -196,7 +196,10 @@ public class RoomServiceImpl implements RoomService {
         return Base64.getEncoder().encodeToString(file);
     }
 
-    public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable) {
+    public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        Sort sort = Sort.by(direction,"createdDate");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Room> activeRooms = roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(capacity, pageable);
         List<UUID> roomIds = activeRooms.stream().map(Room::getId).toList();
 

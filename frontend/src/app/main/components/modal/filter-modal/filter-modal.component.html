@@ -22,7 +22,7 @@
     </div>
 
     <!-- Role Dropdown -->
-    <div class="mb-6">
+    <div *ngIf="!isRoomPage" class="mb-6">
       <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
       <select 
         [(ngModel)]="role" 

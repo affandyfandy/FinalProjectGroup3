@@ -55,20 +55,6 @@ export class RoomListComponent implements OnInit{
   checkOut: string = '';
   guest: number =0;
 
-  queryParam: string = '';
-
-  roomFieldSearch: KeyValue[] = [
-    { key: 'roomNumber', value: 'Room Number' },
-    { key: 'capacity', value: 'Capacity' },
-    { key: 'roomType', value: 'Room Type' },
-    { key: 'price', value: 'Price' },
-    { key: 'status', value: 'Status' },
-    { key: 'createdBy', value: 'Created By' },
-    { key: 'createdDate', value: 'Created Date' },
-    { key: 'lastModifiedBy', value: 'Last Modified By' },
-    { key: 'lastModifiedDate', value: 'Last Modified Date' },
-  ];
-
   constructor(
     private roomService: RoomService,
     private authService: AuthService,
@@ -88,7 +74,7 @@ export class RoomListComponent implements OnInit{
   }
 
   loadRooms(currentPage: number) {
-    this.roomService.getAvailableRooms(this.checkIn, this.checkOut, this.guest, currentPage-1, this.pageSize).subscribe({
+    this.roomService.getAvailableRooms(this.checkIn, this.checkOut, this.guest, currentPage-1, 6).subscribe({
       next: (response: RoomResponse) => {
         console.log("Full response:", response);
         this.rooms = response.content;
@@ -125,7 +111,6 @@ export class RoomListComponent implements OnInit{
     this.router.navigate(['/reservation', id]);
   }
 
-  // Handle changes in page size
   onPageSizeChange(event: Event): void {
     this.pageSize = +(event.target as HTMLSelectElement).value;
     this.currentPage = 1;
@@ -154,90 +139,5 @@ export class RoomListComponent implements OnInit{
     });
   }
 
-  filterRoom(): void {
-    this.showFilterModal = true;
-    this.showOptions = false;
-  }
-
-  onApplyFilter(queryParams: {
-    pageNo?: number;
-    pageSize?: number;
-    status?: string;
-    facility?: string;
-    capacity?: number;
-    roomType?: string;
-    lowerLimitPrice?: number;
-  }) {
-    // Update queryParam string for logging or debugging
-    this.queryParam = this.getQueryParamsAsString(queryParams);
-    console.log('Query Params:', this.queryParam); 
-
-    // Call the service method to filter rooms
-    this.filterRooms(this.currentPage, queryParams);
-    this.showFilterModal = false; // Close the filter modal
-  }
-
-  getQueryParamsAsString(params: any): string {
-    const queryArray = [];
-    let foundFirstQuery = false;
-
-    for (const key in params) {
-      if (params.hasOwnProperty(key)) {
-        const value = params[key];
-        queryArray.push(`${key}=${encodeURIComponent(params[key])}`);
-
-        if (key === 'status') {
-          this.status = value;
-        }
-
-        if (key !== '' && key !== 'status' && !foundFirstQuery) {
-          this.type = key;
-          this.searchText = value;
-          foundFirstQuery = true;
-        }
-      }
-    }
-
-    return queryArray.join('&');
-  }
-
-  filterRooms(
-    pageNo: number = 0,
-    queryParams: {
-      pageSize?: number;
-      status?: string;
-      facility?: string;
-      capacity?: number;
-      roomType?: string;
-      lowerLimitPrice?: number;
-    }
-  ) {
-    const { pageSize, status, facility, capacity, roomType, lowerLimitPrice } = queryParams;
-
-    this.roomService
-      .filterRooms(
-        pageNo,
-        pageSize ?? this.pageSize,
-        status,
-        facility,
-        capacity,
-        roomType,
-        lowerLimitPrice
-      )
-      .subscribe({
-        next: (response: RoomResponse) => {
-          this.rooms = response.content;
-          this.totalElements = response.totalElements;
-          this.currentPage = pageNo;
-        },
-        error: (error) => {
-          console.error('Error filtering rooms:', error);
-        }
-      });
-  }
-
-  onCloseFilter() {
-    this.showFilterModal = false;
-  }
 
 }

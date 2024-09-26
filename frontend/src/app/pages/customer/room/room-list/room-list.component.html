@@ -5,10 +5,6 @@
       <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
     </div>
     <div class="flex space-x-2">
-      <button (click)="filterRoom()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
-        <span class="sr-only">Toggle Filters</span>
-          <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
-      </button>
     </div>
   </div>
 
@@ -57,14 +53,3 @@
     </button>
   </div>
 </div>
-
-
-<app-filter-modal
-  *ngIf="showFilterModal"
-  (filter)="onApplyFilter($event)"
-  (close)="onCloseFilter()"
-  [fields]="roomFieldSearch"
-  [type]="type"
-  [searchText]="searchText"
-  [status]="status"
-></app-filter-modal>

@@ -32,14 +32,13 @@
         <tbody class="bg-white divide-y divide-gray-200">
           <!-- Use *ngFor to iterate over rooms data -->
           <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] font-medium text-primary">{{ user.email }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.fullName }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.phone }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.role }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.lastModifiedBy }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">{{ user.lastModifiedDate }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-[13px] text-primary">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.fullName }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{{ user.email }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.role }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.lastModifiedBy }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">{{ user.lastModifiedDate }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                 <div class="flex items-center">
                     <!-- Checkbox to represent the Switch -->
                     <input type="checkbox" [checked]="user.status === 'ACTIVE'" (change)="toggleItemStatus(user)" />

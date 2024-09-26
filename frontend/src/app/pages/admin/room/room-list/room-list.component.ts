@@ -109,9 +109,9 @@ export class RoomListComponent {
     if (room.status === 'ACTIVE') {
       this.roomService.deactivateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
-          console.log('Room deactivated successfully:', updatedRoom);
+          console.log('Room deactivated successful!', updatedRoom);
           room.status = 'INACTIVE';
-          this.toastService.showToast('Room deactivated successfully!', 'success');
+          this.toastService.showToast('Room deactivated successful!', 'success');
         },
         (error: any) => {
           console.error('Error deactivating room:', error);
@@ -121,9 +121,9 @@ export class RoomListComponent {
     } else {
       this.roomService.activateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
-          console.log('Room activated successfully:', updatedRoom);
+          console.log('Room activated successful!', updatedRoom);
           room.status = 'ACTIVE';
-          this.toastService.showToast('Room activated successfully!', 'success');
+          this.toastService.showToast('Room activated successful!', 'success');
         },
         (error: any) => {
           console.error('Error activating room:', error);
@@ -144,9 +144,9 @@ export class RoomListComponent {
     this.router.navigate(['/admin/rooms/create']);
   }
 
-  importData() {
-    this.router.navigate(['/admin/rooms/import']);
-  }
+  // importData() {
+  //   this.router.navigate(['/admin/rooms/import']);
+  // }
 
   editRoom(room: Room) {
     console.log('Edit room', room);
@@ -164,9 +164,9 @@ export class RoomListComponent {
     if (this.selectedRoom) {
       this.roomService.deleteRoom(this.selectedRoom.id).subscribe({
         next: () => {
-          console.log('Room deleted successfully');
+          console.log('Room deleted successful!');
           this.loadRooms(this.currentPage);
-          this.toastService.showToast('Room deleted successfully!', 'success');
+          this.toastService.showToast('Room deleted successful!', 'success');
         },
         error: (err) => {
           console.error('Error deleting room:', err);
@@ -267,7 +267,6 @@ export class RoomListComponent {
         pageSize ?? this.pageSize,
         status,
         facility,
-        capacity,
         roomType,
         lowerLimitPrice
       )
