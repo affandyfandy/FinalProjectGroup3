@@ -20,10 +20,10 @@
       <thead class="bg-gray-50">
         <tr>
           <!-- Dynamic table headers for Reservations -->
-          <th *ngFor="let header of ['No', 'Room Number', 'Guest', 'Reservation Date', 'Check-in', 'Check-out', 'Status']"
+          <th *ngFor="let header of ['No', 'Room Number', 'Guest', 'Reservation Date', 'Check-in', 'Check-out', 'Status', '']"
               class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider">
               {{ header }}
-              <ng-icon *ngIf="header !== 'No'" name="heroChevronUpDown"></ng-icon>
+              <ng-icon *ngIf="header !== 'No' && header !== ''" name="heroChevronUpDown"></ng-icon>
           </th>
         </tr>
       </thead>
@@ -67,30 +67,5 @@
     <button class="px-4 py-2 mx-2 bg-gray-200" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
     <button class="px-4 py-2 mx-2 bg-gray-200" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
   </div>
-
-  <!-- Modal for Reservation Details -->
-<ng-container *ngIf="selectedReservation">
-  <div class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="modal-background absolute inset-0 bg-black opacity-50" (click)="closeDetailsModal()"></div>
-    <div class="modal-content relative bg-white rounded-lg shadow-lg p-6 z-10">
-      <h2 class="text-xl font-bold mb-4">Reservation Details</h2>
-
-      <!-- Close button -->
-      <button (click)="closeDetailsModal()"
-              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-20">
-        &times;
-      </button>
-
-      <div class="space-y-2">
-        <p><strong>Reservation ID:</strong> {{ selectedReservation.id }}</p>
-        <p><strong>Created By:</strong> {{ selectedReservation.createdBy }}</p>
-        <p><strong>Created At:</strong> {{ selectedReservation.createdTime | date }}</p>
-        <p><strong>Updated By:</strong> {{ selectedReservation.updatedBy }}</p>
-        <p><strong>Updated At:</strong> {{ selectedReservation.updatedTime | date }}</p>
-      </div>
-    </div>
-  </div>
-</ng-container>
-
 
 </div>

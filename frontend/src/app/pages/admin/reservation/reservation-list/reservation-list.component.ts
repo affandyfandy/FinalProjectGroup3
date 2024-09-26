@@ -117,13 +117,13 @@ export class ReservationListComponent implements OnInit {
   editRsvp(rsvp: Reservation) {
     console.log('Edit rsvp', rsvp);
     this.selectedReservation = rsvp;
-    this.router.navigate(['/admin/rooms', this.selectedReservation.id, 'edit']);
+    this.router.navigate(['/admin/reservation', this.selectedReservation.id, 'edit']);
   }
 
   viewRsvp(rsvp: Reservation) {
     console.log('View rsvp', rsvp);
     this.selectedReservation = rsvp;
-    this.router.navigate(['/admin/rooms', this.selectedReservation?.id, 'view']);
+    this.router.navigate(['/admin/reservation', this.selectedReservation?.id, 'view']);
   }
 
   onDeleteConfirmed(): void {  
@@ -152,4 +152,6 @@ export class ReservationListComponent implements OnInit {
   onCancelDelete() {
     this.showDeleteModal = false;
   }
+
+
 }
