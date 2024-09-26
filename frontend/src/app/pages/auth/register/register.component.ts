@@ -56,8 +56,13 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
-    console.log(this.userService.getUserById('admin@example.com'));
     if (this.registerForm.valid) {
+
+      if (this.userService.getUserById(this.registerForm.value.email)) {
+        this.toastService.showToast('Email already exists', 'error');
+        return;
+      }
+      
       const newUser: User = {
         email: this.registerForm.value.email,
         fullName: this.registerForm.value.fullName,
@@ -73,7 +78,7 @@ export class RegisterComponent {
       this.authService.register(newUser);
     } else {
       this.registerForm.markAllAsTouched();
-      this.toastService.showToast('Registration failed' + this.registerForm.errors , 'error');
+      this.toastService.showToast('Please fill all required fields', 'error');
     }
   }
 

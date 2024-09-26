@@ -29,7 +29,7 @@ import { ToastService } from '../../../services/toast.service';
 export class HeaderComponent implements OnInit {
   email: string = '';
   fullName: string = '';
-  photo: SafeUrl | null = null;
+  photo: SafeUrl | null = "https://ui-avatars.com/api/?name=";
   
   constructor(
     private authService: AuthService, 
@@ -68,8 +68,8 @@ export class HeaderComponent implements OnInit {
               console.error('Error loading user photo', error);
             }
           );
-          this.photo = 'https://ui-avatars.com/api/?name=' + this.fullName;
         } else {
+          this.photo = "https://ui-avatars.com/api/?name=" + user.fullName;
         }
       });
     }
