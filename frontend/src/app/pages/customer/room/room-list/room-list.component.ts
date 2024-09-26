@@ -139,7 +139,8 @@ export class RoomListComponent implements OnInit{
 
   }
 
-  createReservation(id: string, facility: Facility[]): void{
+  createReservation(id: string): void{
+    console.log("Clicked");
     const currentUrl = this.router.url.split('?')[0];
 
     const queryParams: any = {};

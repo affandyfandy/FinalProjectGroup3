@@ -128,12 +128,10 @@ export class RoomService {
             map((response: Blob) => {
                 const objectUrl = URL.createObjectURL(response);
                 const safeUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
-                console.log('fetch room photo success', safeUrl);
                 return safeUrl;
             }),
             catchError((error) => {
-                console.error('fetch room photo error', error);
-                return of(null); // Return null in case of error
+                return of(null);
             })
         );
     }
