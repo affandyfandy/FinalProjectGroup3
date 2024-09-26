@@ -9,6 +9,7 @@ import { UserService } from '../../../services/user.service';
 import { User } from '../../../model/user.model';
 import { APIConstants } from '../../../config/app.constants';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-header',
@@ -28,27 +29,27 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class HeaderComponent implements OnInit {
   email: string = '';
   fullName: string = '';
-  photo: SafeUrl | null = null;
+  photo: SafeUrl | null = "https://ui-avatars.com/api/?name=";
   
   constructor(
     private authService: AuthService, 
     private router: Router, 
     private userService: UserService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastService: ToastService
   ) {  }
 
   isLoggedIn() {
     return this.authService.checkCredentials();
-    // return true;
   }
 
   isAdmin() {
     return this.authService.isAdmin();
-    // return true;
   }
 
   ngOnInit() {
     this.loadUserData();
+    
   }
 
   loadUserData() {
@@ -67,6 +68,8 @@ export class HeaderComponent implements OnInit {
               console.error('Error loading user photo', error);
             }
           );
+        } else {
+          this.photo = "https://ui-avatars.com/api/?name=" + user.fullName;
         }
       });
     }

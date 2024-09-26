@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .pathMatchers("/api/v1/room/**").permitAll()
                         .pathMatchers("/api/v1/room/edit/**").hasAuthority("ADMIN")
                         .pathMatchers("/api/v1/room/create/**").hasAuthority("ADMIN")
+                        .pathMatchers("/api/v1/reservations/unavailable-dates/{id}").permitAll()
                         .anyExchange().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(request -> {

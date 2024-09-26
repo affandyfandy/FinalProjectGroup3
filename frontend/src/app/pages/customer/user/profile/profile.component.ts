@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { User } from '../../../../model/user.model';
 import { UserService } from '../../../../services/user.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -31,7 +31,7 @@ export class ProfileComponent implements OnInit {
   editForm: FormGroup;
   isEditMode: boolean = false;
   isViewMode: boolean = false;
-  photo: SafeUrl | null = null;
+  photo: SafeUrl | null = "https://ui-avatars.com/api/?name=";
 
   selectedFile: File | null = null;
   
@@ -46,7 +46,7 @@ export class ProfileComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern('^\\+62[0-9]{3,14}$')]],
       address: ['', [Validators.required]],
-      dateOfBirth: ['', [Validators.required]],
+      dateOfBirth: ['', [Validators.required, this.minAgeValidator(18)]],
     });
   }
 
@@ -68,6 +68,8 @@ export class ProfileComponent implements OnInit {
         });
         if (this.user.photo) {
           this.fetchUserPhoto(this.user.photo);
+        } else {
+          this.photo = "https://ui-avatars.com/api/?name=" + this.user.fullName;
         }
       }
       
@@ -78,8 +80,31 @@ export class ProfileComponent implements OnInit {
     return this.editForm.controls;
   }
 
+  minAgeValidator(minAge: number): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const today = new Date();
+      const birthDate = new Date(control.value);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+
+      return age >= minAge ? null : { minAge: { requiredAge: minAge, actualAge: age } };
+    };
+  }
+
   onSubmit() {
     if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      this.toastService.showToast('Please fill all required fields', 'error');
+      return;
+    }
+
+    if (this.userService.getUserById(this.f['email'].value)) {
+      this.toastService.showToast('Email already exists', 'error');
       return;
     }
 
@@ -111,7 +136,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (error) => {
         console.error('update user error', error);
-        this.toastService.showToast('Error updating user data', 'error');
+        this.toastService.showToast('Error updating user data' + error, 'error');
       }
     });
   }

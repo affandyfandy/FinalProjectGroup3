@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft, heroEllipsisVertical, heroExclamationTriangle, heroInformationCircle, heroStar } from '@ng-icons/heroicons/outline';
 import { heroUserSolid, heroStarSolid, heroAdjustmentsHorizontalSolid, heroInformationCircleSolid, heroHomeSolid, heroCreditCardSolid, heroUserCircleSolid } from '@ng-icons/heroicons/solid';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-reservation-form',
@@ -37,10 +38,16 @@ export class ReservationFormComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
+    if (!this.authService.checkCredentials()) {
+      this.router.navigate(['/auth/login']);
+      this.toastService.showToast('Please login first', 'warning');
+    }
+
     this.activatedRoute.queryParams.subscribe(params => {
       this.queryParam = params;
     });

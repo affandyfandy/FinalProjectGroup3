@@ -9,52 +9,53 @@
       <p class="text-gray-500">Please fill with your data</p>
     </div>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="mb-4">
+      <div class="mb-5">
         <label class="block text-gray-700" for="name">Full Name<span class="text-red-500">*</span></label>
         <input type="text" id="fullName" formControlName="fullName" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Full Name">
-        <div *ngIf="f['fullName'].touched && f['fullName'].invalid" class="text-red-500 text-sm">
+        <div *ngIf="f['fullName'].touched && f['fullName'].invalid" class="text-red-500 text-sm -mb-5">
           <span *ngIf="f['fullName'].errors?.['required']">Full name should not be blank</span>
         </div>
       </div>
-      <div class="mb-4">
+      <div class="mb-5">
         <label class="block text-gray-700" for="email">Email Address<span class="text-red-500">*</span></label>
         <input type="email" id="email" formControlName="email" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Email Address">
-        <div *ngIf="f['email'].touched && f['email'].invalid" class="text-red-500 text-sm">
+        <div *ngIf="f['email'].touched && f['email'].invalid" class="text-red-500 text-sm -mb-5">
           <span *ngIf="f['email'].errors?.['required']">Email should not be blank</span>
           <span *ngIf="f['email'].errors?.['email']">Email should be valid</span>
         </div>
       </div>
-      <div class="mb-4">
+      <div class="mb-5">
         <label class="block text-gray-700" for="password">Password<span class="text-red-500">*</span></label>
         <input type="password" id="password" formControlName="password" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Password">
-        <div *ngIf="f['password'].touched && f['password'].invalid" class="text-red-500 text-sm">
+        <div *ngIf="f['password'].touched && f['password'].invalid" class="text-red-500 text-sm -mb-5">
           <span *ngIf="f['password'].errors?.['required']">Password should not be blank</span>
           <span *ngIf="f['password'].errors?.['minlength']">Password should have at least 8 characters</span>
         </div>
       </div>
-      <div class="mb-4">
+      <div class="mb-5">
         <label class="block text-gray-700" for="password_confirmation">Confirm Password<span class="text-red-500">*</span></label>
         <input type="password" id="password_confirmation" formControlName="password_confirmation" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Confirm Password">
-        <div *ngIf="f['password_confirmation'].touched && f['password_confirmation'].invalid" class="text-red-500 text-sm">
+        <div *ngIf="f['password_confirmation'].touched && f['password_confirmation'].invalid" class="text-red-500 text-sm -mb-5">
           <span *ngIf="f['password_confirmation'].errors?.['required']">Please confirm your password</span>
         </div>
-        <div *ngIf="registerForm.errors?.['passwordMismatch'] && (f['password_confirmation'].touched || f['password'].touched)" class="text-red-500 text-sm">
+        <div *ngIf="registerForm.errors?.['passwordMismatch'] && (f['password_confirmation'].touched || f['password'].touched) && !f['password_confirmation'].errors?.['required']" class="text-red-500 text-sm -mb-5">
           <span>Passwords do not match</span>
         </div>
       </div>
-      <div class="mb-4">
+      <div class="mb-5">
         <label class="block text-gray-700" for="phone">Phone Number<span class="text-red-500">*</span></label>
         <input type="text" id="phone" formControlName="phone" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Phone Number">
-        <div *ngIf="f['phone'].touched && f['phone'].invalid" class="text-red-500 text-sm">
+        <div *ngIf="f['phone'].touched && f['phone'].invalid" class="text-red-500 text-sm -mb-5">
           <span *ngIf="f['phone'].errors?.['required']">Phone number should not be blank</span>
           <span *ngIf="f['phone'].errors?.['pattern']">Phone number should be valid Indonesian format (+62)</span>
         </div>
       </div>
-      <div class="mb-4">
+      <div class="mb-5">
         <label class="block text-gray-700" for="dateOfBirth">Date of Birth<span class="text-red-500">*</span></label>
         <input type="date" id="dateOfBirth" formControlName="dateOfBirth" class="w-full border border-primary p-2 rounded-lg mt-1" placeholder="Date of Birth">
-        <div *ngIf="f['dateOfBirth'].touched && f['dateOfBirth'].invalid" class="text-red-500 text-sm">
+        <div *ngIf="f['dateOfBirth'].touched && f['dateOfBirth'].invalid" class="text-red-500 text-sm -mb-5">
           <span *ngIf="f['dateOfBirth'].errors?.['required']">Date of birth should not be blank</span>
+          <span *ngIf="f['dateOfBirth'].errors?.['minAge']">You must be at least 18 years old</span>
         </div>
       </div>
       <div class="mb-6">

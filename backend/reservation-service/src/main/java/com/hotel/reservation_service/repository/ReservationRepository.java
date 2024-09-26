@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.hotel.reservation_service.dto.DateRangeDto;
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 
@@ -26,4 +27,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID>,
                                                   @Param("checkOutDate") LocalDate checkOutDate,
                                                   Pageable pageable);
 
+    
+    @Query("SELECT new com.hotel.reservation_service.dto.DateRangeDto(r.checkInDate, r.checkOutDate) FROM Reservation r WHERE r.roomId = :roomId AND r.checkOutDate >= CURRENT_DATE")
+    List<DateRangeDto> findUnavailableDateRangesByRoomId(@Param("roomId") UUID roomId);
 }

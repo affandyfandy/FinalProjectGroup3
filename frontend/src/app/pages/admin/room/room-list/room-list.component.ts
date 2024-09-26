@@ -86,19 +86,29 @@ export class RoomListComponent {
   }
 
   loadRooms(currentPage: number) {
-    this.roomService.getAllRooms(currentPage-1, this.pageSize, this.sortBy, this.sortOrder).subscribe({
-      next: (response: RoomResponse) => {
-        console.log("Full response:", response);
-        this.rooms = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
-        this.currentPage = currentPage;
-      },
-      error: (err) => {
-        this.error = 'Nothing to see..';
-        console.error(err);
-      }
-    });
+    if (this.queryParam !== '') {
+      this.roomService.filterRooms(currentPage, this.pageSize, this.queryParam).subscribe({
+        next: (response: RoomResponse) => {
+          this.rooms = response.content;
+          this.totalElements = response.totalElements;
+          this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
+        },
+        error: (error) => {
+          console.error('Error loading rooms:', error);
+        }
+      });
+    } else {
+      this.roomService.getAllRooms(currentPage, this.pageSize, this.sortBy, this.sortOrder).subscribe({
+        next: (response: RoomResponse) => {
+          this.rooms = response.content;
+          this.totalElements = response.totalElements;
+          this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
+        },
+        error: (error) => {
+          console.error('Error loading rooms:', error);
+        }
+      });
+    }
   }
 
   toggleItemStatus(room: Room): void {

@@ -6,8 +6,8 @@ import { Reservation } from '../../model/reservation.model';
 import { RoomService } from '../room.service';
 import { Room } from '../../model/room.model';
 import { AuthService } from '../auth/auth.service';
+import { RangeDates } from '../../model/range-dates';
 import { UserService } from '../user.service';
-import { User } from '../../model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +94,15 @@ export class ReservationService {
     return this.http.get<Reservation[]>(`${this.apiUrl}/search`, { params: httpParams });
   }
 
+  getAvailableDates(roomId: string): Observable<RangeDates[]> {
+    return this.http.get<{ from: string, to: string }[]>(`${this.apiUrl}/unavailable-dates/${roomId}`).pipe(
+      map((dateRanges: { from: string, to: string }[]) =>
+      dateRanges.map(range => ({
+        from: new Date(range.from),
+        to: new Date(range.to)
+      }))
+    ));
+  }
   exportData(): Observable<any>{
     return this.http.get<any[]>(`${this.apiUrl}/export/admin`);
   }

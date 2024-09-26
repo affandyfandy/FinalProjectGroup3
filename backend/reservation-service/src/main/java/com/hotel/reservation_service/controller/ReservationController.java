@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hotel.reservation_service.dto.DateRangeDto;
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.service.ReservationService;
@@ -108,5 +109,8 @@ public class ReservationController {
     }
 
 
-    
+    @GetMapping("/unavailable-dates/{roomId}")
+    public List<DateRangeDto> getUnavailableDatesByRoomId(@PathVariable UUID roomId) {
+        return reservationService.findUnavailableDateRangesByRoomId(roomId);
+    }
 }

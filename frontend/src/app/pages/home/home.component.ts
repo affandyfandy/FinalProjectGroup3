@@ -79,15 +79,13 @@ export class HomeComponent {
 
   onSubmit(): void {
     console.log(this.searchRoomForm.value);
-    if (this.searchRoomForm.valid) {
       this.queryParams = {
-        checkIn: this.datePipe.transform(this.searchRoomForm.value.checkIn, 'yyyy-MM-dd'),
-        checkOut: this.datePipe.transform(this.searchRoomForm.value.checkOut, 'yyyy-MM-dd'),
+        checkIn: this.datePipe.transform(this.searchRoomForm.value.checkIn, 'yyyy-MM-dd') ?? '',
+        checkOut: this.datePipe.transform(this.searchRoomForm.value.checkOut, 'yyyy-MM-dd') ?? '',
         guest: this.searchRoomForm.value.guest
       };
       this.router.navigate(['/rooms'], {
         queryParams: this.queryParams
       });
-    }
   }
 }

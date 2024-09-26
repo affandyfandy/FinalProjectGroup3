@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.hotel.reservation_service.dto.DateRangeDto;
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 
@@ -26,5 +27,5 @@ public interface ReservationService {
     byte[] generateCustomerReservationPdf(String userId);
     byte[] generateAdminReportPdf(String filter);
 
-    
+    List<DateRangeDto> findUnavailableDateRangesByRoomId(UUID roomId);
 }

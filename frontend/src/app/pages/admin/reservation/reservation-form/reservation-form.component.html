@@ -15,12 +15,11 @@
       <div class="bg-white shadow rounded-lg p-6 lg:col-span-2">
         <div class="flex justify-between items-start">
           <div>
-            <h3 class="text-lg font-semibold">Lakeside Hotel BITWAY</h3>
+            <h3 class="text-lg font-semibold">Hotel BITWAY</h3>
               <div class="flex items-center">
                 <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let index = index">
                   <ng-icon name="heroStarSolid" class="h-5 w-5 text-yellow-500"></ng-icon>
                 </ng-container>
-                <span class="ml-2 text-sm text-gray-600">5/5 (1,234 reviews)</span>
               </div>
           </div>
           <span *ngIf="reservation?.status === 'CONFIRMED'" class="bg-green-100 text-green-800 text-md font-medium px-2 py-1 rounded">Confirmed</span>
@@ -42,6 +41,7 @@
                     formControlName="checkInDate"
                     [min]="checkInMinDate"
                     matInput
+                    [matDatepickerFilter]="disableDates"
                     [matDatepicker]="pickerCheckIn"
                     readonly
                     (focus)="pickerCheckIn.open()"
@@ -62,7 +62,8 @@
                   placeholder="Check-out"
                   formControlName="checkOutDate" 
                   [min]="reservationForm.get('checkInDate')?.value"
-                  matInput
+                    [max]="getUnavailableRangeDate(reservationForm.get('checkInDate')?.value)?.from ?? null"
+                    matInput
                   [matDatepicker]="pickerCheckOut"
                   readonly
                   (focus)="pickerCheckOut.open()"
@@ -81,7 +82,7 @@
                   id="status"
                   name="status"
                   formControlName="status"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  class="h-[50px] mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   >
                   <option value="" disabled>Select status</option>
                   <option *ngFor="let status of rsvpStatus" [ngValue]="status">
