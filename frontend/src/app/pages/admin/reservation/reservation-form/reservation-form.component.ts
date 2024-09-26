@@ -20,6 +20,7 @@ import { CUSTOM_DATE_FORMATS } from '../../../../util/custom-date.util';
 import { catchError, Observable } from 'rxjs';
 import { PaymentService } from '../../../../services/reservation/payment.service';
 import { Payment } from '../../../../model/payment.model';
+import { RangeDates } from '../../../../model/range-dates';
 
 
 @Component({
@@ -44,8 +45,10 @@ export class ReservationFormComponent implements OnInit {
   @Input() action?: string;
   @Output() save = new EventEmitter<Reservation>();
   @Output() cancel = new EventEmitter<void>();
-  checkInMinDate?: string;
+  checkInMinDate: Date = new Date();
   reservationId?: string | null = null;
+
+  checkOutMaxDate: Date | null = null;
 
   room?: Room;
   selectedRoom: Room | null = null; 
@@ -62,10 +65,7 @@ export class ReservationFormComponent implements OnInit {
 
   duration: number = 0;
 
-  disabledRanges: { from: Date, to: Date }[] = [
-    { from: new Date(2024, 8, 28), to: new Date(2024, 8, 30) }, // 28 Sept to 30 Sept 2024
-    { from: new Date(2024, 9, 2), to: new Date(2024, 9, 5) },   // 02 Oct to 05 Oct 2024
-  ];
+  disabledRanges: RangeDates[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -81,8 +81,8 @@ export class ReservationFormComponent implements OnInit {
       customerPhone: [''],
       customerAddress: [''],
       roomId: [''],
-      checkInDate: [''],
-      checkOutDate: [''],
+      checkInDate: [{value: null, disabled: true}],
+      checkOutDate: [{value: null, disabled: true}],
       status: [''],
       reservationDate: [''],
       accountNumber: [''],
@@ -91,7 +91,7 @@ export class ReservationFormComponent implements OnInit {
     });
 
     const today = new Date();
-    this.checkInMinDate = today.toISOString().split('T')[0];
+    this.checkInMinDate = today;
   }
 
   ngOnInit(): void {
@@ -114,6 +114,37 @@ export class ReservationFormComponent implements OnInit {
         console.error(err);
       }
     });
+
+    this.reservationForm.get('roomId')?.valueChanges.subscribe((roomId) => {
+      this.reservationForm.get('checkInDate')?.reset();
+      this.reservationForm.get('checkInDate')?.disable();
+
+      if (roomId) {
+        this.reservationForm.get('checkInDate')?.enable();
+
+        this.reservationService.getAvailableDates(roomId).subscribe((dateRanges: RangeDates[]) => {
+          this.disabledRanges = dateRanges;
+        });
+      }
+    });
+
+    this.reservationForm.get('checkInDate')?.valueChanges.subscribe((checkInValue) => {
+      this.reservationForm.get('checkOutDate')?.reset();
+      this.reservationForm.get('checkOutDate')?.disable();
+
+      if (checkInValue) {
+        this.reservationForm.get('checkOutDate')?.enable();
+      }
+    });
+  }
+
+  getUnavailableRangeDate(date: Date): RangeDates | null {
+    for (const range of this.disabledRanges) {
+      if (range.from && date < range.from) {
+        return range;
+      }
+    }
+    return null;
   }
 
   loadReservation(): void {
@@ -268,8 +299,10 @@ export class ReservationFormComponent implements OnInit {
     }
 
     for (const range of this.disabledRanges) {
-      if (d >= range.from && d <= range.to) {
-        return false;
+      if (range.from && range.to) {
+        if (d >= range.from && d <= range.to) {
+          return false;
+        }
       }
     }
     return true;

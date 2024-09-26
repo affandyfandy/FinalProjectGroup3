@@ -4,12 +4,52 @@
       <h1 class="text-2xl font-bold text-primary mb-2">Explore Our Rooms</h1>
       <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
     </div>
-    <div class="flex flex-row gap-5">
-      <button class="w-[100px] cursor-pointer bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">All Type</button>
-      <button class="w-[100px] cursor-pointer bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">Single</button>
-      <button class="w-[100px] cursor-pointer bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">Double</button>
-      <button class="w-[100px] cursor-pointer bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">Suite</button>
+    <div class="flex gap-5">
+      <button
+        class="w-[100px] cursor-pointer p-2 rounded-lg border transition-colors duration-300"
+        [ngClass]="{
+          'bg-primary text-white border-transparent': selectedRoomType === null,
+          'bg-white text-primary border-primary': selectedRoomType !== null
+        }"
+        (click)="selectRoomType(null)"
+      >
+        All Type
+      </button>
+    
+      <button
+        class="w-[100px] cursor-pointer p-2 rounded-lg border transition-colors duration-300"
+        [ngClass]="{
+          'bg-primary text-white border-transparent': selectedRoomType === 'SINGLE',
+          'bg-white text-primary border-primary': selectedRoomType !== 'SINGLE'
+        }"
+        (click)="selectRoomType('SINGLE')"
+      >
+        Single
+      </button>
+    
+      <button
+        class="w-[100px] cursor-pointer p-2 rounded-lg border transition-colors duration-300"
+        [ngClass]="{
+          'bg-primary text-white border-transparent': selectedRoomType === 'DOUBLE',
+          'bg-white text-primary border-primary': selectedRoomType !== 'DOUBLE'
+        }"
+        (click)="selectRoomType('DOUBLE')"
+      >
+        Double
+      </button>
+    
+      <button
+        class="w-[100px] cursor-pointer p-2 rounded-lg border transition-colors duration-300"
+        [ngClass]="{
+          'bg-primary text-white border-transparent': selectedRoomType === 'SUITE',
+          'bg-white text-primary border-primary': selectedRoomType !== 'SUITE'
+        }"
+        (click)="selectRoomType('SUITE')"
+      >
+        Suite
+      </button>
     </div>
+    
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -71,7 +71,7 @@ export class RoomFormComponent implements OnInit {
   facilityList: string[] = [];
 
   minDate: Date = new Date();
-  maxCheckOutDate: Date | null = new Date('2024-09-29');
+  maxCheckOutDate: Date | null = null;
 
   disabledRanges: RangeDates[] = [];
 

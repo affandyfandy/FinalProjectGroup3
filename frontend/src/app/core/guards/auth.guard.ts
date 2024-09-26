@@ -34,7 +34,7 @@ export const AuthGuard: CanActivateFn = (route, state) => {
         }
         if (isAdmin) {
             if (url == '/') {
-                router.navigate([RouterConfig.ADMIN.path]);
+                router.navigate([RouterConfig.ADMIN.path, RouterConfig.ROOM.path]);
                 return false;
             }
             if (!url.includes(RouterConfig.ADMIN.path) && !url.includes('profile')) {

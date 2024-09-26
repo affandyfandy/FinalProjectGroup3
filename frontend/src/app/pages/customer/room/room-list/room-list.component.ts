@@ -55,29 +55,44 @@ export class RoomListComponent implements OnInit{
   checkOut: string = '';
   guest: number =0;
 
+  selectedRoomType: string | null = null;
+
   constructor(
     private roomService: RoomService,
     private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ){}
+    private activatedRoute: ActivatedRoute,
+  ){
+    
+  }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
       this.checkIn = params['checkIn'] !== undefined ? params['checkIn'] : '';
       this.checkOut = params['checkOut'] !== undefined ? params['checkOut'] : '';
       this.guest = params['guest'] !== undefined ? +params['guest'] : 1; 
+      this.selectedRoomType = params['roomType'] !== undefined ? params['roomType'] : null;
     });
 
     this.isAdmin = this.authService.isAdmin();
-    this.loadRooms(this.currentPage);
+    this.loadRooms(this.currentPage, this.selectedRoomType);
   }
 
-  loadRooms(currentPage: number) {
+  isAllType(): boolean {
+    return this.router.url === '/rooms';
+  }
+
+  loadRooms(currentPage: number, roomType: string | null = null): void {
     this.roomService.getAvailableRooms(this.checkIn, this.checkOut, this.guest, currentPage-1, 6).subscribe({
       next: (response: RoomResponse) => {
         console.log("Full response:", response);
-        this.rooms = response.content;
+        // this.rooms.filter((room: Room) => room.roomType === this.selectedRoomType);
+        
+        if (roomType) {
+          this.rooms = response.content.filter((room: Room) => room.roomType === roomType);
+        } else {
+          this.rooms = response.content;
+        }
         this.totalElements = response.totalElements;
         this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
         this.currentPage = currentPage;
@@ -101,6 +116,26 @@ export class RoomListComponent implements OnInit{
         console.error(err);
       }
     });
+  }
+
+  selectRoomType(roomType: string | null) {
+    this.selectedRoomType = roomType;
+
+    if (roomType === null) {
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: { roomType: null },
+        queryParamsHandling: 'merge'
+      });
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: { roomType },
+        queryParamsHandling: 'merge'
+      });
+    }
+
+    this.loadRooms(this.currentPage, this.selectedRoomType);
   }
 
   viewRoom(id: string) {

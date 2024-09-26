@@ -5,6 +5,7 @@ import { catchError, map, Observable, of } from "rxjs";
 import { Room, RoomResponse } from "../model/room.model";
 import { AuthService } from "./auth/auth.service";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { Page } from "../model/page.model";
 
 @Injectable({
   providedIn: 'root'
@@ -175,4 +176,17 @@ export class RoomService {
     
         return this.http.get<RoomResponse>(`${this.baseUrl}/search`, { params });
       }
+
+    getRooms(page: number = 0, size: number = 10, sort: string = '', search: string): Observable<Page<Room>> {
+    let params = new HttpParams().set('page', page).set('size', size).set('sort', sort); 
+
+    if (search) {
+        const searchParams = new URLSearchParams(search);
+        searchParams.forEach((value, key) => {
+            params = params.set(key, value);
+        });
+    }
+
+    return this.http.get<Page<Room>>(this.baseUrl, { params });
+    }
 }

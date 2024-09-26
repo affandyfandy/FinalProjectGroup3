@@ -9,7 +9,6 @@ export interface Reservation {
   checkOutDate: string;
   status: string;
   userId: string;
-  user: User;
   roomId: string;
   room: Room;
   user: User;

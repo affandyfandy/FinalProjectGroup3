@@ -8,7 +8,6 @@ import { Room } from '../../model/room.model';
 import { AuthService } from '../auth/auth.service';
 import { RangeDates } from '../../model/range-dates';
 import { UserService } from '../user.service';
-import { User } from '../../model/user.model';
 
 @Injectable({
   providedIn: 'root'
