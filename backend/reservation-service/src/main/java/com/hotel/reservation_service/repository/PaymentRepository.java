@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.hotel.reservation_service.entity.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment, UUID> {
-    List<Payment> findByReservationId(UUID reservationId);  
+    Payment findByReservationId(UUID reservationId);  
 }

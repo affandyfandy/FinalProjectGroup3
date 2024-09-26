@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PaymentService {
-    List<Payment> getPaymentsByReservationId(UUID reservationId);
+    Payment getPaymentsByReservationId(UUID reservationId);
     Payment createPayment(Payment payment, UUID reservationId);
 }

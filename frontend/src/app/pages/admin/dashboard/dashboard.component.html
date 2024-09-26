@@ -1,1 +1,95 @@
-<p>dashboard works!</p>
+<div class="container p-6 max-w-7xl mx-auto space-y-4">
+    <!-- Overview Section -->
+    <h2 class="text-2xl text-primary font-bold">Overview</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Today's</div>
+        <div class="text-2xl text-primary font-bold">23</div>
+        <div class="text-sm text-gray-500">Check-in</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Today's</div>
+        <div class="text-2xl text-primary font-bold">13</div>
+        <div class="text-sm text-gray-500">Check-out</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Total</div>
+        <div class="text-2xl text-primary font-bold">60</div>
+        <div class="text-sm text-gray-500">In hotel</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Total</div>
+        <div class="text-2xl text-primary font-bold">10</div>
+        <div class="text-sm text-gray-500">Available room</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Total</div>
+        <div class="text-2xl text-primary font-bold">90</div>
+        <div class="text-sm text-gray-500">Occupied room</div>
+      </div>
+    </div>
+  
+    <!-- Rooms Section -->
+    <h2 class="text-2xl text-primary font-bold">Rooms</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Single</div>
+        <div class="text-sm text-gray-500">Available: 2</div>
+        <div class="text-sm text-gray-500">Total: 30</div>
+        <div class="text-xl font-bold">Rp 1,700,777</div>
+        <div class="text-sm text-green-500">Deals: 2</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Double</div>
+        <div class="text-sm text-gray-500">Available: 2</div>
+        <div class="text-sm text-gray-500">Total: 35</div>
+        <div class="text-xl font-bold">Rp 2,032,990</div>
+        <div class="text-sm text-green-500">Deals: 2</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-lg text-primary font-semibold">Suite</div>
+        <div class="text-sm text-gray-500">Available: 2</div>
+        <div class="text-sm text-gray-500">Total: 25</div>
+        <div class="text-xl font-bold">Rp 7,800,221</div>
+      </div>
+    </div>
+  
+    <!-- Room Status and Statistics Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Room Status Card -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="font-semibold text-lg text-primary mb-4">Room status</div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm font-semibold">Occupied rooms</div>
+            <div class="text-gray-500">Clean: 90</div>
+            <div class="text-gray-500">Dirty: 4</div>
+            <div class="text-gray-500">Inspected: 60</div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold">Available rooms</div>
+            <div class="text-gray-500">Clean: 30</div>
+            <div class="text-gray-500">Dirty: 19</div>
+            <div class="text-gray-500">Inspected: 30</div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Occupancy Statistics Card -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center">
+          <div class="font-semibold text-lg text-primary">Occupancy Statistics</div>
+          <select class="border rounded px-2 py-1">
+            <option>Monthly</option>
+          </select>
+        </div>
+        <div class="h-[200px] flex items-end space-x-2 mt-4">
+          <div *ngFor="let month of months" class="flex-1 bg-gray-200 rounded-t" [style.height.%]="getRandomHeight()"></div>
+        </div>
+        <div class="flex justify-between mt-2">
+          <span *ngFor="let month of months" class="text-xs text-gray-500">{{ month }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  

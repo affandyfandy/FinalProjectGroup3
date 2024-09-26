@@ -5,9 +5,11 @@
   </div>
   <div class="max-w-7xl mx-auto">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-primary">Reservation Details</h1>
+      <h1 class="text-3xl font-bold text-primary">{{ action }}</h1>
     </div>
 
+
+    <form class="space-y-6" [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Card for Hotel Info -->
       <div class="bg-white shadow rounded-lg p-6 lg:col-span-2">
@@ -31,35 +33,77 @@
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="flex items-center space-x-2">
-              <i class="w-5 h-5 text-gray-400"></i>
-              <div>
-                <ng-icon name="heroCalendarDays"></ng-icon>
-                Check-in
-                <p class="text-sm text-gray-500"> {{ reservation?.checkInDate | date:'fullDate'}}</p>
+              <div class="text-primary">
+                <ng-icon name="heroCalendarDays" class="mr-2"></ng-icon>
+                <label for="checkInDate">Check-in</label>
+                <mat-form-field class="cursor-pointer" *ngIf="action !== 'Reservation Details'">
+                  <input
+                    placeholder="Check-in"
+                    formControlName="checkInDate"
+                    [min]="checkInMinDate"
+                    matInput
+                    [matDatepicker]="pickerCheckIn"
+                    readonly
+                    (focus)="pickerCheckIn.open()"
+                    (change)="onDateChange()">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerCheckIn"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerCheckIn></mat-datepicker>
+                </mat-form-field>
+                <p *ngIf="action === 'Reservation Details'" class="text-sm text-gray-500"> {{ reservation?.checkInDate | date:'fullDate'}}</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <i class="w-5 h-5 text-gray-400"></i>
+              <i class="text-gray-400"></i>
               <div>
-                <ng-icon name="heroCalendarDays"></ng-icon>
-                Check-out
-                <p class="text-sm text-gray-500">{{ reservation?.checkOutDate | date:'fullDate'}}</p>
+                <ng-icon name="heroCalendarDays" class="mr-2"></ng-icon>
+                <label for="checkOutDate">Check-out</label>
+                <mat-form-field class="cursor-pointer" *ngIf="action !== 'Reservation Details'">
+                  <input
+                  placeholder="Check-out"
+                  formControlName="checkOutDate" 
+                  [min]="reservationForm.get('checkInDate')?.value"
+                  matInput
+                  [matDatepicker]="pickerCheckOut"
+                  readonly
+                  (focus)="pickerCheckOut.open()"
+                  (change)="onDateChange()">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerCheckOut"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerCheckOut></mat-datepicker>
+                </mat-form-field>
+                <p *ngIf="action === 'Reservation Details'" class="text-sm text-gray-500">{{ reservation?.checkOutDate | date:'fullDate'}}</p>
               </div>
             </div>
-            <div class="flex items-center space-x-2">
+            <div *ngIf="action === 'Create Reservation'"> 
+              <div class="items-center">
+                <ng-icon name="heroInboxStack" class="mr-2"></ng-icon>
+                <label class="text-primary" for="status">Status</label>
+                <select
+                  id="status"
+                  name="status"
+                  formControlName="status"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  >
+                  <option value="" disabled>Select status</option>
+                  <option *ngFor="let status of rsvpStatus" [ngValue]="status">
+                    {{ status }}
+                  </option>
+                </select>
+                </div>
+            </div>
+            <div *ngIf="action !== 'Create Reservation'" class="flex items-center space-x-2">
               <i class="w-5 h-5 text-gray-400"></i>
               <div>
                 <ng-icon name="heroUserSolid" class="h-5 w-5"></ng-icon>
                 Guests
-                <p class="text-sm text-gray-500">2 Adults, 1 Child</p>
+                <p class="text-sm text-gray-500">{{ room?.capacity }} Adults</p>
               </div>
             </div>
-            <div class="flex items-center space-x-2">
+            <div *ngIf="action !== 'Create Reservation'" class="flex items-center space-x-2">
               <i class="w-5 h-5 text-gray-400"></i>
               <div>
                 <ng-icon name="heroCreditCard" class="h-5 w-5"></ng-icon>
                 Total Price
-                <p class="text-sm text-gray-500">Rp{{reservation?.amount}}</p>
+                <p class="text-sm text-gray-500">{{reservation?.amount | currency:'Rp':'symbol':'1.0-0' }}</p>
               </div>
             </div>
           </div>
@@ -71,20 +115,20 @@
         <h2 class="text-xl font-bold mb-4">Guest Information</h2>
         <div class="space-y-4">
           <div>
-            <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-            <input type="fullName" id="fullName" class="mt-1 block w-full" value="john.doe@example.com">
+            <label for="fullName" class="block text-md font-medium text-gray-700">Full Name</label>
+            <input type="text" id="fullName" class="mt-1 block w-full" formControlName="customerFullName" [value]="user?.fullName" [readonly]="action === 'Reservation Details'"  />
           </div>
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" id="email" class="mt-1 block w-full" value="john.doe@example.com">
+            <label for="email" class="block text-md font-medium text-gray-700">Email</label>
+            <input type="email" id="email" class="mt-1 block w-full" formControlName="customerEmail" [value]="user?.email" [readonly]="action === 'Reservation Details'"  />
           </div>
           <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-            <input type="tel" id="phone" class="mt-1 block w-full" value="+1 (555) 123-4567">
+            <label for="phone" class="block text-md font-medium text-gray-700">Phone</label>
+            <input type="tel" id="phone" class="mt-1 block w-full" formControlName="customerPhone" [value]="user?.phone" [readonly]="action === 'Reservation Details'"  />
           </div>
           <div>
-            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-            <textarea id="address" class="mt-1 block w-full" rows="4">456 Elm St, Anytown, AT 67890</textarea>
+            <label for="address" class="block text-md font-medium text-gray-700">Address</label>
+            <textarea id="address" class="mt-1 block w-full" formControlName="customerAddress" rows="4" [value]="user?.address" [readonly]="action === 'Reservation Details'" ></textarea>
           </div>
         </div>
       </div>
@@ -92,30 +136,40 @@
       <!-- Room Details -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-xl font-bold mb-4">Room Details</h2>
-        <h3 class="font-semibold mb-2">Deluxe Ocean View Room</h3>
-        <p class="text-sm text-gray-500 mb-4">Room #304, 1 King Bed, Balcony, Sea View</p>
-        <div class="grid grid-cols-2 gap-2 mb-4">
-          <div class="flex items-center space-x-2 text-sm">
-            <i class="w-4 h-4"></i>
-            <span>Free WiFi</span>
-          </div>
-          <div class="flex items-center space-x-2 text-sm">
-            <i class="w-4 h-4"></i>
-            <span>Breakfast Included</span>
-          </div>
-          <div class="flex items-center space-x-2 text-sm">
-            <i class="w-4 h-4"></i>
-            <span>Free Parking</span>
-          </div>
+        <div *ngIf="action === 'Create Reservation'">
+          <label for="roomId" class="block text-md font-medium text-gray-700">Select Room</label>
+        <select
+          id="roomId"
+          name="roomId"
+          formControlName="roomId"
+          (change)="onRoomChange($event)"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        >
+          <option value="" disabled>Select room</option>
+          <option *ngFor="let room of rooms" [value]="room.id">
+            {{ room.roomNumber }} - {{ room.roomType }}
+          </option>
+        </select>
         </div>
-        <div>
-          <label for="roomStatus" class="block text-sm font-medium text-gray-700">Room Status</label>
-          <select id="roomStatus" class="mt-1 block w-full">
-            <option>Clean</option>
-            <option>Needs Cleaning</option>
-            <option>Out of Order</option>
-          </select>
+
+        <div *ngIf="selectedRoom">
+          <img [src]="selectedRoom.photoSafeUrl" alt="{{ selectedRoom.roomNumber }}" class="mt-2 rounded-md" />
         </div>
+
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Room Number</h3>
+        <p *ngIf="action !== 'Create Reservation'" class="text-md mt-4 mb-4">{{ room?.roomNumber }}</p>
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Room Type</h3>
+        <p *ngIf="action !== 'Create Reservation'" class="text-md mt-4 mb-4">{{ room?.roomType }}</p>
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Price per night</h3>
+        <p *ngIf="action !== 'Create Reservation'" class="text-md mt-4 mb-4">{{ room?.price | currency:'Rp':'symbol':'1.0-0'}}</p>
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Facility</h3>
+          <div *ngIf="action !== 'Create Reservation'" class="grid grid-cols-2 gap-4">
+            <div *ngFor="let fclt of facilityList">
+              <div class="flex items-center"><svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg> {{fclt}}</div>
+            </div>
+          </div>
       </div>
 
       <!-- Payment Information -->
@@ -123,8 +177,9 @@
         <h2 class="text-xl font-bold mb-4">Payment Information</h2>
         <div class="space-y-2 mb-4">
           <p class="flex justify-between">
-            <span>Room Charge (3 nights)</span>
-            <span>$600.00</span>
+            <span>Room Charge</span>
+            <span *ngIf="action === 'Create Reservation'">{{ totalAmount | currency:'Rp':'symbol':'1.0-0'}}</span>
+            <span *ngIf="action !== 'Create Reservation'">{{ reservation?.amount | currency:'Rp':'symbol':'1.0-0'}}</span>
           </p>
           <p class="flex justify-between">
             <span>Taxes and Fees</span>
@@ -132,33 +187,40 @@
           </p>
           <hr class="my-2">
           <p class="flex justify-between font-semibold">
-            <span>Total</span>
-            <span>Rp{{reservation?.amount}}</span>
+            <span class="text-lg">Total</span>
+            <span *ngIf="action === 'Create Reservation'">{{ totalAmount | currency:'Rp':'symbol':'1.0-0'}}</span>
+            <span *ngIf="action !== 'Create Reservation'">{{ reservation?.amount | currency:'Rp':'symbol':'1.0-0'}}</span>
           </p>
         </div>
         <div class="space-y-2">
-          <p class="text-sm"><span class="font-medium">Payment Method:</span> Visa ending in 1234</p>
-          <p class="text-sm"><span class="font-medium">Payment Status:</span> Paid in Full</p>
-          <p class="text-sm"><span class="font-medium">Transaction ID:</span> TRX123456789</p>
+          <div>
+            <label for="accountNumber" class="block text-md font-medium text-gray-700">Account Number</label>
+            <input type="number" id="accountNumber" class="mt-1 block w-full" formControlName="accountNumber" [value]="payment?.accountNumber" [readonly]="action === 'Reservation Details'"/>
+          </div>
+          <div>
+            <label for="accountName" class="block text-md font-medium text-gray-700">Account Name</label>
+            <input type="text" id="accountName" class="mt-1 block w-full" formControlName="accountName" [value]="payment?.accountName" [readonly]="action === 'Reservation Details'"/>
+          </div>
+          <div>
+            <label for="amount" class="block text-md font-medium text-gray-700">Amount Paid</label>
+            <input type="number" id="amount" class="mt-1 block w-full" formControlName="amount" [value]="payment?.amount" [readonly]="action === 'Reservation Details'"/>
+          </div>
         </div>
       </div>
-
-      <!-- Special Requests -->
-      <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-xl font-bold mb-4">Special Requests</h2>
-        <textarea class="mt-1 block w-full" rows="4">Guest requested extra pillows and a late check-out if possible.</textarea>
-      </div>
-
+      
       <!-- Reservation History -->
-      <div class="bg-white shadow rounded-lg p-6">
+      <div *ngIf="action === 'Reservation Details'" class="bg-white shadow rounded-lg p-6">
         <h2 class="text-xl font-bold mb-4">Reservation History</h2>
         <ul class="space-y-2 text-sm">
-          <li><span class="font-medium">Created:</span> 2024-05-01 10:30 AM by John (Web)</li>
-          <li><span class="font-medium">Modified:</span> 2024-05-15 02:15 PM by Admin (Sarah)</li>
-          <li><span class="font-medium">Confirmed:</span> 2024-05-02 09:00 AM (Automatic)</li>
+          <li><span class="font-medium">Last Modified Date: </span> {{ reservation?.lastModifiedDate }}</li>
+          <li><span class="font-medium">Last Modified By: </span>{{ reservation?.lastModifiedBy }}</li>
         </ul>
       </div>
-
     </div>
+    <div class="flex justify-end gap-4 mt-4">
+      <button type="button" (click)="onClose()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition duration-200">Cancel</button>
+      <button type="button" (click)="onSubmit()" class="px-4 py-2 cursor-pointer bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Submit</button>
+    </div>
+    </form>
   </div>
 </div>

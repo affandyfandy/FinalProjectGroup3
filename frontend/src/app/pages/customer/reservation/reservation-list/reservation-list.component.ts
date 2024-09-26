@@ -8,12 +8,17 @@ import { Reservation } from '../../../../model/reservation.model';
 import { NgIf, NgFor, CurrencyPipe, DatePipe } from '@angular/common';
 import { RoomService } from '../../../../services/room.service';
 import { Room } from '../../../../model/room.model';
+import { heroFaceFrown } from '@ng-icons/heroicons/outline';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
 
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, DatePipe, NgIconComponent, ReactiveFormsModule],
   templateUrl: './reservation-list.component.html',
+  providers: [
+    provideIcons({ heroFaceFrown})
+  ]
 })
 export class ReservationListComponent implements OnInit {
   reservations: Reservation[] = [];
@@ -38,7 +43,7 @@ export class ReservationListComponent implements OnInit {
   }
 
   loadReservations(page: number): void {
-    this.reservationService.getAllReservationsWithRooms(page - 1, this.pageSize).subscribe({
+    this.reservationService.getAllReservationsWithRoomsAndUsers(page - 1, this.pageSize).subscribe({
       next: (response: any) => {
         this.reservations = response;
         // this.reservations = response.content;

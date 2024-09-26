@@ -1,5 +1,6 @@
 import { Payment } from "./payment.model";
 import { Room } from "./room.model";
+import { User } from "./user.model";
 
 export interface Reservation {
   id: string;
@@ -10,9 +11,15 @@ export interface Reservation {
   userId: string;
   roomId: string;
   room: Room;
-  amount: Payment;
+  user: User;
+  amount: number;
   createdBy?: string;
-  createdTime?: string;
-  updatedBy?: string;
-  updatedTime?: string;
+  createdDate?: string;
+  lastModifiedDate?: string;
+  lastModifiedBy?: string;
+}
+
+export enum ReservationStatus {
+  CONFIRMED = 'CONFIRMED',
+  CANCELED = 'CANCELED'
 }

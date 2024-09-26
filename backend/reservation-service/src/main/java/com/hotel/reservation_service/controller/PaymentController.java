@@ -25,7 +25,7 @@ public class PaymentController {
     }
 
     @GetMapping("/reservation/{reservationId}")
-    public List<Payment> getPaymentsByReservation(@PathVariable UUID reservationId) {
+    public Payment getPaymentsByReservation(@PathVariable UUID reservationId) {
         return paymentService.getPaymentsByReservationId(reservationId);
     }
 

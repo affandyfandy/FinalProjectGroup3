@@ -236,4 +236,9 @@ public class RoomServiceImpl implements RoomService {
 
         return roomMapper.toDto(roomRepository.save(room));
     }
+
+    @Override
+    public List<Room> findAll() {
+        return roomRepository.findAll();
+    }
 }
