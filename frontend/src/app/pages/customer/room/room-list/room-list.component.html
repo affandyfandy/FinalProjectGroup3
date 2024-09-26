@@ -5,17 +5,14 @@
       <p class="text-sm text-gray-600">Room details and amenities vary. Select your ideal room and book today!</p>
     </div>
     <div class="flex space-x-2">
-      <button (click)="filterRoom()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
-        <span class="sr-only">Toggle Filters</span>
-          <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
-      </button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div *ngFor="let room of rooms" class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div *ngFor="let room of rooms" class=" bg-white rounded-lg shadow-md overflow-hidden">
       <div class="relative">
-        <div class="bg-gray-200 h-48 w-full"></div>
+        <div *ngIf="!room.photoSafeUrl" class="bg-gray-400 h-48 w-full"></div>
+        <img *ngIf="room.photoSafeUrl" [src]="room.photoSafeUrl" alt="Room Photo" class="h-48 w-full">
       </div>
       <div class="p-4">
         <div class="flex justify-between items-center mb-2">
@@ -39,7 +36,7 @@
               {{ room.capacity }} Guests
             </p>
           </div>
-          <button (click)="createReservation(room.id, room.facility)" class="bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+          <button (click)="createReservation(room.id)" class="cursor-pointer bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
             Detail
           </button>
         </div>
@@ -56,14 +53,3 @@
     </button>
   </div>
 </div>
-
-
-<app-filter-modal
-  *ngIf="showFilterModal"
-  (filter)="onApplyFilter($event)"
-  (close)="onCloseFilter()"
-  [fields]="roomFieldSearch"
-  [type]="type"
-  [searchText]="searchText"
-  [status]="status"
-></app-filter-modal>

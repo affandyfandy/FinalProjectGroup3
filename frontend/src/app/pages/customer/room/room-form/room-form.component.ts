@@ -9,6 +9,7 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 import { RouterConfig } from '../../../../config/route.constants';
 import { KeyValue } from '../../../../model/key-value.model';
 import { Reservation } from '../../../../model/reservation.model';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-room-form',
@@ -35,6 +36,8 @@ export class RoomFormComponent implements OnInit {
   roomTypes: RoomType = RoomType.DOUBLE;
   roomStatus: Status = Status.ACTIVE;
   roomId: string | null = null;
+
+  photo: SafeUrl | null = null;
 
   checkIn: string = '';
   checkOut: string = '';
@@ -71,6 +74,11 @@ export class RoomFormComponent implements OnInit {
         this.room = room;
         this.getRoomDescription();
         this.updateSelectedFacilities();
+
+        if (this.room?.photo) {
+          this.fetchRoomPhoto(this.room.photo);
+        }
+
       });
     }
 
@@ -146,5 +154,17 @@ export class RoomFormComponent implements OnInit {
     } else {
       console.error('Form is invalid');
     }
+  }
+
+  fetchRoomPhoto(photo: string) {
+    this.roomService.getRoomPhoto(photo).subscribe({
+      next: (response) => {
+        const objectURL = URL.createObjectURL(response);
+        this.photo = objectURL;
+      },
+      error: (error) => {
+        console.error('fetch photo error', error);
+      }
+    });
   }
 }

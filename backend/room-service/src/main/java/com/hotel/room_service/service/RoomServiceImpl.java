@@ -28,6 +28,8 @@ public class RoomServiceImpl implements RoomService {
     private ReservationServiceClient reservationServiceClient;
     @Autowired
     private RoomMapper roomMapper;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Override
     public Room create(Room room) {
@@ -184,7 +186,6 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-
     public byte[] encoded(MultipartFile file) throws IOException {
         return file.getBytes();
         // return Base64.getEncoder().encodeToString(imageBytes);
@@ -195,7 +196,10 @@ public class RoomServiceImpl implements RoomService {
         return Base64.getEncoder().encodeToString(file);
     }
 
-    public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable) {
+    public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        Sort sort = Sort.by(direction,"createdDate");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Room> activeRooms = roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(capacity, pageable);
         List<UUID> roomIds = activeRooms.stream().map(Room::getId).toList();
 
@@ -207,5 +211,20 @@ public class RoomServiceImpl implements RoomService {
                 .toList();
 
         return new PageImpl<>(availableRooms, pageable, activeRooms.getTotalElements());
+    }
+
+    @Override
+    public ReadRoomDto uploadRoomPhoto(UUID id, MultipartFile file) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        if (room.getPhoto() != null && room.getPhoto().startsWith("/images/")) {
+            fileStorageService.deleteFile(room.getPhoto().substring(8));
+        }
+
+        String fileName = fileStorageService.storeFile(file);
+        room.setPhoto("/images/" + fileName);
+
+        return roomMapper.toDto(roomRepository.save(room));
     }
 }

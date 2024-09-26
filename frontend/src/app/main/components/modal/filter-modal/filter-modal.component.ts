@@ -61,6 +61,10 @@ export class FilterModalComponent {
     this.filter.emit(this.queryParams);
   }
 
+  isRoomPage(): boolean {
+    return this.router.url.includes('rooms');
+  }
+
   onClose() {
     this.close.emit();
   }

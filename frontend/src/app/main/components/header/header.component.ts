@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -7,6 +7,8 @@ import { heroChevronDown } from '@ng-icons/heroicons/outline';
 import { AuthService } from '../../../services/auth/auth.service';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../model/user.model';
+import { APIConstants } from '../../../config/app.constants';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +17,8 @@ import { User } from '../../../model/user.model';
     NgIconComponent,
     RouterLink,
     RouterLinkActive,
-    CommonModule
+    CommonModule,
+    NgOptimizedImage
   ],
   templateUrl: './header.component.html',
   providers: [
@@ -25,9 +28,14 @@ import { User } from '../../../model/user.model';
 export class HeaderComponent implements OnInit {
   email: string = '';
   fullName: string = '';
-  photo: string = 'https://ui-avatars.com/api/?name=User';
+  photo: SafeUrl | null = null;
   
-  constructor(private authService: AuthService, private router: Router, private userService: UserService) {  }
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private userService: UserService,
+    private sanitizer: DomSanitizer
+  ) {  }
 
   isLoggedIn() {
     return this.authService.checkCredentials();
@@ -50,7 +58,15 @@ export class HeaderComponent implements OnInit {
         this.email = user.email;
         this.fullName = user.fullName;
         if (user.photo) {
-          this.photo = user.photo;
+          this.userService.getUserPhoto(user.photo).subscribe(
+            (blob) => {
+              const objectURL = URL.createObjectURL(blob);
+              this.photo = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            },
+            (error) => {
+              console.error('Error loading user photo', error);
+            }
+          );
         }
       });
     }

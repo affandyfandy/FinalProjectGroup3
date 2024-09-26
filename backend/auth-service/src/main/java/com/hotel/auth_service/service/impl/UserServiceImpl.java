@@ -6,15 +6,18 @@ import com.hotel.auth_service.entity.Status;
 import com.hotel.auth_service.entity.User;
 import com.hotel.auth_service.mapper.UserMapper;
 import com.hotel.auth_service.repository.UserRepository;
+import com.hotel.auth_service.service.FileStorageService;
 import com.hotel.auth_service.service.UserService;
 import com.hotel.auth_service.spesification.UserSpesification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -23,12 +26,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            UserMapper userMapper,
+            PasswordEncoder passwordEncoder,
+            FileStorageService fileStorageService
+    ) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -107,5 +117,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String email) {
         userRepository.deleteById(email);
+    }
+
+    @Override
+    public UserDto uploadUserPhoto(String email, MultipartFile file) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (user.getPhoto() != null && user.getPhoto().startsWith("/images/")) {
+            fileStorageService.deleteFile(user.getPhoto().substring(8));
+        }
+
+        String fileName = fileStorageService.storeFile(file);
+        user.setPhoto("/images/" + fileName);
+
+        return userMapper.toUserDto(userRepository.save(user));
     }
 }

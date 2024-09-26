@@ -1,18 +1,20 @@
+import { SafeUrl } from "@angular/platform-browser"
+
 export interface Room {
-  id: string
-  roomType: string
-  roomNumber: string
-  capacity: number
-  status: string
-  price: number
-  hotelId: string
-  photo: string
-  multipartFile: File
-  facility: Facility[]; 
-  createdBy?: string
-  createdDate?: string
-  lastModifiedBy?: string
-  lastModifiedDate?: string
+  id: string;
+  roomType: string;
+  roomNumber: string;
+  capacity: number;
+  status: string;
+  price: number;
+  hotelId: string;
+  photo: string;
+  photoSafeUrl?: SafeUrl | null;
+  facility: Facility[];
+  createdBy?: string;
+  createdDate?: string;
+  lastModifiedBy?: string;
+  lastModifiedDate?: string;
 }
 
 export interface RoomResponse{

@@ -8,6 +8,7 @@ import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../../../services/toast.service';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-room-form',
@@ -39,11 +40,13 @@ export class RoomFormComponent implements OnInit {
   facilityList: string[] = [];
   selectedFile?: File;
 
+  photo: SafeUrl | null = null;
+  selectedPhoto: File | null = null;
+
   roomForm: FormGroup;
   isVisible = true;
   showFileUpload = false;
   message: string | null = null;
-  photoUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -82,11 +85,13 @@ export class RoomFormComponent implements OnInit {
             capacity: this.room.capacity,
             status: this.room.status,
             price: this.room.price,
-            // photo: this.room.photo,
+            photo: this.room.photo,
             facility: this.room.facility,
           });
           this.updateSelectedFacilities();
-          this.photoUrl = this.room.photo;
+          if (this.room.photo) {
+            this.fetchRoomPhoto(this.room.photo);
+          }
         },
         error: (err) => {
           console.error('Error fetching room:', err);
@@ -102,7 +107,6 @@ export class RoomFormComponent implements OnInit {
     } else {
       this.selectedFacility = [];
     }
-    // console.log(this.selectedFacility);
 
     this.selectedFacility.forEach((facility) => {
       if (facility.toString() === 'TELEVISION'){
@@ -131,14 +135,12 @@ export class RoomFormComponent implements OnInit {
     if (this.roomForm.valid) {
       const roomData = {
         ...this.roomForm.value,
-        facility: this.roomForm.value.facility.map((f: string) => Facility[f as keyof typeof Facility])
+        // facility: this.roomForm.value.facility.map((f: string) => Facility[f as keyof typeof Facility])
       };
       const formData = new FormData();
-      formData.append('roomData', JSON.stringify(this.roomForm.value));
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
-      console.log("FormData before sending:");
+      const roomDataBlob = new Blob([JSON.stringify(roomData)], { type: 'application/json' });
+      formData.append('roomData', roomDataBlob);
+      
       for (let [key, value] of (formData as any).entries()) {
           console.log(key, value);
       }
@@ -146,9 +148,23 @@ export class RoomFormComponent implements OnInit {
       if (this.action === 'Edit Room' && this.roomId) {
         this.roomService.editRoomData(this.roomId, roomData).subscribe({
           next: (updatedRoom) => {
-            console.log('Room updated successful!:', updatedRoom);
+            console.log('Room updated successfully:', updatedRoom);
+
+            if (this.selectedFile && this.roomId) {
+              this.roomService.uploadRoomPhoto(this.roomId, this.selectedFile).subscribe({
+                next: (photoUrl) => {
+                  console.log('Photo uploaded successfully:', photoUrl);
+                  this.navigateToRoomList();
+                },
+                error: (err) => {
+                  console.error('Error uploading photo:', err);
+                  this.toastService.showToast('Error uploading photo: ' + err, 'error');
+                }
+              });
+            }
+            
             this.save.emit(updatedRoom);
-            this.toastService.showToast('Room updated successful!!', 'success');
+            this.toastService.showToast('Room updated successful!', 'success');
             this.navigateToRoomList();
           },
           error: (err) => {
@@ -157,11 +173,27 @@ export class RoomFormComponent implements OnInit {
           }
         });
       } else if (this.action === 'Add New Room') {
+
         this.roomService.createRoom(formData).subscribe({
           next: (createdRoom) => {
             console.log('Room created successful!:', createdRoom);
+            this.roomId = createdRoom.id;
+
+            if (this.selectedFile) {
+              this.roomService.uploadRoomPhoto(this.roomId, this.selectedFile).subscribe({
+                next: (photoUrl) => {
+                  console.log('Photo uploaded successfully:', photoUrl);
+                  this.navigateToRoomList();
+                },
+                error: (err) => {
+                  console.error('Error uploading photo:', err);
+                  this.toastService.showToast('Error uploading photo: ' + err, 'error');
+                }
+              });
+            }
+            
             this.save.emit(createdRoom);
-            this.toastService.showToast('Room created successful!!', 'success');
+            this.toastService.showToast('Room created successful!', 'success');
             this.navigateToRoomList();
           },
           error: (err) => {
@@ -170,6 +202,7 @@ export class RoomFormComponent implements OnInit {
             this.toastService.showToast('Error creating room: ' + err, 'error');
           }
         });
+        
       }
     }
   }
@@ -181,10 +214,30 @@ export class RoomFormComponent implements OnInit {
   }
 
   onFileSelect(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      console.log('Selected file:', this.selectedFile);
+    const element = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = element.files;
+
+    if (fileList && fileList.length > 0) {
+      this.selectedFile = fileList[0];
+      this.updateImageDisplay();
+    }
+  }
+
+  updateImageDisplay() {
+    if (this.selectedFile) {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+          console.log("After onload");
+          const element = document.getElementById('profile-image') as HTMLImageElement;
+          if (element) {
+              element.src = e.target.result as string;
+          }
+      };
+
+      reader.readAsDataURL(this.selectedFile); 
+    } else {
+        console.log("No file selected");
     }
   }
 
@@ -234,7 +287,7 @@ export class RoomFormComponent implements OnInit {
             case HttpEventType.Response:
               this.message = `Success: ${event.body}`;
               this.showFileUpload = false;
-              this.toastService.showToast('Room data imported successful!!', 'success');
+              this.toastService.showToast('Room data imported successful!', 'success');
               break;
           }
         },
@@ -254,7 +307,16 @@ export class RoomFormComponent implements OnInit {
     }
   }
 
-  getRoomDescription(): void{
-
+  fetchRoomPhoto(photo: string): void {
+    this.roomService.getRoomPhoto(photo).subscribe({
+      next: (response) => {
+        const objectURL = URL.createObjectURL(response);
+        this.photo = objectURL;
+      },
+      error: (error) => {
+        console.error('fetch photo error', error);
+      }
+    });
   }
+
 }

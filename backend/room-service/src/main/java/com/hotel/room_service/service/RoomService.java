@@ -30,4 +30,6 @@ public interface RoomService {
     String byteToString(byte[] file);
 
     Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable);
+
+    ReadRoomDto uploadRoomPhoto(UUID id, MultipartFile file);
 }

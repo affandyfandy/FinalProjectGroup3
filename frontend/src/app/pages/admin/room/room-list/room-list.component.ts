@@ -267,7 +267,6 @@ export class RoomListComponent {
         pageSize ?? this.pageSize,
         status,
         facility,
-        capacity,
         roomType,
         lowerLimitPrice
       )

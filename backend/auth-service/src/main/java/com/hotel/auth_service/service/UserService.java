@@ -2,11 +2,14 @@ package com.hotel.auth_service.service;
 
 import com.hotel.auth_service.criteria.UserSearchCriteria;
 import com.hotel.auth_service.dto.UserDto;
+import com.hotel.auth_service.entity.User;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -21,4 +24,6 @@ public interface UserService extends UserDetailsService {
     Optional<UserDto> changeUserPassword(String email, String password);
     Optional<UserDto> toggleUserStatus(String email);
     void deleteUser(String email);
+
+    UserDto uploadUserPhoto(String email, MultipartFile file);
 }

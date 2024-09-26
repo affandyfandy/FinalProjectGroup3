@@ -132,7 +132,7 @@ export class ReservationListComponent implements OnInit {
         next: () => {
           console.log('Room deleted successful!');
           this.loadReservations(this.currentPage);
-          this.toastService.showToast('Room deleted successful!!', 'success');
+          this.toastService.showToast('Room deleted successful!', 'success');
         },
         error: (err) => {
           console.error('Error deleting room:', err);

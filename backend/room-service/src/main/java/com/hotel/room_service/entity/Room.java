@@ -57,9 +57,8 @@ public class Room extends Auditable<String>{
     private BigDecimal price;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "photo", columnDefinition = "LONGBLOB") 
-    private byte[] photo; 
+    @Column(name = "photo")
+    private String photo;
 
     @ElementCollection(targetClass = Facility.class)
     @Enumerated(EnumType.STRING)
