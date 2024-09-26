@@ -57,11 +57,37 @@
             <form [formGroup]="rsvpForm" (ngSubmit)="onSubmit()">
               <div class="flex flex-col space-y-2 mb-4">
                 <label for="checkIn">Check-in</label>
-                <input type="date" formControlName="checkIn" [(ngModel)]="checkIn" name="checkIn" id="checkIn" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
+                <mat-form-field class="cursor-pointer">
+                  <input
+                    placeholder="Check-in Date"
+                    formControlName="checkIn"
+                    [min]="minDate"
+                    matInput
+                    [matDatepicker]="pickerCheckIn"
+                    [matDatepickerFilter]="disableDates"
+                    readonly
+                    (focus)="pickerCheckIn.open()">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerCheckIn"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerCheckIn></mat-datepicker>
+                </mat-form-field>
               </div>
               <div class="flex flex-col space-y-2 mb-4">
                 <label for="checkOut">Check-out</label>
-                <input type="date" formControlName="checkOut" [(ngModel)]="checkOut" name="checkOut" id="checkOut" class="bg-neutral-100 p-3 border-none rounded-md cursor-pointer">
+                <mat-form-field class="cursor-pointer">
+                  <input
+                    placeholder="Check-out Date"
+                    formControlName="checkOut" 
+                    [min]="rsvpForm.get('checkIn')?.value"
+                    matInput
+                    [matDatepicker]="pickerCheckOut"
+                    [matDatepickerFilter]="disableDates"
+                    readonly
+                    (focus)="pickerCheckOut.open()">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerCheckOut"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerCheckOut></mat-datepicker>
+                </mat-form-field>
               </div>
               <div class="flex flex-col items-end justify-end">
                 <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg mb-4" [disabled]="!rsvpForm.valid">Book Now</button>

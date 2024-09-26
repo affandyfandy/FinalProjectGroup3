@@ -14,7 +14,12 @@ export interface Reservation {
   user: User;
   amount: Payment;
   createdBy?: string;
-  createdTime?: string;
-  updatedBy?: string;
-  updatedTime?: string;
+  createdDate?: string;
+  lastModifiedBy?: string;
+  lastModifiedDate?: string;
+}
+
+export enum ReservationStatus {
+  CONFIRMED = 'CONFIRMED',
+  CANCELED = 'CANCELED'
 }

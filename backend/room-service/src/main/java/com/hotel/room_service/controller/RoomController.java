@@ -40,6 +40,8 @@ import com.hotel.room_service.entity.Room;
 import com.hotel.room_service.exception.InvalidInputException;
 import com.hotel.room_service.service.RoomService;
 
+import feign.Response;
+
 @RestController
 @RequestMapping("/api/v1/room")
 public class RoomController {
@@ -192,5 +194,11 @@ public class RoomController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
         }
+    }
+
+    @GetMapping("/list/all")
+    public List<ReadRoomDto> getAllRoomsInList(){
+        List<Room> listRoom = roomService.findAll();
+        return roomMapper.toListDto(listRoom);
     }
 }

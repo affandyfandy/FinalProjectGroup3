@@ -3,6 +3,8 @@ package com.hotel.reservation_service.entity;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.hotel.reservation_service.audit.Auditable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "payments")
-public class Payment extends AuditEntity {
+public class Payment extends Auditable<String> {
 
     @Id
     @GeneratedValue
