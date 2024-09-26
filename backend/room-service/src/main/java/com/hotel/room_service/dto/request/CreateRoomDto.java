@@ -1,10 +1,7 @@
 package com.hotel.room_service.dto.request;
 
 import java.math.BigDecimal;
-
 import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;

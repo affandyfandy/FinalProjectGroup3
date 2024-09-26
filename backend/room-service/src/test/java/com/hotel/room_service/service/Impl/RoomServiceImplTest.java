@@ -1,5 +1,37 @@
 package com.hotel.room_service.service.Impl;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hotel.room_service.client.ReservationServiceClient;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.response.ReadRoomDto;
@@ -9,25 +41,6 @@ import com.hotel.room_service.entity.Status;
 import com.hotel.room_service.repository.RoomRepository;
 import com.hotel.room_service.service.FileStorageService;
 import com.hotel.room_service.service.RoomServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 class RoomServiceImplTest {
 
@@ -85,6 +98,14 @@ class RoomServiceImplTest {
     }
 
     @Test
+    void testSaveAll_Success() {
+        List<Room> roomList = List.of(room);
+        roomService.saveAll(roomList);
+
+        verify(roomRepository, times(1)).saveAll(roomList);
+    }
+
+    @Test
     void testUpdateRoom_NotFound() {
         when(roomRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
@@ -95,7 +116,6 @@ class RoomServiceImplTest {
         verify(roomRepository, times(1)).findById(roomId);
         verify(roomRepository, never()).save(any(Room.class));
     }
-
 
     @Test
     void testFindById_Success() {
@@ -117,7 +137,6 @@ class RoomServiceImplTest {
         assertNull(foundRoom);
         verify(roomRepository, times(1)).findById(roomId);
     }
-
 
     @Test
     void testUpdateStatus_Success() {
@@ -166,13 +185,23 @@ class RoomServiceImplTest {
         verify(roomRepository, times(0)).save(room); // Tidak ada penyimpanan karena status tidak valid
     }
 
-
     @Test
     void testFindAllSorted_Success() {
         Page<Room> roomPage = new PageImpl<>(List.of(room));
         when(roomRepository.findAll(any(Pageable.class))).thenReturn(roomPage);
 
         Page<Room> result = roomService.findAllSorted(0, 10, "roomNumber", "asc");
+
+        assertEquals(1, result.getTotalElements());
+        verify(roomRepository, times(1)).findAll(any(Pageable.class));
+    }
+
+    @Test
+    void testFindAllSorted_Desc_Success() {
+        Page<Room> roomPage = new PageImpl<>(List.of(room));
+        when(roomRepository.findAll(any(Pageable.class))).thenReturn(roomPage);
+
+        Page<Room> result = roomService.findAllSorted(0, 10, "roomNumber", "desc");
 
         assertEquals(1, result.getTotalElements());
         verify(roomRepository, times(1)).findAll(any(Pageable.class));
@@ -223,7 +252,6 @@ class RoomServiceImplTest {
         verify(roomRepository, never()).delete(any(Room.class));
     }
 
-
     @Test
     void testUploadRoomPhoto_Success() throws IOException {
         MultipartFile file = mock(MultipartFile.class);
@@ -258,13 +286,17 @@ class RoomServiceImplTest {
     @Test
     void testGetAvailableRooms_Success() {
         Page<Room> roomPage = new PageImpl<>(List.of(room));
-        when(roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(anyInt(), any(Pageable.class))).thenReturn(roomPage);
-        when(reservationServiceClient.getUnavailableRoomIds(anyList(), any(LocalDate.class), any(LocalDate.class), any(Pageable.class))).thenReturn(Page.empty());
+        when(roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(anyInt(), any(Pageable.class)))
+                .thenReturn(roomPage);
+        when(reservationServiceClient.getUnavailableRoomIds(anyList(), any(LocalDate.class), any(LocalDate.class),
+                any(Pageable.class))).thenReturn(Page.empty());
 
-        Page<ReadRoomDto> result = roomService.getAvailableRooms(LocalDate.now(), LocalDate.now().plusDays(3), 2, PageRequest.of(0, 10));
+        Page<ReadRoomDto> result = roomService.getAvailableRooms(LocalDate.now(), LocalDate.now().plusDays(3), 2,
+                PageRequest.of(0, 10));
 
         assertEquals(1, result.getTotalElements());
         verify(roomRepository, times(1)).findAllActiveRoomsAndCapacityGreaterThanEqual(anyInt(), any(Pageable.class));
-        verify(reservationServiceClient, times(1)).getUnavailableRoomIds(anyList(), any(LocalDate.class), any(LocalDate.class), any(Pageable.class));
+        verify(reservationServiceClient, times(1)).getUnavailableRoomIds(anyList(), any(LocalDate.class),
+                any(LocalDate.class), any(Pageable.class));
     }
 }

@@ -1,14 +1,30 @@
 package com.hotel.room_service.controller;
 
-import com.hotel.room_service.dto.RoomMapper;
-import com.hotel.room_service.dto.request.CreateRoomDto;
-import com.hotel.room_service.dto.response.ReadRoomDto;
-import com.hotel.room_service.entity.Room;
-import com.hotel.room_service.service.RoomService;
+import java.math.BigDecimal;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,16 +38,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import com.hotel.room_service.dto.RoomMapper;
+import com.hotel.room_service.dto.request.CreateRoomDto;
+import com.hotel.room_service.dto.response.ReadRoomDto;
+import com.hotel.room_service.entity.Room;
+import com.hotel.room_service.service.RoomService;
 
 class RoomControllerTest {
 

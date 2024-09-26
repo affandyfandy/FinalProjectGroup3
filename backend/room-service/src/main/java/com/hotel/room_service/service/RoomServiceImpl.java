@@ -1,21 +1,23 @@
 package com.hotel.room_service.service;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
-import java.util.Base64;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hotel.room_service.client.ReservationServiceClient;
 import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.response.ReadRoomDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hotel.room_service.entity.Room;
 import com.hotel.room_service.entity.Status;
 import com.hotel.room_service.repository.RoomRepository;

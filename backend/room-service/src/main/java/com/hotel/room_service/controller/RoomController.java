@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +35,6 @@ import com.hotel.room_service.dto.RoomMapper;
 import com.hotel.room_service.dto.request.CreateRoomDto;
 import com.hotel.room_service.dto.response.ReadRoomDto;
 import com.hotel.room_service.entity.Room;
-import com.hotel.room_service.exception.InvalidInputException;
 import com.hotel.room_service.service.RoomService;
 
 @RestController

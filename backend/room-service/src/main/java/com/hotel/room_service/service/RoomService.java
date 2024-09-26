@@ -1,19 +1,17 @@
 package com.hotel.room_service.service;
 
-import com.hotel.room_service.dto.response.ReadRoomDto;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hotel.room_service.dto.response.ReadRoomDto;
 import com.hotel.room_service.entity.Room;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 @Service
 public interface RoomService {
     Room create(Room room);
