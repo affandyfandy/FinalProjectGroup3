@@ -86,13 +86,7 @@ export class RoomListComponent implements OnInit{
     this.roomService.getAvailableRooms(this.checkIn, this.checkOut, this.guest, currentPage-1, 6).subscribe({
       next: (response: RoomResponse) => {
         console.log("Full response:", response);
-        // this.rooms.filter((room: Room) => room.roomType === this.selectedRoomType);
-        
-        if (roomType) {
-          this.rooms = response.content.filter((room: Room) => room.roomType === roomType);
-        } else {
-          this.rooms = response.content;
-        }
+        this.rooms = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
         this.currentPage = currentPage;

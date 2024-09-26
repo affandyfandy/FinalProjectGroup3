@@ -63,10 +63,8 @@ public class RoomController {
                                                @RequestParam(required = false, defaultValue = "1") int capacity,
                                                @RequestParam(defaultValue = "0", required = false) int pageNo,
                                                @RequestParam(defaultValue = "10", required = false) int pageSize) {
-        Page<Room> pageRoom = roomService.getAvailableRooms(checkIn, checkOut, capacity, pageNo, pageSize);
-        List<ReadRoomDto> listRoomDto = roomMapper.toListDto(pageRoom.getContent());
-        Page<ReadRoomDto> pageRoomDto = new PageImpl<>(listRoomDto, pageRoom.getPageable(), pageRoom.getTotalElements());
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoomDto);
+        Page<ReadRoomDto> pageRoom = roomService.getAvailableRooms(checkIn, checkOut, capacity, pageNo, pageSize);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pageRoom);
     }
 
     @GetMapping("/{id}")

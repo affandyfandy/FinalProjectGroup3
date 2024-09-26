@@ -206,20 +206,18 @@ public class RoomServiceImpl implements RoomService {
         return Base64.getEncoder().encodeToString(file);
     }
 
-    public Page<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize){
-        Sort.Direction direction = Sort.Direction.ASC;
-        Sort sort = Sort.by(direction,"price");
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+    public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize){
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Room> activeRooms = roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(capacity, pageable);
-        // List<UUID> roomIds = activeRooms.stream().map(Room::getId).toList();
-        // Page<UUID> unavailableRoomIds = reservationServiceClient.getUnavailableRoomIds(roomIds, checkInDate, checkOutDate, pageable);
+         List<UUID> roomIds = activeRooms.stream().map(Room::getId).toList();
+         Page<UUID> unavailableRoomIds = reservationServiceClient.getUnavailableRoomIds(roomIds, checkInDate, checkOutDate, pageable);
 
-        // List<ReadRoomDto> availableRooms = activeRooms.stream()
-        //         .filter(room -> !unavailableRoomIds.getContent().contains(room.getId()))
-        //         .map(roomMapper::toDto)
-        //         .toList();
+         List<ReadRoomDto> availableRooms = activeRooms.stream()
+                 .filter(room -> !unavailableRoomIds.getContent().contains(room.getId()))
+                 .map(roomMapper::toDto)
+                 .toList();
 
-        return activeRooms;
+        return new PageImpl<>(availableRooms, pageable, activeRooms.getTotalElements());
     }
 
     @Override
