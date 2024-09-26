@@ -79,6 +79,7 @@
                     placeholder="Check-out Date"
                     formControlName="checkOut" 
                     [min]="rsvpForm.get('checkIn')?.value"
+                    [max]="getUnavailableRangeDate(rsvpForm.get('checkIn')?.value)?.from ?? null"
                     matInput
                     [matDatepicker]="pickerCheckOut"
                     [matDatepickerFilter]="disableDates"

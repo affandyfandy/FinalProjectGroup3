@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.hotel.reservation_service.dto.DateRangeDto;
 import com.hotel.reservation_service.entity.Reservation;
 import com.hotel.reservation_service.entity.ReservationStatus;
 import com.hotel.reservation_service.repository.ReservationRepository;
@@ -135,5 +135,10 @@ public class ReservationServiceImpl implements ReservationService {
         } catch (Exception e) {
             throw new RuntimeException("Error generating PDF", e);
         }
+    }
+
+    @Override
+    public List<DateRangeDto> findUnavailableDateRangesByRoomId(UUID roomId) {
+        return reservationRepository.findUnavailableDateRangesByRoomId(roomId);
     }
 }

@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core'; // For native Date support
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CUSTOM_DATE_FORMATS } from '../../../../util/custom-date.util';
+import { RangeDates } from '../../../../model/range-dates';
+import { ReservationService } from '../../../../services/reservation/reservation.service';
 
 @Component({
   selector: 'app-room-form',
@@ -69,18 +71,17 @@ export class RoomFormComponent implements OnInit {
   facilityList: string[] = [];
 
   minDate: Date = new Date();
+  maxCheckOutDate: Date | null = new Date('2024-09-29');
 
-  disabledRanges: { from: Date, to: Date }[] = [
-    { from: new Date(2024, 8, 28), to: new Date(2024, 8, 30) }, // 28 Sept to 30 Sept 2024
-    { from: new Date(2024, 9, 2), to: new Date(2024, 9, 5) },   // 02 Oct to 05 Oct 2024
-  ];
+  disabledRanges: RangeDates[] = [];
 
   constructor(
     private fb: FormBuilder,
     private roomService: RoomService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private reservationService: ReservationService
   ) {
     this.rsvpForm = this.fb.group({
       checkIn: ['', [Validators.required]],
@@ -120,9 +121,12 @@ export class RoomFormComponent implements OnInit {
 
         if (this.room?.photo) {
           this.fetchRoomPhoto(this.room.photo);
-        }
-
+        }  
       });
+      this.reservationService.getAvailableDates(this.roomId).subscribe((dateRanges: RangeDates[]) => {
+        this.disabledRanges = dateRanges;
+      });
+      
     }
 
     this.rsvpForm.get('checkIn')?.valueChanges.subscribe((checkInValue) => {
@@ -133,6 +137,15 @@ export class RoomFormComponent implements OnInit {
         this.rsvpForm.get('checkOut')?.enable();
       }
     });
+  }
+
+  getUnavailableRangeDate(date: Date): RangeDates | null {
+    for (const range of this.disabledRanges) {
+      if (range.from && date < range.from) {
+        return range;
+      }
+    }
+    return null;
   }
 
   parseDate(dateString: string): Date | null {
@@ -234,8 +247,10 @@ export class RoomFormComponent implements OnInit {
     }
 
     for (const range of this.disabledRanges) {
-      if (d >= range.from && d <= range.to) {
-        return false;
+      if (range.from && range.to) {
+        if (d >= range.from && d <= range.to) {
+          return false;
+        }
       }
     }
     return true;

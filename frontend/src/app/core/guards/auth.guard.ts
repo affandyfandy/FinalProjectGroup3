@@ -19,7 +19,7 @@ export const AuthGuard: CanActivateFn = (route, state) => {
             return false;
         }
 
-        if (url === '/'  || url === '/rooms') {
+        if (url === '/'  || url.includes(RouterConfig.ROOM.path) || url.includes('/reservations/unavailable-dates')) {
             return true;
         } else {
             router.navigate(['/auth/login']);

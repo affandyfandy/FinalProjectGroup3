@@ -9,6 +9,7 @@ import { UserService } from '../../../services/user.service';
 import { User } from '../../../model/user.model';
 import { APIConstants } from '../../../config/app.constants';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-header',
@@ -34,7 +35,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService, 
     private router: Router, 
     private userService: UserService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastService: ToastService
   ) {  }
 
   isLoggedIn() {
@@ -66,6 +68,8 @@ export class HeaderComponent implements OnInit {
               console.error('Error loading user photo', error);
             }
           );
+          this.photo = 'https://ui-avatars.com/api/?name=' + this.fullName;
+        } else {
         }
       });
     }
