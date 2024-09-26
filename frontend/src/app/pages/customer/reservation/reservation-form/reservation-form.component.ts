@@ -20,9 +20,9 @@ export class ReservationFormComponent implements OnInit {
 
   user: User | null = null;
   room: Room | null = null;
-  
+
   queryParam: any = {};
-  
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -48,5 +48,8 @@ export class ReservationFormComponent implements OnInit {
         this.room = room;
       });
     }
+  }
+  confirmReservation() {
+    this.router.navigate(['/reservation/payment']);
   }
 }

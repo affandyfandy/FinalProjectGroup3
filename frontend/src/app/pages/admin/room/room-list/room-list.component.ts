@@ -230,11 +230,57 @@ export class RoomListComponent {
     this.showOptions = false;
   }
 
-  onApplyFilter(queryParams: any) {
+  onApplyFilter(queryParams: {
+    pageNo?: number;
+    pageSize?: number;
+    status?: string;
+    facility?: string;
+    capacity?: number;
+    roomType?: string;
+    lowerLimitPrice?: number;
+  }) {
+    // Update queryParam string for logging or debugging
     this.queryParam = this.getQueryParamsAsString(queryParams);
     console.log('Query Params:', this.queryParam); 
-    this.loadRooms(this.currentPage);
-    this.showFilterModal = false;
+
+    // Call the service method to filter rooms
+    this.filterRooms(this.currentPage, queryParams);
+    this.showFilterModal = false; // Close the filter modal
+  }
+
+  filterRooms(
+    pageNo: number = 0,
+    queryParams: {
+      pageSize?: number;
+      status?: string;
+      facility?: string;
+      capacity?: number;
+      roomType?: string;
+      lowerLimitPrice?: number;
+    }
+  ) {
+    const { pageSize, status, facility, capacity, roomType, lowerLimitPrice } = queryParams;
+
+    this.roomService
+      .filterRooms(
+        pageNo,
+        pageSize ?? this.pageSize,
+        status,
+        facility,
+        capacity,
+        roomType,
+        lowerLimitPrice
+      )
+      .subscribe({
+        next: (response: RoomResponse) => {
+          this.rooms = response.content;
+          this.totalElements = response.totalElements;
+          this.currentPage = pageNo;
+        },
+        error: (error) => {
+          console.error('Error filtering rooms:', error);
+        }
+      });
   }
 
   onCloseFilter() {
@@ -254,11 +300,11 @@ export class RoomListComponent {
           this.status = value;
         }
 
-        // if (key !== '' && key !== 'status' && !foundFirstQuery) {
-        //   this.type = key;
-        //   this.searchText = value;
-        //   foundFirstQuery = true;
-        // }
+        if (key !== '' && key !== 'status' && !foundFirstQuery) {
+          this.type = key;
+          this.searchText = value;
+          foundFirstQuery = true;
+        }
       }
     }
 

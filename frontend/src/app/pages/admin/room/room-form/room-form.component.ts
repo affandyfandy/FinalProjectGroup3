@@ -319,4 +319,8 @@ export class RoomFormComponent implements OnInit {
       }
     });
   }
+  
+  getRoomDescription(): void{
+    
+  }
 }

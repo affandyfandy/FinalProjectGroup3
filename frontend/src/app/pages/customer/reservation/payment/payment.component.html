@@ -1,1 +1,40 @@
-<p>payment works!</p>
+<div class="w-3/4 py-20 mx-auto">
+  <div class="mb-10">
+    <h1 class="text-4xl font-bold text-primary mb-2">Payment Information</h1>
+    <p class="text-sm text-gray-600">
+      Reservation ID is : <span class="text-green-500">c1cb8f0b-5a4c-42e1-ae3a-c7094ec205ed</span>
+    </p>
+    <span>Your booking has been received, Please proceed with your payment to complete your booking.</span>
+  </div>
+
+  <div class="flex flex-col space-y-14 mt-5">
+    <div class="flex flex-col space-y-5">
+      <form class="space-y-6" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label for="accName" class="block text-sm font-medium text-gray-700">Account Name</label>
+              <input formControlName="accName" type="text" id="accName" name="accName" placeholder="Enter account name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div>
+              <label for="accNumber" class="block text-sm font-medium text-gray-700">Account Number</label>
+              <input formControlName="accNumber" type="text" id="accNumber" name="accNumber" placeholder="Enter account number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div>
+              <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
+              <input formControlName="amount" type="text" id="amount" name="amount" value="Rp. 122" readonly class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div class="flex flex-col space-y-4"></div>
+            <div class="flex flex-col space-y-4">
+
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="flex gap-5">
+        <button (click)="submitPayment()" type="submit" class="px-4 py-2 bg-primary text-white rounded-md shadow-sm">Submit Payment</button>
+        <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-sm">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
