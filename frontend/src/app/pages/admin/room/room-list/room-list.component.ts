@@ -62,10 +62,6 @@ export class RoomListComponent {
     { key: 'roomType', value: 'Room Type' },
     { key: 'price', value: 'Price' },
     { key: 'status', value: 'Status' },
-    { key: 'createdBy', value: 'Created By' },
-    { key: 'createdDate', value: 'Created Date' },
-    { key: 'lastModifiedBy', value: 'Last Modified By' },
-    { key: 'lastModifiedDate', value: 'Last Modified Date' },
   ];
   
   sortDirection: { [key: string]: string } = {};
@@ -233,48 +229,49 @@ export class RoomListComponent {
   onApplyFilter(queryParams: {
     pageNo?: number;
     pageSize?: number;
-    status?: string;
-    facility?: string;
+    roomNumber?: string;
     capacity?: number;
     roomType?: string;
-    lowerLimitPrice?: number;
+    price?: string;
+    status?: string;
   }) {
     // Update queryParam string for logging or debugging
     this.queryParam = this.getQueryParamsAsString(queryParams);
     console.log('Query Params:', this.queryParam); 
 
     // Call the service method to filter rooms
-    this.filterRooms(this.currentPage, queryParams);
+    this.filterRooms(queryParams);
     this.showFilterModal = false; // Close the filter modal
   }
 
   filterRooms(
-    pageNo: number = 0,
     queryParams: {
+      pageNo?: number;
       pageSize?: number;
-      status?: string;
-      facility?: string;
+      roomNumber?: string;
       capacity?: number;
       roomType?: string;
-      lowerLimitPrice?: number;
+      price?: string;
+      status?: string;
     }
   ) {
-    const { pageSize, status, facility, capacity, roomType, lowerLimitPrice } = queryParams;
+    const { pageNo, pageSize, roomNumber, capacity, roomType, price, status} = queryParams;
 
     this.roomService
       .filterRooms(
         pageNo,
-        pageSize ?? this.pageSize,
-        status,
-        facility,
+        pageSize,
+        roomNumber,
+        capacity,
         roomType,
-        lowerLimitPrice
+        price,
+        status,
       )
       .subscribe({
         next: (response: RoomResponse) => {
           this.rooms = response.content;
           this.totalElements = response.totalElements;
-          this.currentPage = pageNo;
+          // this.currentPage = this.pageNo;
         },
         error: (error) => {
           console.error('Error filtering rooms:', error);
