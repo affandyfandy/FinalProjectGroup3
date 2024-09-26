@@ -87,7 +87,7 @@ export class UserService {
     return this.htpp.post(`${this.authApiUrl}/${id}/photo`, formData);
   }
 
-  getUserPhoto(id: string): Observable<Blob> {
-    return this.htpp.get(`${this.authApiUrl}/${id}/photo`, { responseType: 'blob' });
-  }
+  getUserPhoto(photo: string): Observable<Blob> {
+    return this.htpp.get(`${this.authApiUrl}${photo}`, { responseType: 'blob' });
+  } 
 }

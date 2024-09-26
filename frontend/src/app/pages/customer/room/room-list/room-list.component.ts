@@ -9,6 +9,7 @@ import { RoomFormComponent } from '../room-form/room-form.component';
 import { Facility, Room, RoomResponse } from '../../../../model/room.model';
 import { RoomService } from '../../../../services/room.service';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -71,6 +72,20 @@ export class RoomListComponent implements OnInit{
         this.totalElements = response.totalElements;
         this.totalPages = Array.from({ length: Math.ceil(this.totalElements / this.pageSize) }, (_, i) => i + 1);
         this.currentPage = currentPage;
+
+        this.rooms.forEach((room: Room) => {
+          this.roomService.fetchRoomPhoto(room.photo).subscribe({
+            next: (photoUrl) => {
+              if (photoUrl) {
+                room.photoSafeUrl = photoUrl;
+              } else {
+                console.log('Photo URL is null or an error occurred');
+              }
+            }
+          });
+          
+        });
+
       },
       error: (err) => {
         this.error = 'Nothing to see..';
@@ -97,6 +112,8 @@ export class RoomListComponent implements OnInit{
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadRooms(this.currentPage);
+    console.log("Room photo:", this.rooms[0].photoSafeUrl);
+
   }
 
   createReservation(id: string, facility: Facility[]): void{

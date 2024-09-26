@@ -28,6 +28,8 @@ public class RoomServiceImpl implements RoomService {
     private ReservationServiceClient reservationServiceClient;
     @Autowired
     private RoomMapper roomMapper;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Override
     public Room create(Room room) {
@@ -182,7 +184,6 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-
     public byte[] encoded(MultipartFile file) throws IOException {
         return file.getBytes();
         // return Base64.getEncoder().encodeToString(imageBytes);
@@ -205,5 +206,20 @@ public class RoomServiceImpl implements RoomService {
                 .toList();
 
         return new PageImpl<>(availableRooms, pageable, activeRooms.getTotalElements());
+    }
+
+    @Override
+    public ReadRoomDto uploadRoomPhoto(UUID id, MultipartFile file) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        if (room.getPhoto() != null && room.getPhoto().startsWith("/images/")) {
+            fileStorageService.deleteFile(room.getPhoto().substring(8));
+        }
+
+        String fileName = fileStorageService.storeFile(file);
+        room.setPhoto("/images/" + fileName);
+
+        return roomMapper.toDto(roomRepository.save(room));
     }
 }

@@ -6,7 +6,7 @@
         <div class="text-center">
           <h3 class="text-xl font-semibold text-primary">{{ user?.fullName }}</h3>
         </div>
-        <img [src]="imageSrc" alt="avatar" id="profile-image" class="my-6 w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
+        <img [src]="photo" alt="avatar" id="profile-image" class="w-32 h-32 my-6 bg-gray-300 rounded-full flex items-center justify-center">
         <input (change)="onFileChanged($event)" class="block w-full text-sm text-primary border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
       </div>
   

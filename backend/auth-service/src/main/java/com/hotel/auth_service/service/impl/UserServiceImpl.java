@@ -121,9 +121,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto uploadUserPhoto(String email, MultipartFile file) {
-        String fileName = fileStorageService.storeFile(file);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (user.getPhoto() != null && user.getPhoto().startsWith("/images/")) {
+            fileStorageService.deleteFile(user.getPhoto().substring(8));
+        }
+
+        String fileName = fileStorageService.storeFile(file);
         user.setPhoto("/images/" + fileName);
 
         return userMapper.toUserDto(userRepository.save(user));

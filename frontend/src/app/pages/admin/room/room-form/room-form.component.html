@@ -9,12 +9,11 @@
     <form *ngIf="action !== 'Import Room Data'" class="space-y-6" [formGroup]="roomForm" (ngSubmit)="onSubmit()">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-4">
-          <div class="bg-gray-100 p-4 rounded-lg">
-            <div class="w-32 h-32 mx-auto mb-2">
-            <input type="file" (change)="onFileSelect($event)" accept="image/*" *ngIf="action !== 'Room Details'">
-            <img *ngIf="action === 'Room Details'" [src]="'data:image/jpeg;base64,' + photoUrl" alt="Room Photo" class="w-full h-full object-cover rounded-lg">
-            </div>
-            <p class="text-center text-sm text-gray-600">Upload Photo</p>
+          <div class="bg-gray-100 p-1 h-32 rounded-lg">
+              <img *ngIf="photo" [src]="photo" id="profile-image" alt="Room Photo" class="w-full h-full object-cover rounded-lg">
+          </div>
+          <div class="">
+            <input (change)="onFileSelect($event)" class="block w-full text-sm text-primary border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
           </div>
           <div>
             <p class="font-medium mb-2">Select Facility</p>
@@ -49,6 +48,7 @@
               [disabled]="action === 'Room Details'"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
+              <option value="" disabled>Select room type</option>
               <option *ngFor="let type of roomTypes" [value]="type">
                 {{ type }}
               </option>
@@ -86,6 +86,7 @@
               formControlName="status"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
+              <option value="" disabled>Select status</option>
               <option *ngFor="let status of roomStatus" [ngValue]="status">
                 {{ status }}
               </option>
@@ -94,12 +95,13 @@
               Select the room status
             </span>
           </div>
+          <div class="flex justify-end space-x-3">
+            <button *ngIf="action !== 'Room Details'" (click)="onClose()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Cancel</button>
+            <button *ngIf="action !== 'Room Details'" [disabled]="!roomForm.valid" type="submit" class="px-4 py-2 cursor-pointer bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
+          </div>
         </div>
       </div>
-      <div class="flex justify-center space-x-3">
-        <button *ngIf="action !== 'Room Details'" (click)="onClose()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Cancel</button>
-        <button *ngIf="action !== 'Room Details'" [disabled]="!roomForm.valid" type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
-      </div>
+      
     </form>
 
 
