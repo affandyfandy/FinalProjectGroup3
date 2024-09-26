@@ -11,7 +11,14 @@ export const AuthGuard: CanActivateFn = (route, state) => {
     const isAdmin = authService.isAdmin();
     const url = state.url;
 
+    console.log('AuthGuard', isLoggedIn, isAdmin, url);
+
     if (!isLoggedIn) {
+        if (url === '/reservation') {
+            router.navigate(['/auth/login']);
+            return false;
+        }
+
         if (url === '/'  || url === '/rooms') {
             return true;
         } else {
@@ -30,7 +37,7 @@ export const AuthGuard: CanActivateFn = (route, state) => {
                 router.navigate([RouterConfig.ADMIN.path]);
                 return false;
             }
-            if (!url.includes(RouterConfig.ADMIN.path)) {
+            if (!url.includes(RouterConfig.ADMIN.path) && !url.includes('profile')) {
                 router.navigate([RouterConfig.UNAUTHORIZED.path]);
                 return false;
             }

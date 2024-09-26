@@ -8,6 +8,8 @@ import { Reservation } from '../../../../model/reservation.model';
 import { NgIf, NgFor, CurrencyPipe, DatePipe } from '@angular/common';
 import { RoomService } from '../../../../services/room.service';
 import { Room } from '../../../../model/room.model';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { RouterConfig } from '../../../../config/route.constants';
 
 @Component({
   selector: 'app-reservation-list',
@@ -30,10 +32,16 @@ export class ReservationListComponent implements OnInit {
     private reservationService: ReservationService,
     private router: Router,
     private roomService: RoomService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    if (!this.authService.isAdmin()) {
+      this.router.navigate([RouterConfig.AUTH.link, 'login']);
+      return;
+    }
+
     this.loadReservations(this.currentPage);
   }
 

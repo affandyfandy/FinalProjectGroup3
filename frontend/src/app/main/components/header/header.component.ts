@@ -39,16 +39,15 @@ export class HeaderComponent implements OnInit {
 
   isLoggedIn() {
     return this.authService.checkCredentials();
-    // return true;
   }
 
   isAdmin() {
     return this.authService.isAdmin();
-    // return true;
   }
 
   ngOnInit() {
     this.loadUserData();
+    
   }
 
   loadUserData() {
