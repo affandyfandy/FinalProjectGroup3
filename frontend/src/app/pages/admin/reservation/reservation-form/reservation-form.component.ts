@@ -7,7 +7,7 @@ import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/c
 import { heroCalendarDays, heroChevronLeft, heroCreditCard, heroInboxStack, heroMapPin } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
-import { Room } from '../../../../model/room.model';
+import { Facility, Room } from '../../../../model/room.model';
 import { RoomService } from '../../../../services/room.service';
 import { User } from '../../../../model/user.model';
 import { UserService } from '../../../../services/user.service';
@@ -21,6 +21,7 @@ import { catchError, Observable } from 'rxjs';
 import { PaymentService } from '../../../../services/reservation/payment.service';
 import { Payment } from '../../../../model/payment.model';
 import { RangeDates } from '../../../../model/range-dates';
+import { ToastService } from '../../../../services/toast.service';
 
 
 @Component({
@@ -53,6 +54,8 @@ export class ReservationFormComponent implements OnInit {
   room?: Room;
   selectedRoom: Room | null = null; 
 
+  facilityList: string[] = [];
+
   user?: User;
   payment?: Payment;
   rooms: Room[] = [];
@@ -74,7 +77,8 @@ export class ReservationFormComponent implements OnInit {
     private router: Router, 
     private roomService: RoomService,
     private userService: UserService,
-    private paymentService: PaymentService) {
+    private paymentService: PaymentService,
+    private toastService: ToastService) {
     this.reservationForm = this.fb.group({
       customerFullName: [''],
       customerEmail: [''],
@@ -152,24 +156,27 @@ export class ReservationFormComponent implements OnInit {
       this.reservationService.getReservationById(this.reservationId).subscribe({
         next: (reservation: Reservation) => {
           this.reservation = reservation;
+          this.findPayment(reservation.id);
           this.reservationForm.patchValue({
             customerName: this.reservation.userId,
             roomId: this.reservation.roomId,
             checkInDate: this.reservation.checkInDate,
             checkOutDate: this.reservation.checkOutDate,
             status: this.reservation.status
-           
           });
           if (this.reservation.roomId) {
+            console.log("masuk k eisni nyari room");
             this.roomService.getRoomById(this.reservation.roomId).subscribe({
               next: (room) => {
                 this.room = room;
+                this.updateSelectedFacilities();
               },
               error: (err) => {
                 console.error('Error fetching room details:', err);
               }
             });
           }
+          console.log(this.room);
           console.log(this.reservation.userId);
           if (this.reservation.userId){
             this.userService.getUserById(this.reservation.userId).subscribe({
@@ -184,10 +191,24 @@ export class ReservationFormComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.error('Error fetching user:', err);
+          console.error('Error fetching reservation:', err);
         }
       });
 
+    }
+  }
+
+  findPayment(id: string): void{
+    if (this.reservation){
+      this.paymentService.getByReservationId(id).subscribe({
+        next: (payment) => {
+          this.payment = payment;
+          console.log(this.payment);
+        },
+        error: (err) => {
+          console.error('Error fetching payment details:', err);
+        }
+      });
     }
   }
   
@@ -207,14 +228,25 @@ export class ReservationFormComponent implements OnInit {
   
             // Call procedPayment only after the reservation is created successfully
             this.procedPayment();
+            this.toastService.showToast('Reservation created successful!', 'success');
+            this.navigateToReservationList();
           },
           error: (err) => {
             console.error('Error creating reservation:', err);
+            this.toastService.showToast('Error creating reservation: '+err, 'error');
+            this.navigateToReservationList();
           }
         });
       }
     }
   }
+
+  navigateToReservationList(): void {
+    this.router.navigateByUrl('/admin/reservation', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/admin/reservation']); // Refreshes the component
+    });
+  }
+  
 
   checkUser(reservationForm: FormGroup): void {
     const reservationData = { ...this.reservationForm.value };
@@ -335,5 +367,33 @@ export class ReservationFormComponent implements OnInit {
     if (this.selectedRoom){
       this.totalAmount = this.selectedRoom.price * this.duration;
     }
+  }
+
+  updateSelectedFacilities(): void {
+    if (this.room?.facility) {
+      this.room.facility = this.room.facility.map((facility: Facility) => facility);
+    }
+
+    this.room?.facility.forEach((facility) => {
+      if (facility.toString() === 'TELEVISION'){
+        this.facilityList.push('Television');
+      }
+      else if (facility.toString() === 'REFRIGERATOR'){
+        this.facilityList.push('Refrigerator');
+      }
+      else if (facility.toString() === 'MINIBAR'){
+        this.facilityList.push('Minibar');
+      }
+      else if (facility.toString() === 'WIFI'){
+        this.facilityList.push('Wi-Fi');
+      }
+      else if (facility.toString() === 'COFFEE_MAKER'){
+        this.facilityList.push('Coffee Maker');
+      }
+      else if (facility.toString() === 'HAIR_DRYER'){
+        this.facilityList.push('Hair Dryer');
+      }
+    })
+
   }
 }

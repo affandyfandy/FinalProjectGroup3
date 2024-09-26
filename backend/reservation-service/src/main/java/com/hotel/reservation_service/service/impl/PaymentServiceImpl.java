@@ -22,7 +22,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> getPaymentsByReservationId(UUID reservationId) {
+    public Payment getPaymentsByReservationId(UUID reservationId) {
         return paymentRepository.findByReservationId(reservationId);  
     }
 

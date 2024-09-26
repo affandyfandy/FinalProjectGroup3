@@ -34,7 +34,7 @@
             <div class="flex items-center space-x-2">
               <div class="text-primary">
                 <ng-icon name="heroCalendarDays" class="mr-2"></ng-icon>
-                <label class="text-primary" for="checkInDate">Check-in</label>
+                <label for="checkInDate">Check-in</label>
                 <mat-form-field class="cursor-pointer" *ngIf="action !== 'Reservation Details'">
                   <input
                     placeholder="Check-in"
@@ -56,7 +56,7 @@
               <i class="text-gray-400"></i>
               <div>
                 <ng-icon name="heroCalendarDays" class="mr-2"></ng-icon>
-                <label class="text-primary" for="checkOutDate">Check-out</label>
+                <label for="checkOutDate">Check-out</label>
                 <mat-form-field class="cursor-pointer" *ngIf="action !== 'Reservation Details'">
                   <input
                   placeholder="Check-out"
@@ -71,7 +71,7 @@
                   <mat-datepicker-toggle matIconSuffix [for]="pickerCheckOut"></mat-datepicker-toggle>
                   <mat-datepicker #pickerCheckOut></mat-datepicker>
                 </mat-form-field>
-                <p class="text-sm text-gray-500">{{ reservation?.checkOutDate | date:'fullDate'}}</p>
+                <p *ngIf="action === 'Reservation Details'" class="text-sm text-gray-500">{{ reservation?.checkOutDate | date:'fullDate'}}</p>
               </div>
             </div>
             <div *ngIf="action === 'Create Reservation'"> 
@@ -104,7 +104,7 @@
               <div>
                 <ng-icon name="heroCreditCard" class="h-5 w-5"></ng-icon>
                 Total Price
-                <p class="text-sm text-gray-500">{{reservation?.amount}}</p>
+                <p class="text-sm text-gray-500">{{reservation?.amount | currency:'Rp':'symbol':'1.0-0' }}</p>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@
           </div>
           <div>
             <label for="address" class="block text-md font-medium text-gray-700">Address</label>
-            <textarea id="address" class="mt-1 block w-full" formControlName="customerAddress" rows="4" [readonly]="action === 'Reservation Details'" ></textarea>
+            <textarea id="address" class="mt-1 block w-full" formControlName="customerAddress" rows="4" [value]="user?.address" [readonly]="action === 'Reservation Details'" ></textarea>
           </div>
         </div>
       </div>
@@ -137,7 +137,8 @@
       <!-- Room Details -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-xl font-bold mb-4">Room Details</h2>
-        <label *ngIf="action === 'Create Reservation'" for="roomId" class="block text-md font-medium text-gray-700">Select Room</label>
+        <div *ngIf="action === 'Create Reservation'">
+          <label for="roomId" class="block text-md font-medium text-gray-700">Select Room</label>
         <select
           id="roomId"
           name="roomId"
@@ -150,28 +151,25 @@
             {{ room.roomNumber }} - {{ room.roomType }}
           </option>
         </select>
+        </div>
 
         <div *ngIf="selectedRoom">
           <img [src]="selectedRoom.photoSafeUrl" alt="{{ selectedRoom.roomNumber }}" class="mt-2 rounded-md" />
         </div>
 
-        <h3 *ngIf="action !== 'Create Reservation'" class="font-semibold mb-2">{{ reservation?.room?.roomNumber }} - {{ reservation?.room?.roomType }}</h3>
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Room Number</h3>
+        <p *ngIf="action !== 'Create Reservation'" class="text-md mt-4 mb-4">{{ room?.roomNumber }}</p>
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Room Type</h3>
+        <p *ngIf="action !== 'Create Reservation'" class="text-md mt-4 mb-4">{{ room?.roomType }}</p>
         <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Price per night</h3>
-        <p *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">{{ reservation?.room?.price }}</p>
-        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Safety and Hygiene</h3>
+        <p *ngIf="action !== 'Create Reservation'" class="text-md mt-4 mb-4">{{ room?.price | currency:'Rp':'symbol':'1.0-0'}}</p>
+        <h3 *ngIf="action !== 'Create Reservation'" class="text-md font-semibold mt-4 mb-4">Facility</h3>
           <div *ngIf="action !== 'Create Reservation'" class="grid grid-cols-2 gap-4">
-            <div class="flex items-center"><svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg> Daily Cleaning</div>
-            <div class="flex items-center"><svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg> Fire Extinguishers</div>
-            <div class="flex items-center"><svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg> Disinfections and Sterilizations</div>
-            <div class="flex items-center"><svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg> Smoke Detectors</div>
+            <div *ngFor="let fclt of facilityList">
+              <div class="flex items-center"><svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg> {{fclt}}</div>
+            </div>
           </div>
       </div>
 
@@ -181,8 +179,8 @@
         <div class="space-y-2 mb-4">
           <p class="flex justify-between">
             <span>Room Charge</span>
-            <span *ngIf="action === 'Create Reservation'">Rp{{ totalAmount }}</span>
-            <span *ngIf="action !== 'Create Reservation'">Rp{{ reservation?.amount }}</span>
+            <span *ngIf="action === 'Create Reservation'">{{ totalAmount | currency:'Rp':'symbol':'1.0-0'}}</span>
+            <span *ngIf="action !== 'Create Reservation'">{{ reservation?.amount | currency:'Rp':'symbol':'1.0-0'}}</span>
           </p>
           <p class="flex justify-between">
             <span>Taxes and Fees</span>
@@ -191,22 +189,22 @@
           <hr class="my-2">
           <p class="flex justify-between font-semibold">
             <span class="text-lg">Total</span>
-            <span *ngIf="action === 'Create Reservation'">Rp{{ totalAmount }}</span>
-            <span *ngIf="action !== 'Create Reservation'">Rp{{ reservation?.amount }}</span>
+            <span *ngIf="action === 'Create Reservation'">{{ totalAmount | currency:'Rp':'symbol':'1.0-0'}}</span>
+            <span *ngIf="action !== 'Create Reservation'">{{ reservation?.amount | currency:'Rp':'symbol':'1.0-0'}}</span>
           </p>
         </div>
         <div class="space-y-2">
           <div>
             <label for="accountNumber" class="block text-md font-medium text-gray-700">Account Number</label>
-            <input type="number" id="accountNumber" class="mt-1 block w-full" formControlName="accountNumber"/>
+            <input type="number" id="accountNumber" class="mt-1 block w-full" formControlName="accountNumber" [value]="payment?.accountNumber" [readonly]="action === 'Reservation Details'"/>
           </div>
           <div>
             <label for="accountName" class="block text-md font-medium text-gray-700">Account Name</label>
-            <input type="text" id="accountName" class="mt-1 block w-full" formControlName="accountName"/>
+            <input type="text" id="accountName" class="mt-1 block w-full" formControlName="accountName" [value]="payment?.accountName" [readonly]="action === 'Reservation Details'"/>
           </div>
           <div>
             <label for="amount" class="block text-md font-medium text-gray-700">Amount Paid</label>
-            <input type="number" id="amount" class="mt-1 block w-full" formControlName="amount"/>
+            <input type="number" id="amount" class="mt-1 block w-full" formControlName="amount" [value]="payment?.amount" [readonly]="action === 'Reservation Details'"/>
           </div>
         </div>
       </div>

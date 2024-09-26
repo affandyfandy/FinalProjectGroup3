@@ -103,5 +103,8 @@ export class ReservationService {
       }))
     ));
   }
+  exportData(): Observable<any>{
+    return this.http.get<any[]>(`${this.apiUrl}/export/admin`);
+  }
 }
 

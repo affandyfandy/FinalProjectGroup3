@@ -10,12 +10,17 @@ import { RoomService } from '../../../../services/room.service';
 import { Room } from '../../../../model/room.model';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { RouterConfig } from '../../../../config/route.constants';
+import { heroFaceFrown } from '@ng-icons/heroicons/outline';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
 
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, DatePipe, NgIconComponent, ReactiveFormsModule],
   templateUrl: './reservation-list.component.html',
+  providers: [
+    provideIcons({ heroFaceFrown})
+  ]
 })
 export class ReservationListComponent implements OnInit {
   reservations: Reservation[] = [];
