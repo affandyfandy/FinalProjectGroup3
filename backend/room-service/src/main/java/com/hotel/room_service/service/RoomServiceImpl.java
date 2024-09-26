@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.Base64;
 
@@ -51,23 +52,25 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room findById(UUID id) {
-        return roomRepository.findById(id).get();
+        return roomRepository.findById(id).orElse(null);
     }
 
     @Override
     public Room updateStatus(UUID id, String status) {
         Room findRoom = findById(id);
-        if (findRoom != null){
-            if (status.equals("active")){
+        if (findRoom != null) {
+            if (status.equalsIgnoreCase("active")) {
                 findRoom.setStatus(Status.ACTIVE);
-            }
-            else if (status.equals("inactive")){
+            } else if (status.equalsIgnoreCase("inactive")) {
                 findRoom.setStatus(Status.INACTIVE);
+            } else {
+                return findRoom;
             }
             roomRepository.save(findRoom);
         }
         return findRoom;
     }
+
 
     @Override
     public Page<Room> findAllSorted(int pageNo, int pageSize, String sortBy, String sortOrder) {
@@ -161,22 +164,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room updateRoom(UUID id, Room room){
+    public Room updateRoom(UUID id, Room room) {
         Room findRoom = findById(id);
-        if (findRoom != null){
-            findRoom.setCapacity(room.getCapacity());
-            findRoom.setFacility(room.getFacility());
-            findRoom.setPrice(room.getPrice());
-            findRoom.setRoomNumber(room.getRoomNumber());
-            findRoom.setRoomType(room.getRoomType());
-            findRoom.setPhoto(room.getPhoto());
-            roomRepository.save(findRoom);
+        if (findRoom == null) {
+            throw new NoSuchElementException("Room with ID " + id + " not found");
         }
+        findRoom.setCapacity(room.getCapacity());
+        findRoom.setFacility(room.getFacility());
+        findRoom.setPrice(room.getPrice());
+        findRoom.setRoomNumber(room.getRoomNumber());
+        findRoom.setRoomType(room.getRoomType());
+        findRoom.setPhoto(room.getPhoto());
+        roomRepository.save(findRoom);
         return findRoom;
     }
+
     @Override
     public void deleteRoom(UUID id) {
         Room findRoom = findById(id);
+        if (findRoom == null) {
+            throw new NoSuchElementException("Room with ID " + id + " not found");
+        }
         roomRepository.delete(findRoom);
     }
 
@@ -185,16 +193,6 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.saveAll(listRoom);
     }
 
-    @Override
-    public byte[] encoded(MultipartFile file) throws IOException {
-        return file.getBytes();
-        // return Base64.getEncoder().encodeToString(imageBytes);
-    }
-
-    @Override
-    public String byteToString(byte[] file) {
-        return Base64.getEncoder().encodeToString(file);
-    }
 
     public Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable) {
         Page<Room> activeRooms = roomRepository.findAllActiveRoomsAndCapacityGreaterThanEqual(capacity, pageable);

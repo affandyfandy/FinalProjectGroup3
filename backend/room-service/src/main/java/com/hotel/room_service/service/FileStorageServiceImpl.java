@@ -1,5 +1,6 @@
 package com.hotel.room_service.service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,7 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class FileStorageServiceImpl implements FileStorageService{
+public class FileStorageServiceImpl implements FileStorageService {
 
     private final Path fileStorageLocation;
 
@@ -19,46 +20,47 @@ public class FileStorageServiceImpl implements FileStorageService{
         this.fileStorageLocation = Paths.get("src/main/resources/static/images").toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not create the directory for file storage.", ex);
         }
     }
 
     @Override
     public String storeFile(MultipartFile file) {
-        String originalFileName = file.getOriginalFilename();
-        String cleanedFileName = StringUtils.cleanPath(originalFileName).replace(" ", "_");
-        String fileName = System.currentTimeMillis() + "_" + cleanedFileName;
+        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename()).replace(" ", "_");
+        String fileName = System.currentTimeMillis() + "_" + originalFileName;
+
+        if (fileName.contains("..")) {
+            throw new IllegalArgumentException("Invalid path sequence in filename: " + fileName);
+        }
 
         try {
-            if (fileName.contains("..")) {
-                throw new RuntimeException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
-
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Path targetLocation = fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
             return fileName;
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
-
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to store file " + fileName + ". Please try again.", ex);
         }
     }
 
     @Override
     public Resource loadFileAsResource(String fileName) {
+        // Implement this if needed
         return null;
     }
 
     @Override
     public void deleteFile(String fileName) {
+        Path filePath = fileStorageLocation.resolve(fileName).normalize();
+
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
+            } else {
+                throw new RuntimeException("File not found: " + fileName);
             }
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not delete file " + fileName, ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to delete file " + fileName, ex);
         }
     }
 }

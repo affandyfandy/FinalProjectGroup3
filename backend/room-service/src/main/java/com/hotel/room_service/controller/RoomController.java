@@ -64,10 +64,13 @@ public class RoomController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getRoomDetails(@PathVariable UUID id){
-        Room room = roomService.findById(id) != null ? roomService.findById(id) : null;
+        Room room = roomService.findById(id);
+        if (room == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        }
         ReadRoomDto roomDto = roomMapper.toDto(room);
-//        roomDto.setPhotoUrl(roomService.byteToString(room.getPhoto()));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roomDto);
+
     }   
 
     @PostMapping("/create")
@@ -151,18 +154,6 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Collections.singletonMap("status", "success"));
     }
 
-    @PostMapping("/import")
-    public ResponseEntity<String> importProduct(@RequestParam("file") MultipartFile file){
-        try {
-            // List<Room> listProduct = FileUtils.readProductFromExcel(file);
-            List<Room> listProduct = new ArrayList<>();
-            roomService.saveAll(listProduct);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Room imported successfully");
-        } catch (InvalidInputException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid file content: " + e.getMessage());
-        }
-    }
-
     @PostMapping("/{id}/photo")
     public ResponseEntity<?> uploadUserPhoto(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
         try {
@@ -192,4 +183,6 @@ public class RoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
         }
     }
+
+
 }
