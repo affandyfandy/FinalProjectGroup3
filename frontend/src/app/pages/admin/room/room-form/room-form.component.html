@@ -10,7 +10,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-4">
           <div class="bg-gray-100 p-1 h-32 rounded-lg">
-              <img *ngIf="photo" [src]="photo" id="profile-image" alt="Room Photo" class="w-full h-full object-cover rounded-lg">
+              <img *ngIf="photo || selectedFile" [src]="photo" id="profile-image" alt="Room Photo" class="w-full h-full object-cover rounded-lg">
           </div>
           <div class="">
             <input (change)="onFileSelect($event)" class="block w-full text-sm text-primary border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">

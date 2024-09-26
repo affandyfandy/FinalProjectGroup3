@@ -62,10 +62,6 @@ export class RoomListComponent {
     { key: 'roomType', value: 'Room Type' },
     { key: 'price', value: 'Price' },
     { key: 'status', value: 'Status' },
-    { key: 'createdBy', value: 'Created By' },
-    { key: 'createdDate', value: 'Created Date' },
-    { key: 'lastModifiedBy', value: 'Last Modified By' },
-    { key: 'lastModifiedDate', value: 'Last Modified Date' },
   ];
   
   sortDirection: { [key: string]: string } = {};
@@ -109,9 +105,9 @@ export class RoomListComponent {
     if (room.status === 'ACTIVE') {
       this.roomService.deactivateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
-          console.log('Room deactivated successfully:', updatedRoom);
+          console.log('Room deactivated successful!', updatedRoom);
           room.status = 'INACTIVE';
-          this.toastService.showToast('Room deactivated successfully!', 'success');
+          this.toastService.showToast('Room deactivated successful!', 'success');
         },
         (error: any) => {
           console.error('Error deactivating room:', error);
@@ -121,9 +117,9 @@ export class RoomListComponent {
     } else {
       this.roomService.activateRoom(room.id).subscribe(
         (updatedRoom: Room) => {
-          console.log('Room activated successfully:', updatedRoom);
+          console.log('Room activated successful!', updatedRoom);
           room.status = 'ACTIVE';
-          this.toastService.showToast('Room activated successfully!', 'success');
+          this.toastService.showToast('Room activated successful!', 'success');
         },
         (error: any) => {
           console.error('Error activating room:', error);
@@ -144,9 +140,9 @@ export class RoomListComponent {
     this.router.navigate(['/admin/rooms/create']);
   }
 
-  importData() {
-    this.router.navigate(['/admin/rooms/import']);
-  }
+  // importData() {
+  //   this.router.navigate(['/admin/rooms/import']);
+  // }
 
   editRoom(room: Room) {
     console.log('Edit room', room);
@@ -164,9 +160,9 @@ export class RoomListComponent {
     if (this.selectedRoom) {
       this.roomService.deleteRoom(this.selectedRoom.id).subscribe({
         next: () => {
-          console.log('Room deleted successfully');
+          console.log('Room deleted successful!');
           this.loadRooms(this.currentPage);
-          this.toastService.showToast('Room deleted successfully!', 'success');
+          this.toastService.showToast('Room deleted successful!', 'success');
         },
         error: (err) => {
           console.error('Error deleting room:', err);
@@ -233,49 +229,49 @@ export class RoomListComponent {
   onApplyFilter(queryParams: {
     pageNo?: number;
     pageSize?: number;
-    status?: string;
-    facility?: string;
+    roomNumber?: string;
     capacity?: number;
     roomType?: string;
-    lowerLimitPrice?: number;
+    price?: string;
+    status?: string;
   }) {
     // Update queryParam string for logging or debugging
     this.queryParam = this.getQueryParamsAsString(queryParams);
     console.log('Query Params:', this.queryParam); 
 
     // Call the service method to filter rooms
-    this.filterRooms(this.currentPage, queryParams);
+    this.filterRooms(queryParams);
     this.showFilterModal = false; // Close the filter modal
   }
 
   filterRooms(
-    pageNo: number = 0,
     queryParams: {
+      pageNo?: number;
       pageSize?: number;
-      status?: string;
-      facility?: string;
+      roomNumber?: string;
       capacity?: number;
       roomType?: string;
-      lowerLimitPrice?: number;
+      price?: string;
+      status?: string;
     }
   ) {
-    const { pageSize, status, facility, capacity, roomType, lowerLimitPrice } = queryParams;
+    const { pageNo, pageSize, roomNumber, capacity, roomType, price, status} = queryParams;
 
     this.roomService
       .filterRooms(
         pageNo,
-        pageSize ?? this.pageSize,
-        status,
-        facility,
+        pageSize,
+        roomNumber,
         capacity,
         roomType,
-        lowerLimitPrice
+        price,
+        status,
       )
       .subscribe({
         next: (response: RoomResponse) => {
           this.rooms = response.content;
           this.totalElements = response.totalElements;
-          this.currentPage = pageNo;
+          // this.currentPage = this.pageNo;
         },
         error: (error) => {
           console.error('Error filtering rooms:', error);

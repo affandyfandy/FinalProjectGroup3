@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Reservation } from '../../../../model/reservation.model';
 import { ReservationService } from '../../../../services/reservation/reservation.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroChevronLeft } from '@ng-icons/heroicons/outline';
+import { heroCalendarDays, heroChevronLeft, heroCreditCard, heroMapPin } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { heroStarSolid, heroUserSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-reservation-form',
@@ -18,7 +19,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   ],
   templateUrl: './reservation-form.component.html',
   providers: [
-    provideIcons({ heroChevronLeft })
+    provideIcons({ heroMapPin, heroChevronLeft, heroStarSolid, heroCalendarDays, heroUserSolid, heroCreditCard})
   ]
 })
 export class ReservationFormComponent implements OnInit {

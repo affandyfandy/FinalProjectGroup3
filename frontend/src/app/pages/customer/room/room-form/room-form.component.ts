@@ -3,13 +3,19 @@ import { Facility, Room, RoomType, Status } from '../../../../model/room.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../../../../services/room.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronLeft } from '@ng-icons/heroicons/outline';
 import { RouterConfig } from '../../../../config/route.constants';
 import { KeyValue } from '../../../../model/key-value.model';
 import { Reservation } from '../../../../model/reservation.model';
 import { SafeUrl } from '@angular/platform-browser';
+
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core'; // For native Date support
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CUSTOM_DATE_FORMATS } from '../../../../util/custom-date.util';
 
 @Component({
   selector: 'app-room-form',
@@ -18,11 +24,23 @@ import { SafeUrl } from '@angular/platform-browser';
     CommonModule,
     ReactiveFormsModule,
     NgIconComponent,
-    FormsModule
+    FormsModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule
   ],
   templateUrl: './room-form.component.html',
   providers: [
-    provideIcons({ heroChevronLeft})
+    DatePipe,
+    provideIcons({ heroChevronLeft}),
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: CUSTOM_DATE_FORMATS
+    },
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'en-GB'
+    }
   ]
 })
 export class RoomFormComponent implements OnInit {
@@ -31,7 +49,7 @@ export class RoomFormComponent implements OnInit {
   @Output() save = new EventEmitter<Reservation>();
   @Output() cancel = new EventEmitter<void>();
 
-  rsvpForm: FormGroup; // Declare rsvpForm
+  rsvpForm: FormGroup;
   room: Room | null = null;
   roomTypes: RoomType = RoomType.DOUBLE;
   roomStatus: Status = Status.ACTIVE;
@@ -42,21 +60,46 @@ export class RoomFormComponent implements OnInit {
   checkIn: string = '';
   checkOut: string = '';
 
+  checkInDate: Date | null = null;
+  checkOutDate: Date | null = null;
+
   queryParam: any = {};
   description: string = '';
   selectedFacility: Facility[] = [];
   facilityList: string[] = [];
 
+  minDate: Date = new Date();
+
+  disabledRanges: { from: Date, to: Date }[] = [
+    { from: new Date(2024, 8, 28), to: new Date(2024, 8, 30) }, // 28 Sept to 30 Sept 2024
+    { from: new Date(2024, 9, 2), to: new Date(2024, 9, 5) },   // 02 Oct to 05 Oct 2024
+  ];
+
   constructor(
     private fb: FormBuilder,
     private roomService: RoomService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe
   ) {
     this.rsvpForm = this.fb.group({
       checkIn: ['', [Validators.required]],
-      checkOut: ['', [Validators.required]],
+      checkOut: [{value: null, disabled: true}, [Validators.required]],
       roomId: ['']
+    });
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      const checkInParam = params['checkIn'] !== undefined ? params['checkIn'] : '';
+      const checkOutParam = params['checkOut'] !== undefined ? params['checkOut'] : '';
+
+      if (checkInParam && checkOutParam) {
+        const checkInParsedDate = this.parseDate(checkInParam); 
+        const checkOutParsedDate = this.parseDate(checkOutParam);
+        if (checkInParsedDate) {
+          this.rsvpForm.controls['checkIn'].setValue(checkInParsedDate);
+          this.rsvpForm.controls['checkOut'].setValue(checkOutParsedDate);
+        }
+      }
     });
   }
 
@@ -82,11 +125,28 @@ export class RoomFormComponent implements OnInit {
       });
     }
 
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.checkIn = params['checkIn'] !== undefined ? params['checkIn'] : '';
-      this.checkOut = params['checkOut'] !== undefined ? params['checkOut'] : '';
+    this.rsvpForm.get('checkIn')?.valueChanges.subscribe((checkInValue) => {
+      this.rsvpForm.get('checkOut')?.reset();
+      this.rsvpForm.get('checkOut')?.disable();
+
+      if (checkInValue) {
+        this.rsvpForm.get('checkOut')?.enable();
+      }
     });
   }
+
+  parseDate(dateString: string): Date | null {
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      console.log(new Date(year, month, day));
+      return new Date(year, month, day);
+    }
+    return null;
+  }
+  
 
   goBack(): void {
     this.router.navigate(['/rooms']);
@@ -147,8 +207,8 @@ export class RoomFormComponent implements OnInit {
       const formValues = this.rsvpForm.value;
       const queryParams = {
         roomId: this.room?.id,
-        checkIn: formValues.checkIn,
-        checkOut: formValues.checkOut
+        checkIn: this.datePipe.transform(formValues.checkIn, 'yyyy-MM-dd'),
+        checkOut: this.datePipe.transform(formValues.checkOut, 'yyyy-MM-dd')
       };
       this.router.navigate(['reservation/create'], { queryParams });
     } else {
@@ -166,5 +226,18 @@ export class RoomFormComponent implements OnInit {
         console.error('fetch photo error', error);
       }
     });
+  }
+
+  disableDates = (d: Date | null): boolean => {
+    if (!d) {
+      return false;
+    }
+
+    for (const range of this.disabledRanges) {
+      if (d >= range.from && d <= range.to) {
+        return false;
+      }
+    }
+    return true;
   }
 }

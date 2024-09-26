@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { AppConstants } from "../../config/app.constants";
 import { Reservation } from '../../model/reservation.model';
 import { RoomService } from '../room.service';
 import { Room } from '../../model/room.model';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ import { Room } from '../../model/room.model';
 export class ReservationService {
   private apiUrl = `${AppConstants.BASE_API_V1_URL}/reservations`;
 
-  constructor(private http: HttpClient, private roomService : RoomService) {}
+  constructor(private http: HttpClient, private roomService : RoomService, 
+    private authService: AuthService
+  ) {}
 
   getAllReservationsWithRooms(page: number = 0, size: number = 10): Observable<Reservation[]> {
     return this.getAllReservations(page, size).pipe(
@@ -46,7 +49,10 @@ export class ReservationService {
   }
 
   createReservation(reservation: Reservation): Observable<Reservation> {
-    return this.http.post<Reservation>(this.apiUrl, reservation);
+    const headers = new HttpHeaders({
+      'Logged-User': this.authService.getUserInformation()[1].value
+  });
+    return this.http.post<Reservation>(this.apiUrl, reservation, { headers });
   }
 
   updateReservation(id: string, reservation: Reservation): Observable<Reservation> {

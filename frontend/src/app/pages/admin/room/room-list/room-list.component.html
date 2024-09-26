@@ -9,9 +9,6 @@
           class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
           Add New Room
         </button>
-        <button (click)="importData()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
-          Import Data
-        </button>
         <button (click)="filterRoom()" class="h-fit bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
           <span class="sr-only">Toggle Filters</span>
             <ng-icon name="heroAdjustmentsHorizontalSolid" class="h-5 w-5"></ng-icon> Filter
@@ -22,11 +19,11 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th *ngFor="let header of ['No', 'Room Number', 'Room Type', 'Price', 'Last Modified Date', 'Last Modified By', 'Status']"
+              <th *ngFor="let header of ['No', 'Room Number', 'Room Type', 'Price', 'Last Modified Date', 'Last Modified By', 'Status', '']"
                   (click)="sortData(header.toLowerCase().replace(' ', ''))"
                   class="px-6 py-3 text-left text-sm font-medium text-primary tracking-wider cursor-pointer">
                   {{ header }}
-                  <ng-icon *ngIf="header !== 'No'" name="heroChevronUpDown"></ng-icon>
+                  <ng-icon *ngIf="header !== 'No' && header !== ''" name="heroChevronUpDown"></ng-icon>
               </th>
             </tr>
           </thead>          

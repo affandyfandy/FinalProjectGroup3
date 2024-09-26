@@ -3,6 +3,10 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../../../model/user.model';
 import { UserService } from '../../../../services/user.service';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroChevronLeft } from '@ng-icons/heroicons/outline';
+import { Router } from '@angular/router';
+import { ToastService } from '../../../../services/toast.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { APIConstants } from '../../../../config/app.constants';
 import { AuthService } from '../../../../services/auth/auth.service';
@@ -13,19 +17,30 @@ import { AuthService } from '../../../../services/auth/auth.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    NgIconComponent,
     NgOptimizedImage
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
+  providers: [
+    provideIcons({ heroChevronLeft })
+  ]
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
   editForm: FormGroup;
+  isEditMode: boolean = false;
+  isViewMode: boolean = false;
   photo: SafeUrl | null = null;
 
   selectedFile: File | null = null;
   
-  constructor(private userService: UserService, private fb: FormBuilder, private authService: AuthService) { 
+  constructor(
+    private userService: UserService,
+    private fb: FormBuilder, 
+    private authService: AuthService,
+    private toastService: ToastService,
+    private router: Router) { 
     this.editForm = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -92,11 +107,16 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         console.log('update user success', response);
         location.reload();
+        this.toastService.showToast('Profile updated successful!', 'success');
       },
       error: (error) => {
         console.error('update user error', error);
+        this.toastService.showToast('Error updating user data', 'error');
       }
     });
+  }
+  onCancel() {
+    this.router.navigate(['/']);
   }
 
   onFileChanged(event: Event) {

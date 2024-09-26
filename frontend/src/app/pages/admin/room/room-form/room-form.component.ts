@@ -17,7 +17,7 @@ import { SafeUrl } from '@angular/platform-browser';
     CommonModule,
     ReactiveFormsModule,
     NgIconComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './room-form.component.html',
   providers: [
@@ -47,7 +47,6 @@ export class RoomFormComponent implements OnInit {
   isVisible = true;
   showFileUpload = false;
   message: string | null = null;
-  // photoUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -108,7 +107,6 @@ export class RoomFormComponent implements OnInit {
     } else {
       this.selectedFacility = [];
     }
-    // console.log(this.selectedFacility);
 
     this.selectedFacility.forEach((facility) => {
       if (facility.toString() === 'TELEVISION'){
@@ -137,7 +135,7 @@ export class RoomFormComponent implements OnInit {
     if (this.roomForm.valid) {
       const roomData = {
         ...this.roomForm.value,
-        facility: this.roomForm.value.facility.map((f: string) => Facility[f as keyof typeof Facility])
+        // facility: this.roomForm.value.facility.map((f: string) => Facility[f as keyof typeof Facility])
       };
       const formData = new FormData();
       const roomDataBlob = new Blob([JSON.stringify(roomData)], { type: 'application/json' });
@@ -166,7 +164,7 @@ export class RoomFormComponent implements OnInit {
             }
             
             this.save.emit(updatedRoom);
-            this.toastService.showToast('Room updated successfully!', 'success');
+            this.toastService.showToast('Room updated successful!', 'success');
             this.navigateToRoomList();
           },
           error: (err) => {
@@ -178,6 +176,7 @@ export class RoomFormComponent implements OnInit {
 
         this.roomService.createRoom(formData).subscribe({
           next: (createdRoom) => {
+            console.log('Room created successful!:', createdRoom);
             this.roomId = createdRoom.id;
 
             if (this.selectedFile) {
@@ -194,7 +193,7 @@ export class RoomFormComponent implements OnInit {
             }
             
             this.save.emit(createdRoom);
-            this.toastService.showToast('Room created successfully!', 'success');
+            this.toastService.showToast('Room created successful!', 'success');
             this.navigateToRoomList();
           },
           error: (err) => {
@@ -288,7 +287,7 @@ export class RoomFormComponent implements OnInit {
             case HttpEventType.Response:
               this.message = `Success: ${event.body}`;
               this.showFileUpload = false;
-              this.toastService.showToast('Room data imported successfully!', 'success');
+              this.toastService.showToast('Room data imported successful!', 'success');
               break;
           }
         },
@@ -319,8 +318,5 @@ export class RoomFormComponent implements OnInit {
       }
     });
   }
-  
-  getRoomDescription(): void{
-    
-  }
+
 }

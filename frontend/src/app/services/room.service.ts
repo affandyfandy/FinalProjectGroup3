@@ -137,22 +137,26 @@ export class RoomService {
     }
     
     filterRooms(
-        pageNo: number = 0,
-        pageSize: number = 10,
-        status?: string,
-        facility?: string,
+        pageNo?: number,
+        pageSize?: number,
+        roomNumber?: string,
         capacity?: number,
         roomType?: string,
-        lowerLimitPrice?: number
+        price?: string,
+        status?: string,
       ): Observable<RoomResponse>{
         let params = new HttpParams()
-          .set('pageNo', pageNo.toString())
-          .set('pageSize', pageSize.toString());
+        if (pageNo){
+          params = params.set('pageNo', pageNo);
+        }
+        if (pageSize){
+           params = params.set('pageSize', pageSize);
+        }
         if (status) {
           params = params.set('status', status);
         }
-        if (facility) {
-          params = params.set('facility', facility);
+        if (roomNumber) {
+          params = params.set('roomNumber', roomNumber);
         }
         if (capacity !== undefined) {
           params = params.set('capacity', capacity.toString());
@@ -160,9 +164,10 @@ export class RoomService {
         if (roomType) {
           params = params.set('roomType', roomType);
         }
-        if (lowerLimitPrice !== undefined) {
-          params = params.set('lowerLimitPrice', lowerLimitPrice.toString());
+        if (price !== undefined) {
+          params = params.set('lowerLimitPrice', price.toString());
         }
+        console.log("params in service " + params);
     
         return this.http.get<RoomResponse>(`${this.baseUrl}/search`, { params });
       }

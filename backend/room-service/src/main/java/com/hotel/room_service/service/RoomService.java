@@ -1,5 +1,6 @@
 package com.hotel.room_service.service;
 
+import com.hotel.room_service.criteria.RoomSearchCriteria;
 import com.hotel.room_service.dto.response.ReadRoomDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,8 @@ public interface RoomService {
     Room create(Room room);
     Room update(UUID id, Room room);
     Page<Room> findAllSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
-    Page<Room> search(int pageNo, int pageSize, String status, String facility, String roomType, Integer capacity,
-                BigDecimal lowerLimit);
+    // Page<Room> search(int pageNo, int pageSize, String roomNumber, Integer capacity, String roomType, BigDecimal price, String status);
+    Page<Room> getAllRoomByQuery(int pageNo, int pageSize, RoomSearchCriteria criteria) ;
     Room findById(UUID id);
     Page<Room> findAllActiveSorted(int pageNo, int pageSize, String sortBy, String sortOrder);
     Room updateStatus(UUID id, String status);
@@ -29,7 +30,7 @@ public interface RoomService {
     byte[] encoded(MultipartFile file) throws IOException;
     String byteToString(byte[] file);
 
-    Page<ReadRoomDto> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, Pageable pageable);
+    Page<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int capacity, int pageNo, int pageSize);
 
     ReadRoomDto uploadRoomPhoto(UUID id, MultipartFile file);
 }
