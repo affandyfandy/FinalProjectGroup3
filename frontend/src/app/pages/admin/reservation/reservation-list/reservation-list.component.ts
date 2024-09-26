@@ -153,5 +153,19 @@ export class ReservationListComponent implements OnInit {
     this.showDeleteModal = false;
   }
 
+  exportData(): void{
+    this.reservationService.exportData().subscribe({
+      next: () => {
+        console.log('export data successful!');
+        this.loadReservations(this.currentPage);
+        this.toastService.showToast('Data exported successful!', 'success');
+      },
+      error: (err) => {
+        console.error('Error exporting room:', err);
+        this.toastService.showToast('Error exporting reservation data', 'error');
+      }
+    })
+  }
+
 
 }

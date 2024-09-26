@@ -93,5 +93,9 @@ export class ReservationService {
     const httpParams = new HttpParams({ fromObject: params });
     return this.http.get<Reservation[]>(`${this.apiUrl}/search`, { params: httpParams });
   }
+
+  exportData(): Observable<any>{
+    return this.http.get<any[]>(`${this.apiUrl}/export/admin`);
+  }
 }
 

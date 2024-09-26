@@ -1,5 +1,5 @@
 <div class="container mx-auto px-4 py-8">
-  <div class="mb-5 flex justify-between items-end">
+  <div *ngIf="reservations.length !== 0" class="mb-5 flex justify-between items-end">
     <div>
       <h1 class="text-2xl font-bold text-primary mb-2">Manage Reservations</h1>
       <p class="text-sm text-gray-600">Manage your bookings or create a new reservation.</p>
@@ -12,7 +12,20 @@
     </div>
   </div>
 
-  <div class="grid gap-4">
+  <div class="grid gap-8">
+    <div *ngIf="reservations.length === 0" class="max-w-md mx-auto bg-white p-6">
+      <div class="flex items-start">
+        <ng-icon name="heroFaceFrown" class="text-primary" [style.width.px]="50" [style.height.px]="50" [style.padding]="'0px'" [style.boxSizing]="'content-box'"></ng-icon>
+        <div class="ml-4">
+          <h3 class="font-semibold justify-center text-lg">Oops! Looks like you haven’t booked your escape yet.</h3>
+          <p class="mt-2 mb-2">Let’s find you the perfect stay for your next adventure!</p>
+          <button (click)="createReservation()" class="bg-primary text-white py-2 px-5 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">
+            Let's Book Now
+          </button>
+        </div>
+      </div>
+    </div>
+    
     <div *ngFor="let reservation of reservations" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-300">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold text-primary">Reservation #{{ reservation.id }}</h2>

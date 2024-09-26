@@ -20,4 +20,8 @@ export class PaymentService {
 
     return this.http.post<Payment>(`${this.apiUrl}/reservation/${reservationId}`, paymentData, { headers });
   }
+
+  getByReservationId(reservationId: string): Observable<Payment>{
+    return this.http.get<Payment>(`${this.apiUrl}/reservation/${reservationId}`);
+  }
 }

@@ -12,11 +12,11 @@ export interface Reservation {
   roomId: string;
   room: Room;
   user: User;
-  amount: Payment;
+  amount: number;
   createdBy?: string;
   createdDate?: string;
-  lastModifiedBy?: string;
   lastModifiedDate?: string;
+  lastModifiedBy?: string;
 }
 
 export enum ReservationStatus {
