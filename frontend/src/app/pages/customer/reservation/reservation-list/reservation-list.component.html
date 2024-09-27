@@ -38,17 +38,19 @@
         </span>
       </div>
 
-      <div class="text-sm text-gray-600">
-        <p><strong>Room Number:</strong> {{ reservation.room.roomNumber }}</p>
-        <p><strong>Guest:</strong> {{ reservation.userId }}</p>
-        <p><strong>Reservation Date:</strong> {{ reservation.reservationDate | date }}</p>
-        <p><strong>Check-in:</strong> {{ reservation.checkInDate | date }}</p>
-        <p><strong>Check-out:</strong> {{ reservation.checkOutDate | date }}</p>
+      <div class="text-sm text-gray-600 flex justify-between items-end">
+        <div>
+          <p><strong>Room Number:</strong> {{ reservation.room.roomNumber }}</p>
+          <p><strong>Guest:</strong> {{ reservation.userId }}</p>
+          <p><strong>Reservation Date:</strong> {{ reservation.reservationDate | date }}</p>
+          <p><strong>Check-in:</strong> {{ reservation.checkInDate | date }}</p>
+          <p><strong>Check-out:</strong> {{ reservation.checkOutDate | date }}</p>
+        </div>
+        <div class="mt-4 flex justify-center">
+          <button (click)="openRescheduleModal(reservation)" class="w-full h-[42px] bg-primary text-white p-2 rounded-lg border border-transparent hover:bg-white hover:border-primary hover:text-primary">Reschedule</button>
+        </div>
       </div>
 
-      <div class="mt-4 flex justify-center">
-        <button (click)="openRescheduleModal(reservation)" class="text-primary underline">Reschedule</button>
-      </div>
     </div>
   </div>
 

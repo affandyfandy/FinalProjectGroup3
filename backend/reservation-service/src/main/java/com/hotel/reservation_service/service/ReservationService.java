@@ -28,4 +28,5 @@ public interface ReservationService {
     byte[] generateAdminReportPdf(String filter);
 
     List<DateRangeDto> findUnavailableDateRangesByRoomId(UUID roomId);
+    List<Reservation> getReservationsByUserId(String userId);
 }

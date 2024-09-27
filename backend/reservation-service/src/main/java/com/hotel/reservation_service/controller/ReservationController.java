@@ -52,6 +52,11 @@ public class ReservationController {
         return reservationService.getAllReservations(pageable);
     }
 
+    @GetMapping("/user/{userId}")
+    public List<Reservation> getReservationsByUserId(@PathVariable String userId) {
+        return reservationService.getReservationsByUserId(userId);
+    }
+
     @GetMapping("/sorted")
     public List<Reservation> getAllReservationsSorted(
             @RequestParam(defaultValue = "reservationDate") String sortBy,

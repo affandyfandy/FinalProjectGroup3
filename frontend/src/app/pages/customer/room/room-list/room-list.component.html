@@ -10,7 +10,7 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div *ngFor="let room of rooms" class=" bg-white rounded-lg shadow-md overflow-hidden">
-      <div class="relative">
+      <div class="">
         <div *ngIf="!room.photoSafeUrl" class="bg-gray-400 h-48 w-full"></div>
         <img *ngIf="room.photoSafeUrl" [src]="room.photoSafeUrl" alt="Room Photo" class="h-48 w-full">
       </div>

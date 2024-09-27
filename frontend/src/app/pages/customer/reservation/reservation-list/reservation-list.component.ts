@@ -33,6 +33,8 @@ export class ReservationListComponent implements OnInit {
   selectedReservation: Reservation | null = null;
   rescheduleForm!: FormGroup;
 
+  userId: string = '';
+
   constructor(
     private reservationService: ReservationService,
     private router: Router,
@@ -42,16 +44,17 @@ export class ReservationListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.authService.isAdmin()) {
+    if (!this.authService.checkCredentials()) {
       this.router.navigate([RouterConfig.AUTH.link, 'login']);
       return;
     }
 
+    this.userId = this.authService.getUserInformation()[1].value;
     this.loadReservations(this.currentPage);
   }
 
   loadReservations(page: number): void {
-    this.reservationService.getAllReservationsWithRoomsAndUsers(page - 1, this.pageSize).subscribe({
+    this.reservationService.getAllReservationsByUserIdWithRoomsAndUsers(this.userId, page - 1, this.pageSize).subscribe({
       next: (response: any) => {
         this.reservations = response;
         // this.reservations = response.content;

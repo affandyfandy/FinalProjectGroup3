@@ -2,17 +2,17 @@ package com.hotel.reservation_service.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 import java.util.UUID;
 
 import com.hotel.reservation_service.audit.Auditable;
-import jakarta.persistence.PrePersist;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
