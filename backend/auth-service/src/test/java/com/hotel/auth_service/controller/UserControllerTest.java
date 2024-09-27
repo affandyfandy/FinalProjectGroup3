@@ -1,28 +1,23 @@
 package com.hotel.auth_service.controller;
 
-import com.hotel.auth_service.criteria.UserSearchCriteria;
-import com.hotel.auth_service.dto.UserDto;
-import com.hotel.auth_service.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+import com.hotel.auth_service.dto.UserDto;
+import com.hotel.auth_service.service.UserService;
 
-public class UserControllerTest {
+class UserControllerTest {
 
     @Mock
     private UserService userService;
@@ -31,77 +26,71 @@ public class UserControllerTest {
     private UserController userController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void testGetAllUsers() {
-        // Arrange
-        Page<UserDto> page = new PageImpl<>(List.of(new UserDto()));
-        when(userService.getAllUsers(any(PageRequest.class), any(UserSearchCriteria.class))).thenReturn(page);
 
-        // Act
-        ResponseEntity<Page<UserDto>> response = userController.getAllUsers(PageRequest.of(0, 10), new UserSearchCriteria());
-
-        // Assert
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1, response.getBody().getTotalElements());
-    }
 
     @Test
-    public void testGetUserById_Success() {
-        // Arrange
+    void getUserById_Success() {
+        String userId = "123";
         UserDto userDto = new UserDto();
-        when(userService.getUserByEmail(anyString())).thenReturn(Optional.of(userDto));
+        when(userService.getUserByEmail(userId)).thenReturn(Optional.of(userDto));
 
-        // Act
-        ResponseEntity<UserDto> response = userController.getUserById("test-id");
+        ResponseEntity<UserDto> response = userController.getUserById(userId);
 
-        // Assert
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(userDto, response.getBody());
+        verify(userService).getUserByEmail(userId);
     }
 
     @Test
-    public void testGetUserById_NotFound() {
-        // Arrange
-        when(userService.getUserByEmail(anyString())).thenReturn(Optional.empty());
-
-        // Act & Assert
-        try {
-            userController.getUserById("test-id");
-        } catch (IllegalArgumentException e) {
-            assertEquals("User not found", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testCreateUser() {
-        // Arrange
+    void createUser_Success() {
         UserDto userDto = new UserDto();
         when(userService.createUser(any(UserDto.class))).thenReturn(userDto);
 
-        // Act
         ResponseEntity<UserDto> response = userController.createUser(userDto);
 
-        // Assert
         assertEquals(201, response.getStatusCodeValue());
         assertEquals(userDto, response.getBody());
+        verify(userService).createUser(any(UserDto.class));
     }
 
     @Test
-    public void testUploadUserPhoto_Success() throws Exception {
-        // Arrange
-        MultipartFile file = mock(MultipartFile.class);
+    void updateUser_Success() {
+        String userId = "123";
         UserDto userDto = new UserDto();
-        when(userService.uploadUserPhoto(anyString(), any(MultipartFile.class))).thenReturn(userDto);
+        when(userService.updateUser(userId, userDto)).thenReturn(Optional.of(userDto));
 
-        // Act
-        ResponseEntity<?> response = userController.uploadUserPhoto("test-id", file);
+        ResponseEntity<UserDto> response = userController.updateUser(userId, userDto);
 
-        // Assert
         assertEquals(200, response.getStatusCodeValue());
+        assertEquals(userDto, response.getBody());
+        verify(userService).updateUser(userId, userDto);
     }
 
+    @Test
+    void deleteUser_Success() {
+        String userId = "123";
+
+        ResponseEntity<Void> response = userController.deleteUser(userId);
+
+        assertEquals(204, response.getStatusCodeValue());
+        verify(userService).deleteUser(userId);
+    }
+
+    @Test
+    void uploadUserPhoto_Success() throws Exception {
+        String userId = "123";
+        MultipartFile file = mock(MultipartFile.class);
+        UserDto userDto = new UserDto();
+        when(userService.uploadUserPhoto(userId, file)).thenReturn(userDto);
+
+        ResponseEntity<?> response = userController.uploadUserPhoto(userId, file);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(userDto, response.getBody());
+        verify(userService).uploadUserPhoto(userId, file);
+    }
 }

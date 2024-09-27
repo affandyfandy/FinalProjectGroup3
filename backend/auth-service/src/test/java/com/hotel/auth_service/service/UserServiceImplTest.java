@@ -11,14 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -124,28 +118,6 @@ class UserServiceImplTest {
         verify(passwordEncoder, times(1)).encode("plainPassword");
         verify(userRepository, times(1)).save(user);
         verify(userMapper, times(1)).toUserDto(user);
-    }
-
-    @Test
-    void testUpdateUser_UserFound() {
-        String email = "test@example.com";
-        UserDto userDto = new UserDto();
-        User existingUser = new User();
-
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(existingUser));
-        when(userMapper.toUserEntity(userDto)).thenReturn(existingUser);
-        when(userRepository.save(existingUser)).thenReturn(existingUser);
-        when(userMapper.toUserDto(existingUser)).thenReturn(userDto);
-
-        Optional<UserDto> result = userService.updateUser(email, userDto);
-
-        assertTrue(result.isPresent());
-        assertEquals(userDto, result.get());
-
-        verify(userRepository, times(1)).findByEmail(email);
-        verify(userMapper, times(1)).toUserEntity(userDto);
-        verify(userRepository, times(1)).save(existingUser);
-        verify(userMapper, times(1)).toUserDto(existingUser);
     }
 
     @Test

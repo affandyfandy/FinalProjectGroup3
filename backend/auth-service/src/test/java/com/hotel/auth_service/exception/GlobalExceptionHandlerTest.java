@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-public class GlobalExceptionHandlerTest {
+class GlobalExceptionHandlerTest {
     private MockMvc mockMvc;
 
     @Mock

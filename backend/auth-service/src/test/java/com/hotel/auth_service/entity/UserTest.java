@@ -10,18 +10,16 @@ class UserTest {
 
     @Test
     void testToString() {
-        // Arrange
         String email = "alif@example.com";
         String password = "12345678";
-        Role role = Role.CUSTOMER; // Assuming Role is an enum
+        Role role = Role.CUSTOMER;
         String fullName = "Alif";
         String phone = "+62123456789";
         LocalDate dateOfBirth = LocalDate.of(1995, 9, 19);
         String photo = "https://example.com/photo.jpg";
         String address = "Indonesia";
-        Status status = Status.ACTIVE; // Assuming Status is an enum
+        Status status = Status.ACTIVE;
 
-        // Create a User instance with all the values
         User user = new User(email, password, role, fullName, phone, dateOfBirth, photo, address, status);
 
         // Expected toString result
@@ -37,10 +35,8 @@ class UserTest {
                 ", status=" + status +
                 '}';
 
-        // Act
         String actual = user.toString();
 
-        // Assert
         assertEquals(expected, actual);
     }
 }
