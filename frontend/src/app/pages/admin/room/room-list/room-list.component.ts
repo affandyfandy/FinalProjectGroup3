@@ -83,10 +83,12 @@ export class RoomListComponent {
   ngOnInit(): void {
     this.queryParam = this.getQueryParamsAsString(this.activatedRoute.snapshot.queryParams);
     this.loadRooms(this.currentPage);
+    this.onApplyFilter(this.activatedRoute.snapshot.queryParams);
   }
 
   loadRooms(currentPage: number) {
     if (this.queryParam !== '') {
+      console.log('Query Params:', this.queryParam);
       this.roomService.filterRooms(currentPage, this.pageSize, this.queryParam).subscribe({
         next: (response: RoomResponse) => {
           this.rooms = response.content;
@@ -98,6 +100,7 @@ export class RoomListComponent {
         }
       });
     } else {
+      console.log('All');
       this.roomService.getAllRooms(currentPage, this.pageSize, this.sortBy, this.sortOrder).subscribe({
         next: (response: RoomResponse) => {
           this.rooms = response.content;

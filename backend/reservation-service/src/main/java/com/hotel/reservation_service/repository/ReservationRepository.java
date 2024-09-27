@@ -27,6 +27,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID>,
                                                   @Param("checkOutDate") LocalDate checkOutDate,
                                                   Pageable pageable);
 
+    @Query("SELECT r FROM Reservation r WHERE r.userId = :userId")
+    Page<Reservation> findReservationsByUserId(String userId, Pageable pageable);
     
     @Query("SELECT new com.hotel.reservation_service.dto.DateRangeDto(r.checkInDate, r.checkOutDate) FROM Reservation r WHERE r.roomId = :roomId AND r.checkOutDate >= CURRENT_DATE")
     List<DateRangeDto> findUnavailableDateRangesByRoomId(@Param("roomId") UUID roomId);

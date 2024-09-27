@@ -42,7 +42,37 @@ export class ReservationService {
       map((reservationsWithRoomsAndUsers: Reservation[]) => reservationsWithRoomsAndUsers)
     );
   }
-  
+
+  getAllReservationsByUserId(userId: string, page: number = 0, size: number = 10): Observable<any> {
+    const params = new HttpParams().set('page', page).set('size', size).set('userId', userId);
+    return this.http.get<any>(this.apiUrl + '/user/' + userId, { params });
+  }
+
+  getAllReservationsByUserIdWithRoomsAndUsers(userId: string, page: number = 0, size: number = 10): Observable<Reservation[]> {
+    return this.getAllReservationsByUserId(userId, page, size).pipe(
+      switchMap((reservationsResponse: any) => {
+        const reservations: Reservation[] = reservationsResponse;
+
+        const enrichedReservationsObservables = reservations.map((reservation: Reservation) => 
+          forkJoin({
+            room: this.roomService.getRoomById(reservation.roomId),
+            user: this.userService.getUserById(reservation.userId)
+          }).pipe(
+            map(({ room, user }) => ({
+              ...reservation,
+              room,
+              user
+            }))
+          )
+        );
+
+        return forkJoin(enrichedReservationsObservables);
+      }
+      ),
+      map((reservationsWithRoomsAndUsers: Reservation[]) => reservationsWithRoomsAndUsers)
+    );
+  }
+
   getAllReservationsWithRooms(page: number = 0, size: number = 10): Observable<Reservation[]> {
     return this.getAllReservations(page, size).pipe(
       switchMap((reservationsResponse: any) => {

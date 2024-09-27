@@ -11,7 +11,6 @@ export const AuthGuard: CanActivateFn = (route, state) => {
     const isAdmin = authService.isAdmin();
     const url = state.url;
 
-    console.log('AuthGuard', isLoggedIn, isAdmin, url);
 
     if (!isLoggedIn) {
         if (url === '/reservation') {

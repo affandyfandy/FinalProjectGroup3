@@ -79,6 +79,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation createReservation(Reservation reservation) {
+        reservation.setCreatedDate(LocalDateTime.now());
         return reservationRepository.save(reservation);
     }
 
@@ -140,5 +141,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<DateRangeDto> findUnavailableDateRangesByRoomId(UUID roomId) {
         return reservationRepository.findUnavailableDateRangesByRoomId(roomId);
+    }
+
+    @Override
+    public List<Reservation> getReservationsByUserId(String userId) {
+        return reservationRepository.findByUserId(userId);
     }
 }
